@@ -1,5 +1,10 @@
+// import { products } from "../data/product";
 
 function Shopping(){
-    return(<></>)
+    return(
+        <div>
+            
+        </div>
+    )
 }
 export default Shopping;
