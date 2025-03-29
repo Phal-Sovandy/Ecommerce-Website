@@ -1,5 +1,4 @@
-
-function Login(){
-    return(<></>)
+function Login() {
+  return <></>;
 }
 export default Login;

@@ -1,5 +1,4 @@
-
-function Contacts(){
-    return(<></>)
+function Contacts() {
+  return <></>;
 }
 export default Contacts;

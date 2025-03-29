@@ -1,0 +1,73 @@
+.checkout-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  height: 240px;
+  width: calc(100% - 2px);
+  gap: 20px;
+  background-color: var(--grey-color);
+  border-radius: 5px;
+  flex-shrink: 0;
+  z-index: 100;
+  outline: 1px solid var(--black-color);
+  transition: box-shadow 0.2s ease;
+}
+.checkout-item:hover {
+  box-shadow: inset 0 0 5px var(--black-color);
+}
+.item-image {
+  width: 200px;
+  height: 100%;
+  overflow: hidden;
+  background-color: white;
+}
+.item-image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.item-details {
+  flex: 1;
+}
+
+.takeOutItem,
+.addItem {
+  background-color: white;
+  padding: 5px 20px;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  border: none;
+}
+.takeOutItem:hover,
+.addItem:hover {
+  outline: 1px solid var(--black-color);
+  cursor: pointer;
+}
+.takeOutItem:active,
+.addItem:active {
+  background-color: var(--grey-color);
+}
+.takeOutItem.disable {
+  background-color: var(--grey-color);
+  color: rgb(94, 94, 94);
+}
+.itemQuantity {
+  margin-inline: 15px;
+  font-size: 1.2rem;
+}
+.item-rm {
+  margin-top: 20px;
+  border: none;
+  background-color: var(--black-color);
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+}
+.item-rm:hover {
+  background-color: var(--red-color);
+  transition: background-color 0.2s ease;
+}

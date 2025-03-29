@@ -1,19 +1,18 @@
-body{
-    margin: 0;
-    background: url("../../assets/logo/mario_uncompressed.gif");
-    background-clip: padding-box;
-    background-position: center;
-    position: relative;
-    background-color: #1C2F36;
-    color: rgb(255, 255, 255);
-    width: 100%;
-    overflow-x: hidden;
+body {
+  margin: 0;
+  background-clip: padding-box;
+  background-position: center;
+  position: relative;
+  background-color: var(--primary-color);
+  color: rgb(0, 0, 0);
+  width: 100%;
+  overflow-x: hidden;
 }
-button{
-    font-family: inherit;
+button {
+  font-family: inherit;
 }
-*{
-    box-sizing: border-box;
-    font-family: Poppins, "Roboto Condensed", Arial, Helvetica, sans-serif;
-    scrollbar-width: thin;
+* {
+  box-sizing: border-box;
+  font-family: Poppins, "Roboto Condensed", Arial, Helvetica, sans-serif;
+  scrollbar-width: thin;
 }

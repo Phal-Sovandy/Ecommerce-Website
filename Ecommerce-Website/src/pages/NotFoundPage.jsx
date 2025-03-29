@@ -1,6 +1,5 @@
-
-function NotFoundPage(){
-    return (<></>)
+function NotFoundPage() {
+  return <></>;
 }
 
 export default NotFoundPage;

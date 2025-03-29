@@ -1,0 +1,230 @@
+#check-out-form form {
+  width: 100%;
+}
+#check-out-form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+#check-out-form-inner #head {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid var(--black-color);
+}
+#check-out-form-inner #head .fa-minus {
+  padding: 5px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+#check-out-form-inner #head .fa-minus:hover {
+  background-color: var(--grey-color);
+}
+#delivery-card-checkout-container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  overflow: auto;
+  padding-block: 5px;
+}
+.delivery-card-checkout {
+  flex-shrink: 0;
+  background-color: rgba(255, 255, 255, 0);
+  border: 1px solid var(--black-color);
+  width: 260px;
+  overflow: hidden;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.delivery-card-checkout .price-check h4 {
+  margin: 0;
+}
+.delivery-card-checkout:hover,
+.payment-card:hover {
+  cursor: pointer;
+  background-color: #3a5964;
+  color: white;
+}
+.delivery-card-checkout:active,
+.payment-card:active {
+  background-color: white;
+  color: var(--black-color);
+}
+#delivery-name {
+  font-size: 1.2rem !important;
+  margin-block: 5px;
+}
+#check-out-form p {
+  font-size: 1rem;
+}
+.price-check {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.price-check .fa-circle-check {
+  color: white;
+  display: none;
+}
+.selected-delivery {
+  background-color: var(--black-color);
+  color: white;
+}
+.selected-delivery > div .fa-circle-check {
+  display: block;
+}
+#mid,
+#payment-method,
+#delivery-selection,
+#card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+#bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#check-out-form input {
+  background-color: rgba(225, 225, 225, 0);
+  border: 1px solid var(--black-color);
+  padding: 10px 15px;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 1rem;
+  accent-color: var(--black-color);
+}
+#payment-card-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.payment-card {
+  border-radius: 5px;
+  padding: 10px 15px;
+  background-color: var(--grey-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.2s ease;
+}
+.payment-card > div {
+  flex-shrink: 0;
+  background-color: rgb(126, 126, 126);
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+}
+.is-toggled {
+  background-color: var(--black-color);
+  color: white;
+}
+.is-toggled > div {
+  background-color: var(--primary-color);
+}
+#card-info-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#info {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+#info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 2;
+}
+#info-right {
+  border-radius: 10px;
+  background-color: var(--grey-color);
+  flex: 1;
+  height: 350px;
+}
+#info-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+#btn {
+  margin-top: 10px;
+}
+#btn button {
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background-color: white;
+  border: 2px solid var(--black-color);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  margin-right: 10px;
+}
+#btn button:last-child {
+  background-color: var(--black-color);
+  color: white;
+}
+#btn button:last-child:hover {
+  background-color: #1db954;
+  border-color: #1db954;
+  color: var(--black-color);
+}
+#btn button:first-child:hover {
+  background-color: var(--red-color);
+  border-color: var(--red-color);
+  color: white;
+}
+
+#total-final-price {
+  color: red;
+}
+#total-section table {
+  margin-top: 10px;
+  text-align: right;
+  width: 100%;
+  border-collapse: collapse;
+}
+#total-section table th {
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+.title {
+  font-weight: 700 !important;
+  width: 20px;
+}
+#total-section table tfoot {
+  border-top: 1px solid black;
+}
+#total-section table tfoot th {
+  padding-top: 20px;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+#total-section > div {
+  border-radius: 5px;
+  padding: 20px;
+  background-color: var(--grey-color);
+}
+@media (max-width: 650px) {
+  #info {
+    flex-direction: column;
+  }
+}
