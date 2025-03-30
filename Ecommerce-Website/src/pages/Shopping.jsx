@@ -1,20 +1,30 @@
-import React, { useState } from "react";
-import "../styles/Shopping.css";
+import React, { useState, useEffect } from "react";
 import { products } from "../data/products.js";
+import { useCart } from "../context/CartContext.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 import SideBar from "../components/SideBar.jsx";
+import ProductWindow from "../components/ProductWindow.jsx";
+
+import "../styles/Shopping.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faGlobe } from "@fortawesome/free-solid-svg-icons";
-
-import { useCart } from "../context/CartContext.jsx";
 
 function Shopping() {
   const { addToCart } = useCart();
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [showFilter, setShowFilter] = useState(false);
+  const [showWindow, setShowWindow] = useState(false);
+  const [windowProduct, setWindowProduct] = useState(null);
+
+  useEffect(() => {
+    document.title = "Shops at Sooner";
+  });
 
   return (
     <div>
+      {showWindow ? (
+        <ProductWindow product={windowProduct} setShowState={setShowWindow} />
+      ) : null}
       <header>Shops</header>
       <main>
         <div id="top-product-menu">
@@ -27,7 +37,7 @@ function Shopping() {
             {showFilter ? <h2>Filter Items</h2> : <h2>Show All Items</h2>}
           </div>
         </div>
-        <section className={showFilter? "" : "hide-side-bar-section"}>
+        <section className={showFilter ? "" : "hide-side-bar-section"}>
           <SideBar
             products={products}
             setFilteredProducts={setFilteredProducts}
@@ -40,6 +50,8 @@ function Shopping() {
                   key={product.id}
                   product={product}
                   addToCart={addToCart}
+                  showDetails={setShowWindow}
+                  setShowItem={setWindowProduct}
                 />
               ))
             ) : (

@@ -1,0 +1,191 @@
+#contact-form{
+    width: 75%;
+    background-color: var(--identity-color);
+    border-radius: 10px;
+    padding: 3%;
+    margin: auto;
+    color: white;
+
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10%;
+    transition: all 1s ease;
+}
+#contact-form #link-social{
+    margin-top: 40px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+#contact-form a:hover{
+    transform: scale(1.5) translateY(-3px);
+    margin-inline: 3px;
+}
+#left-part{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 3;
+}
+#left-part h1{
+    font-size: 3.5rem;
+    font-weight: 600;
+}
+#left-part p{
+    font-size: 0.9rem;
+    text-align: justify;
+}
+#left-part #copy-right{
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+}
+#left-part #copy-right p{
+    color: rgb(185, 185, 185);
+    font-weight: 200;
+}
+#left-part #copy-right div{
+    width: 100px;
+    height: 100px;
+}
+#left-part #copy-right div img{
+    width: 100%;
+}
+#contact-form #link-social{
+    margin-block: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+#link-social a:hover{
+    transform: scale(1.5) translateY(-3px);
+    margin-inline: 3px;
+}
+#contact-form #link-social a{
+    color: #ffffff;
+    transition: transform 0.2s ease, margin 0.2s ease;
+}
+#right-part{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 2;
+}
+#right-part h2{
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+
+#right-part input{
+    background-color: var(--primary-color);
+    border-radius: 30px;
+    border: none;
+    padding: 15px 20px;
+}
+#right-part input::placeholder{
+    color: rgb(50, 50, 50);
+    font-weight: 200;
+    font-size: 1rem;
+}
+
+#right-part select{
+    background-color: var(--primary-color);
+    font-weight: 200;
+    border-radius: 30px;
+    padding-inline: 10px;
+    border: none;
+}
+
+#contact-form form{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: 
+    "name name gender"
+    "country country region"
+    "email email email"
+    "tel tel tel"
+    "com com com"
+    "button button button";
+
+    gap: 20px;
+}
+
+#name{
+    grid-area: name;
+}
+#gender{
+    grid-area: gender;
+}
+#country{
+    grid-area: country;
+}
+#region{
+    grid-area: region;
+}
+#email{
+    grid-area: email;
+}
+#tel{
+    grid-area: tel;
+}
+#com{
+    grid-area: com;
+}
+#btn-sub-res{
+    grid-area: button;
+    display: flex;
+    gap: 10px;
+}
+#btn-sub-res button{
+    width: 100px;
+}
+#right-part button{
+    padding: 15px 20px;
+    border-radius: 30px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 1px solid #1C2F36;
+    transition: background-color 0.5s ease;
+}
+#right-part #reset{
+    background-color: rgba(255, 255, 255, 0);
+    color: white;
+    border-color: white;
+}
+#right-part #submit:hover{
+    background-color: #ffa000;
+    color: white;
+    border-color: #ffa000;
+}
+#right-part #submit:active{
+    transition: none;
+    background-color: #e28f00;
+}
+#right-part #reset:hover{
+    background-color: #fa3f3f;
+    border-color: #fa3f3f;
+}
+#right-part #reset:active{
+    transition: none;
+    background-color: #c91e1e;
+    border-color: #c91e1e;
+}
+@media (max-width: 780px) {
+    #contact-form{
+        flex-direction: column;
+        align-items: center;
+        gap: 70px;
+    }
+    #right-part, #left-part{
+        flex: 1;
+    }
+    #contact-form #link-social{
+        justify-content: center;
+    }
+}

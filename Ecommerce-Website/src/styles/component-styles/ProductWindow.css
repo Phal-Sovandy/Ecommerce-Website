@@ -1,12 +1,190 @@
-.product-window{
-    margin: 50px;
-    background-color: aquamarine;
-    padding: 20px;
-    border-radius: 10px;
-    display: flex;
-    gap: 20px
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(194, 194, 194, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 999;
 }
-.product-window .image-holder{
-    background-color: beige;
-    border-radius: 10px;
+.product-window {
+  z-index: 1000;
+  width: 80vw;
+  height: 60vh;
+  overflow: hidden;
+  max-width: 1350px;
+  background-color: white;
+  padding: 20px;
+  padding-bottom: 30px;
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  transition: all 0.2s ease;
+}
+.product-window .head {
+  width: 100%;
+  padding-bottom: 10px;
+}
+.product-window .head .fa-minus {
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+  padding: 5px 10px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+.product-window .head .fa-minus:hover{
+  background-color: var(--grey-color);
+}
+.product-window .bottom {
+  width: 100%;
+  height: calc(100% - 20px);
+  display: flex;
+  gap: 20px;
+}
+.product-window .image-holder {
+  background-color: var(--grey-color);
+  border-radius: 10px;
+  width: 30%;
+  overflow: hidden;
+}
+.product-window .item-details {
+  background-color: whitesmoke;
+  padding-inline: 20px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.product-window .product-images {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.product-window .item-details h2 {
+  font-size: 1.5rem;
+  color: (--black-color);
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+.product-window .item-details p {
+  font-size: 1.1rem;
+}
+.product-window .product-keywords {
+  color: grey;
+  margin-top: 5px;
+  padding-bottom: 10px;
+  margin-bottom: 0;
+}
+
+.product-rating > img {
+  width: 20%;
+  min-width: 105px;
+  max-width: 150px;
+}
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.product-rating p {
+  margin: 0;
+}
+.product-rating span {
+  color: grey;
+}
+.product-window .price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--identity-color);
+  margin-block: 20px;
+}
+.product-window .addToCart-btn {
+  padding: 10px 25px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background-color: var(--identity-color);
+  color: white;
+  border: none;
+  border-radius: 50px;
+}
+.item-details .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid grey;
+  position: sticky;
+  top: 0;
+  background-color: whitesmoke;
+}
+
+.product-window h4 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.selection-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-inline: 1px;
+}
+.selection-container > div{
+    padding: 8px 15px;
+    border-radius: 5px;
+    outline: 1px solid grey;
+    transition: all 0.2s ease;
+}
+.selection-container > div:hover{
+    background-color: var(--identity-color);
+    color: white;
+    font-weight: 600;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+    cursor: pointer;
+    outline: none;
+}
+.selection-container > div:active{
+    background-color: white;
+    color: var(--black-color);
+    outline: none;
+}
+
+.selection-container > div.selected{
+    font-weight: 600;
+    background-color: var(--identity-color);
+    color: white;
+    outline: none;
+}
+.product-descriptions h4{
+  border-bottom: 1px solid grey;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+.product-descriptions p{
+  margin: 0;
+}
+
+.size-chart-container{
+  width: 100%;
+  overflow: hidden;
+}
+.chart-holder{
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 5px;
+}
+.chart-holder img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }

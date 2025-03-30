@@ -1,9 +1,8 @@
-import ProductWindow from "../components/ProductWindow.jsx";
+import { useEffect } from "react";
 function Home() {
-  return (
-    <>
-      <ProductWindow/>
-    </>
-  );
+  useEffect(() => {
+    document.title = "Sooner's Home";
+  });
+  return <></>;
 }
 export default Home;

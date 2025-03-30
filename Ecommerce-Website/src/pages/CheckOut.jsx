@@ -1,14 +1,17 @@
+import { useEffect } from "react";
+import { useCart } from "../context/CartContext.jsx";
+
 import CheckOutWindow from "../components/CheckOutWindow.jsx";
 import CheckOutItem from "../components/CheckOutItem.jsx";
-
-import { useCart } from "../context/CartContext.jsx";
 
 import "../styles/CheckOut.css";
 
 function CheckOut() {
   const { cart, updateItemQuantity, removeFromCart, removeAllFromCart } =
     useCart();
-
+  useEffect(() => {
+    document.title = "Check Out at Sooner";
+  });
   return (
     <main id="checkout">
       <div className="checkout-items-container">

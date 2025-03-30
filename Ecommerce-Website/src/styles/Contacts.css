@@ -1,0 +1,103 @@
+.top-contact .title {
+  text-align: center;
+  width: 60%;
+  margin: auto;
+  border-bottom: 1px solid grey;
+}
+.top-contact .title h1 {
+  font-size: 4rem;
+  margin-bottom: 0;
+}
+.top-contact .title h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+.top-contact .title p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: grey;
+}
+
+.comment-container {
+  margin: 50px 100px;
+  height: 50vh;
+  min-height: 600px;
+  position: relative;
+  backdrop-filter: blur(100px);
+}
+.comment-container::before{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: "";
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--identity-color) 20%, rgba(0, 0, 0, 0) 70%);
+    opacity: 0.3;
+    filter: blur(20px);
+    z-index: -1;
+}
+.comment {
+  background-color: rgb(255, 255, 255);
+  padding: 20px;
+  display: inline-block;
+  width: 25%;
+  min-height: 200px;
+  max-height: 500px;
+  max-width: 650px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  position: absolute;
+  animation: fadeAndShrink 5s 1 normal;
+  transition: all 0.5s ease;
+}
+.description-comment p{
+    margin-bottom: 0;
+}
+.comment.message1 {
+    top: 50px;
+    left: 0;
+}
+.comment.message2 {
+    top: 0;
+    right: 0;
+}
+.comment.message3 {
+    bottom: 0;
+    left: 10%;
+}
+.comment.message4 {
+    bottom: 30px;
+    right: 10%;
+}
+.comment.message5 {
+    top: 20%;
+    right: 40%;
+}
+.comment:hover{
+    transform: translate(5px, -5px);
+    background-color: var(--identity-color);
+    color: white;
+    z-index: 100;
+}
+.profile-comment-card {
+  border-bottom: 1px solid grey;
+}
+.profile-comment-card h2 {
+  margin: 0;
+}
+.profile-comment-card p {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+@keyframes fadeAndShrink {
+  from {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}

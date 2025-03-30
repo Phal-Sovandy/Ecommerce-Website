@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import "../styles/component-styles/CheckOutItem.css";
+import priceFormat from "../utils/priceFormat";
 
 function CheckOutItem({ item, itemChange, itemRemove }) {
-  const [quantity, setQuantity] = useState(item.quantity);
+  const [quantity, setQuantity] = useState(Math.min(item.quantity, item.stock));
 
   function handleAddItem() {
     if (quantity < item.stock) {
       setQuantity((q) => q + 1);
-      itemChange({ id: item.id, quantity: quantity + 1 });
+      itemChange({ ...item, quantity: quantity + 1 });
     }
   }
   function handleTakeOutItem() {
-    if (quantity > 0) {
+    if (quantity > 1) {
       setQuantity((q) => q - 1);
-      itemChange({ id: item.id, quantity: quantity - 1 });
+      itemChange({ ...item, quantity: quantity - 1 });
     }
   }
 
@@ -29,16 +30,29 @@ function CheckOutItem({ item, itemChange, itemRemove }) {
             .slice(0, item.keywords.length > 3 ? 4 : item.keywords.length)
             .join(" | ")}
         </p>
+        <h4>${priceFormat(item.priceCents * item.quantity)}</h4>
+        {item.size ? <div className="product-size">{item.size}</div> : null}
+        {item.option ? (
+          <div className="product-option">{item.option}</div>
+        ) : null}
         <div className="item-quantity-set">
-          <button className="takeOutItem" onClick={handleTakeOutItem}>
+          <button
+            className={`takeOutItem ${quantity <= 1 ? "disabled-btn" : ""}`}
+            onClick={handleTakeOutItem}
+          >
             -
           </button>
           <span className="itemQuantity">{quantity}</span>
-          <button className="addItem" onClick={handleAddItem}>
+          <button
+            className={`addItem ${
+              quantity >= item.stock ? "disabled-btn" : ""
+            }`}
+            onClick={handleAddItem}
+          >
             +
           </button>
         </div>
-        <button className="item-rm" onClick={() => itemRemove(item.id)}>
+        <button className="item-rm" onClick={() => itemRemove(item)}>
           Remove
         </button>
       </div>

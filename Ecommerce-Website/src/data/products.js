@@ -40,7 +40,8 @@ import countertopBlenderImage from "../assets/products/countertop-blender-64-oz.
 import mixingBowlSetImage from "../assets/products/floral-mixing-bowl-set.jpg";
 import kitchenPaperTowelsImage from "../assets/products/kitchen-paper-towels-30-pack.jpg";
 import fleeceZipUpHoodieImage from "../assets/products/men-cozy-fleece-zip-up-hoodie-red.jpg";
-import clothingSizeChart from "../assets/clothing-size-chart.png";
+
+
 
 export const ALL_CATEGORIES = [
   "socks",
@@ -51,6 +52,7 @@ export const ALL_CATEGORIES = [
   "footwear",
   "accessories",
 ];
+
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -85,10 +87,9 @@ export const products = [
       count: 56,
     },
     priceCents: 799,
-    keywords: ["tshirts", "apparel", "mens"],
+    keywords: ["tshirts", "apparel", "mens", "top"],
     stock: 10,
     type: "clothing",
-    sizeChartLink: clothingSizeChart,
   },
   {
     id: "54e0eccd-8f36-462b-b68a-8182611d9add",
@@ -135,7 +136,7 @@ export const products = [
       count: 317,
     },
     priceCents: 2400,
-    keywords: ["hoodies", "sweaters", "apparel"],
+    keywords: ["hoodies", "sweaters", "apparel", "top"],
     stock: 69,
   },
   {
@@ -183,10 +184,9 @@ export const products = [
       count: 235,
     },
     priceCents: 2070,
-    keywords: ["robe", "swimsuit", "swimming", "bathing", "apparel"],
+    keywords: ["robe", "swimsuit", "swimming", "bathing", "apparel", "top"],
     stock: 200,
     type: "clothing",
-    sizeChartLink: clothingSizeChart,
   },
   {
     id: "aad29d11-ea98-41ee-9285-b916638cac4a",
@@ -233,7 +233,7 @@ export const products = [
       count: 160,
     },
     priceCents: 1699,
-    keywords: ["shorts", "apparel", "mens"],
+    keywords: ["shorts", "apparel", "mens", "bottom"],
     stock: 48,
   },
   {
@@ -293,10 +293,9 @@ export const products = [
       count: 2465,
     },
     priceCents: 1374,
-    keywords: ["hooded", "hoodies", "sweaters", "womens", "apparel"],
+    keywords: ["hooded", "hoodies", "sweaters", "womens", "apparel", "top"],
     stock: 83,
     type: "clothing",
-    sizeChartLink: clothingSizeChart,
   },
   {
     id: "a93a101d-79ef-4cf3-a6cf-6dbe532a1b4a",
@@ -331,10 +330,9 @@ export const products = [
       count: 2556,
     },
     priceCents: 1599,
-    keywords: ["tshirts", "shirts", "apparel", "mens"],
+    keywords: ["tshirts", "shirts", "apparel", "mens", "top"],
     stock: 3,
     type: "clothing",
-    sizeChartLink: clothingSizeChart,
   },
   {
     id: "b86ddc8b-3501-4b17-9889-a3bad6fb585f",
@@ -381,7 +379,7 @@ export const products = [
       count: 9017,
     },
     priceCents: 2290,
-    keywords: ["pants", "apparel", "mens"],
+    keywords: ["pants", "apparel", "mens", "bottom"],
     stock: 0,
   },
   {
@@ -441,7 +439,7 @@ export const products = [
       count: 248,
     },
     priceCents: 2400,
-    keywords: ["pants", "sweatpants", "jogging", "apparel", "womens"],
+    keywords: ["pants", "sweatpants", "jogging", "apparel", "womens", "bottom"],
     stock: 45,
   },
   {
@@ -561,7 +559,7 @@ export const products = [
       count: 3157,
     },
     priceCents: 2400,
-    keywords: ["sweaters", "hoodies", "apparel", "mens"],
+    keywords: ["sweaters", "hoodies", "apparel", "mens", "top"],
     stock: 168,
   },
 ];
