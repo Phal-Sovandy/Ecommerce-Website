@@ -21,7 +21,7 @@ Before you begin, ensure you have the following installed on your system:
 1. Clone the repository:
    ```sh
    git clone https://github.com/Phal-Sovandy/Final_Project---Front-End.git
-   cd Ecommerce-Website
+   cd ./Final_Project---Front-End/Ecommerce-Website
    ```
 
 2. Install dependencies:
