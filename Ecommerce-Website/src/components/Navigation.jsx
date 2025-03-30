@@ -1,8 +1,7 @@
 import { NavLink, Link } from "react-router-dom";
-import "../styles/component-styles/Navigation.css";
 import sonnerLogo from "../assets/logo/Sooner_Logo(white).png";
+import "../styles/component-styles/Navigation.css";
 
-// <Navink to="/page1" className={({ isActive }) => isActive ? active-css-class : ""}> Page1 </NavLink>
 function Navigation() {
   return (
     <nav>
@@ -42,6 +41,3 @@ function Navigation() {
 }
 
 export default Navigation;
-
-// npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
-// npm install @fortawesome/fontawesome-svg-core @fortawesome/free-brands-svg-icons @fortawesome/react-fontawesome

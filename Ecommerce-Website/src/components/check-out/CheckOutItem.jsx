@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../styles/component-styles/CheckOutItem.css";
-import priceFormat from "../utils/priceFormat";
+import priceFormat from "../../utils/priceFormat.js";
+import "../../styles/component-styles/check-out/CheckOutItem.css";
 
 function CheckOutItem({ item, itemChange, itemRemove }) {
   const [quantity, setQuantity] = useState(Math.min(item.quantity, item.stock));

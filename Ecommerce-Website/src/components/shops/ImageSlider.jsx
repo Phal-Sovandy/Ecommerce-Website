@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "../styles/component-styles/ImageSlider.css";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import "../../styles/component-styles/shops/ImageSlider.css";
+
 
 function ImageSlider({ images, selectedImageIndex }) {
   const [currentIndex, setCurrentIndex] = useState(selectedImageIndex);
@@ -18,10 +18,10 @@ function ImageSlider({ images, selectedImageIndex }) {
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
-  
+
   useEffect(() => {
     setCurrentIndex(selectedImageIndex);
-  },[selectedImageIndex])
+  }, [selectedImageIndex]);
 
   return (
     <div className="image-slider">

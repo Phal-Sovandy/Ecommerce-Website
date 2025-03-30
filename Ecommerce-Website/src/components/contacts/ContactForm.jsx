@@ -8,9 +8,8 @@ import {
   faFacebookF,
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import sonnerLogo from "../assets/logo/Sooner_Logo(white).png";
-
-import "../styles/component-styles/ContactForm.css";
+import sonnerLogo from "../../assets/logo/Sooner_Logo(white).png";
+import "../../styles/component-styles/contacts/ContactForm.css";
 
 function Contacts() {
   return (

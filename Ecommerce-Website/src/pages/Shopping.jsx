@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { products } from "../data/products.js";
 import { useCart } from "../context/CartContext.jsx";
-import ProductCard from "../components/ProductCard.jsx";
-import SideBar from "../components/SideBar.jsx";
-import ProductWindow from "../components/ProductWindow.jsx";
+import ProductCard from "../components/shops/ProductCard.jsx";
+import SideBar from "../components/shops/SideBar.jsx";
+import ProductWindow from "../components/shops/ProductWindow.jsx";
 
-import "../styles/Shopping.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faGlobe } from "@fortawesome/free-solid-svg-icons";
+
+import "../styles/Shopping.css";
 
 function Shopping() {
   const { addToCart } = useCart();

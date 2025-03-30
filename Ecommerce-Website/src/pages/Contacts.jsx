@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import ContactForm from "../components/ContactForm.jsx";
+import ContactForm from "../components/contacts/ContactForm.jsx";
 import { COMMENTS } from "../data/comments.js";
 
 import "../styles/Contacts.css";

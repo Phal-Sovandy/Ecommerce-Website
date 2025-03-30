@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-
-import "../styles/component-styles/SideBar.css";
-import { ALL_CATEGORIES } from "../data/products.js";
+import { ALL_CATEGORIES } from "../../data/products.js";
+import "../../styles/component-styles/shops/SideBar.css";
 
 function SideBar({ products, setFilteredProducts, showSideBar }) {
   const [filters, setFilters] = useState({

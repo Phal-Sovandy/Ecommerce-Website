@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useCart } from "../context/CartContext.jsx";
+import { useCart } from "../../context/CartContext.jsx";
 
-import priceFormat from "../utils/priceFormat.js";
+import priceFormat from "../../utils/priceFormat.js";
 import ImageSlider from "./ImageSlider.jsx";
+
 import {
   VARIATION_PRODUCTS,
   VARIATION_PRODUCT_IDS,
-} from "../data/variationProducts.js";
+} from "../../data/variationProducts.js";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
-import "../styles/component-styles/ProductWindow.css";
 
-import topSizeChart from "../assets/top-size-chart.png";
-import bottomSizeChart from "../assets/bottom-size-chart.webp";
-import shoesSizeChart from "../assets/shoes-size-chart.webp";
+import topSizeChart from "../../assets/top-size-chart.png";
+import bottomSizeChart from "../../assets/bottom-size-chart.webp";
+import shoesSizeChart from "../../assets/shoes-size-chart.webp";
+
+import "../../styles/component-styles/shops/ProductWindow.css";
+
 
 function ProductWindow({ product, setShowState }) {
   const { addToCart } = useCart();
@@ -165,22 +168,20 @@ function ProductWindow({ product, setShowState }) {
       setShowState(false);
     }
   }
-  
+
   useEffect(() => {
     const handleClick = (event) => {
       if (event.target.classList.contains("overlay")) {
         setShowState(false);
       }
     };
-  
+
     window.addEventListener("click", handleClick);
-    
+
     return () => {
       window.removeEventListener("click", handleClick);
     };
   }, []);
-  
-  
 
   return (
     <div className="overlay">

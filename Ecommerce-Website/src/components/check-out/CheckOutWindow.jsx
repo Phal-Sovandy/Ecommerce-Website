@@ -1,13 +1,15 @@
 import { useState } from "react";
-import "../styles/component-styles/CheckOutWindow.css";
+import priceFormat from "../../utils/priceFormat.js";
+import { useCart } from "../../context/CartContext.jsx";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import priceFormat from "../utils/priceFormat.js";
-import { useCart } from "../context/CartContext.jsx";
 
-import abaQr from "../assets/paymentMethods/khqr_for_check_out.jpg";
-import masterVisa from "../assets/paymentMethods/visa_master.png";
-import payPal from "../assets/paymentMethods/paypal.png";
+import abaQr from "../../assets/paymentMethods/khqr_for_check_out.jpg";
+import masterVisa from "../../assets/paymentMethods/visa_master.png";
+import payPal from "../../assets/paymentMethods/paypal.png";
+
+import "../../styles/component-styles/check-out/CheckOutWindow.css";
 
 function CheckOutWindow() {
   const [selectedDelivery, setSelectedDelivery] = useState(null);

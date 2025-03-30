@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useCart } from "../context/CartContext.jsx";
 
-import CheckOutWindow from "../components/CheckOutWindow.jsx";
-import CheckOutItem from "../components/CheckOutItem.jsx";
+import CheckOutWindow from "../components/check-out/CheckOutWindow.jsx";
+import CheckOutItem from "../components/check-out/CheckOutItem.jsx";
 
 import "../styles/CheckOut.css";
 

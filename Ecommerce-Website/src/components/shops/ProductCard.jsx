@@ -1,10 +1,11 @@
-import { useCart } from "../context/CartContext";
-import { VARIATION_PRODUCT_IDS } from "../data/variationProducts.js";
+import { useCart } from "../../context/CartContext.jsx";
+import { VARIATION_PRODUCT_IDS } from "../../data/variationProducts.js";
+import priceFormat from "../../utils/priceFormat.js";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faHeart } from "@fortawesome/free-solid-svg-icons";
 
-import "../styles/component-styles/ProductCard.css";
-import priceFormat from "../utils/priceFormat.js";
+import "../../styles/component-styles/shops/ProductCard.css";
 
 function ProductCard({ product, showDetails, setShowItem }) {
   const { addToCart } = useCart();
