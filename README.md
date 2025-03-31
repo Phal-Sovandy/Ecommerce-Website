@@ -21,14 +21,13 @@ Before you begin, ensure you have the following installed on your system:
 1. Clone the repository:
    ```sh
    git clone https://github.com/Phal-Sovandy/Final_Project---Front-End.git
-   cd Ecommerce-Website
+   cd ./Final_Project---Front-End/Ecommerce-Website
    ```
 
 2. Install dependencies:
    ```sh
    npm install
-   npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
-   npm install @fortawesome/fontawesome-svg-core @fortawesome/free-brands-svg-icons @fortawesome/react-fontawesome
+   npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/free-brands-svg-icons @fortawesome/react-fontawesome
    npm install react-router-dom
    ```
 
