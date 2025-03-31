@@ -7,7 +7,11 @@ aside {
   border-top-right-radius: 10px;
 }
 aside > div {
+  height: calc(100vh - 70px - 61px - 20px - 16.38px);
+  overflow-x: hidden;
+  overflow-y: auto;
   width: 100%;
+  padding-right: 5px;
   display: inline-block;
   position: sticky;
   top: 150px;

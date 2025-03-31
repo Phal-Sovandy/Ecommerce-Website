@@ -1,3 +1,5 @@
+import menSweatShirt from "../assets/products/men-athestic-grey-sweater.png";
+import menSummerTShirt from "../assets/products/men-summer-t-shirt.jpg"
 import socksImage from "../assets/products/athletic-cotton-socks-6-pairs.jpg";
 import basketballImage from "../assets/products/intermediate-composite-basketball.jpg";
 import tshirtImage from "../assets/products/adults-plain-cotton-tshirt-2-pack-teal.jpg";
@@ -55,6 +57,78 @@ export const ALL_CATEGORIES = [
 
 export const products = [
   {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c0",
+    image: menSweatShirt,
+    name: "Men's Athestic Sweater Color Grey",
+    rating: {
+      stars: 4.5,
+      count: 69,
+    },
+    priceCents: 1680,
+    keywords: ["top", "sweater", "shirt", "apparel"],
+    stock: 10,
+  },
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c1",
+    image: menSummerTShirt,
+    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+    rating: {
+      stars: 4.5,
+      count: 82,
+    },
+    priceCents: 1090,
+    keywords: ["top", "sweater", "shirt", "apparel"],
+    stock: 5,
+  },
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c2",
+    image: socksImage,
+    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+    rating: {
+      stars: 4.5,
+      count: 87,
+    },
+    priceCents: 1090,
+    keywords: ["socks", "sports", "apparel"],
+    stock: 5,
+  },
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c3",
+    image: socksImage,
+    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+    rating: {
+      stars: 4.5,
+      count: 87,
+    },
+    priceCents: 1090,
+    keywords: ["socks", "sports", "apparel"],
+    stock: 5,
+  },
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c4",
+    image: socksImage,
+    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+    rating: {
+      stars: 4.5,
+      count: 87,
+    },
+    priceCents: 1090,
+    keywords: ["socks", "sports", "apparel"],
+    stock: 5,
+  },
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c5",
+    image: socksImage,
+    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+    rating: {
+      stars: 4.5,
+      count: 87,
+    },
+    priceCents: 1090,
+    keywords: ["socks", "sports", "apparel"],
+    stock: 5,
+  },
+  {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: socksImage,
     name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
@@ -64,7 +138,7 @@ export const products = [
     },
     priceCents: 1090,
     keywords: ["socks", "sports", "apparel"],
-    stock: 2,
+    stock: 5,
   },
   {
     id: "15b6fc6f-327a-4ec4-896f-486349e85a3d",

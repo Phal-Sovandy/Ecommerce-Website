@@ -1,20 +1,49 @@
-:root{
-    --primary-color: #e8eae5;
-    --identity-color: #035a52;
-    --grey-color: #e7e7e7;
-    --black-color: #1c2f36;
-    --red-color: #ee2c00;
+:root {
+  --primary-color: #e8eae5;
+  --identity-color: #035a52;
+  --grey-color: #e7e7e7;
+  --black-color: #1c2f36;
+  --red-color: #ee2c00;
 
-    --product-cart-width: 250px;
-    --product-cart-height: 400px;
+  --product-cart-width: 250px;
+  --product-cart-height: 400px;
 }
-h2{
-    font-size: 1.5rem;
+h2 {
+  font-size: 1.5rem;
 }
-button{
-    cursor: pointer;
-    transition: box-shadow 0.2s ease;
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
 }
-button:hover{
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+button:hover {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-clip: padding-box;
+  background-position: center;
+  position: relative;
+  background-color: var(--primary-color);
+  color: rgb(0, 0, 0);
+  width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Poppins, "Roboto Condensed", Arial, Helvetica, sans-serif;
+  scrollbar-width: thin;
+}
+header {
+  color: black;
+  font-size: 4rem;
+  font-weight: 600;
+  padding: 20px 90px 10px 90px;
+  text-align: center;
+  box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+    rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+  background-color: #fcfaee;
 }

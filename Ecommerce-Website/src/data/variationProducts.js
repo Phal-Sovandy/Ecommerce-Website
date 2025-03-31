@@ -1,4 +1,11 @@
 // Variation Products
+import menSummerTshirtDarkRose from "../assets/products/variations/men-summer-t-shirt-dark-rose.jpg";
+import menSummerTshirtLightGreen from "../assets/products/variations/men-summer-t-shirt-lightgreen.jpg";
+import menSummerTshirtPurple from "../assets/products/variations/men-summer-t-shirt-purple.jpg";
+import menSummerTshirtPink from "../assets/products/variations/men-summer-t-shirt-pink.jpg";
+import menSummerTshirtOrange from "../assets/products/variations/men-summer-t-shirt-orange.jpg";
+import menSummerTshirtYellow from "../assets/products/variations/men-summer-t-shirt-yellow.jpg";
+
 import adultsTShirtBlack from "../assets/products/variations/adults-plain-cotton-tshirt-2-pack-black.jpg";
 import adultsTShirtPlusBlack from "../assets/products/variations/adults-plain-cotton-tshirt-2-pack-plus-black.jpg";
 import adultsTShirtRed from "../assets/products/variations/adults-plain-cotton-tshirt-2-pack-red.jpg";
@@ -55,27 +62,46 @@ import womenHoodieBlack from "../assets/products/variations/women-stretch-popove
 import womenHoodieBlue from "../assets/products/variations/women-stretch-popover-hoodie-blue.jpg";
 import womenHoodieGray from "../assets/products/variations/women-stretch-popover-hoodie-gray.jpg";
 
-
 export const VARIATION_PRODUCT_IDS = [
-    "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
-    "19c6a64a-5463-4d45-9af8-e41140a4100c",
-    "3fdfe8d6-9a15-4979-b459-585b0d0545b9",
-    "77919bbe-0e56-475b-adde-4f24dfed3a04",
-    "1c079479-8586-494f-ab53-219325432536",
-    "ee1f7c56-f977-40a4-9642-12ba5072e2b0",
-    "bc2847e9-5323-403f-b7cf-57fde044a955",
-    "8b5a2ee1-6055-422a-a666-b34ba28b76d4",
-    "4df68c27-fd59-4a6a-bbd1-e754ddb6d53c",
-    "82bb68d7-ebc9-476a-989c-c78a40ee5cd9",
-    "dd82ca78-a18b-4e2a-9250-31e67412f98d",
-    "aad29d11-ea98-41ee-9285-b916638cac4a",
-    "b86ddc8b-3501-4b17-9889-a3bad6fb585f",
-    "a45cfa0a-66d6-4dc7-9475-e2b01595f7d7",
-    "4f4fbcc2-4e72-45cc-935c-9e13d79cc57f",
-    "b0f17cc5-8b40-4ca5-9142-b61fe3d98c85",
-  ];
-  
+  "e43638ce-6aa0-4b85-b27f-e1d07eb678c1",
+  "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
+  "19c6a64a-5463-4d45-9af8-e41140a4100c",
+  "3fdfe8d6-9a15-4979-b459-585b0d0545b9",
+  "77919bbe-0e56-475b-adde-4f24dfed3a04",
+  "1c079479-8586-494f-ab53-219325432536",
+  "ee1f7c56-f977-40a4-9642-12ba5072e2b0",
+  "bc2847e9-5323-403f-b7cf-57fde044a955",
+  "8b5a2ee1-6055-422a-a666-b34ba28b76d4",
+  "4df68c27-fd59-4a6a-bbd1-e754ddb6d53c",
+  "82bb68d7-ebc9-476a-989c-c78a40ee5cd9",
+  "dd82ca78-a18b-4e2a-9250-31e67412f98d",
+  "aad29d11-ea98-41ee-9285-b916638cac4a",
+  "b86ddc8b-3501-4b17-9889-a3bad6fb585f",
+  "a45cfa0a-66d6-4dc7-9475-e2b01595f7d7",
+  "4f4fbcc2-4e72-45cc-935c-9e13d79cc57f",
+  "b0f17cc5-8b40-4ca5-9142-b61fe3d98c85",
+];
+
 export const VARIATION_PRODUCTS = [
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c1",
+    images: [
+      menSummerTshirtDarkRose,
+      menSummerTshirtLightGreen,
+      menSummerTshirtPurple,
+      menSummerTshirtPink,
+      menSummerTshirtOrange,
+      menSummerTshirtYellow,
+    ],
+    selection: [
+      "Dark-Rose",
+      "Light-Green",
+      "Purple",
+      "Pink",
+      "Orange",
+      "Yellow",
+    ],
+  },
   {
     id: "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
     images: [
