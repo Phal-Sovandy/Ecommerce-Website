@@ -20,6 +20,10 @@ export function CartProvider({ children }) {
     );
   }
   function addToCart(product) {
+    if(product.stock <= 0){
+      window.alert("Product is out of stock, Please select another product.");
+      return
+    }
     setCart((c) => {
       const existingItem = checkProductExistance(c, product);
 
@@ -45,7 +49,6 @@ export function CartProvider({ children }) {
           return [...c, { ...product, quantity: 1 }];
         }
       }
-
       return c;
     });
   }
