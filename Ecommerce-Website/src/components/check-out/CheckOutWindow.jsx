@@ -121,6 +121,12 @@ function CheckOutWindow() {
             );
             return false;
           }
+          if (cart.length <= 0){
+            window.alert(
+              "Cart is empty. Please add some products"
+            );
+            return false;
+          }
           window.alert("Orders Received!");
         }}
         onReset={() => {
