@@ -1,56 +1,80 @@
-footer{
-    margin-top: 100px;
-    color: white;
+footer {
+  color: white;
 }
-footer .top{
-    background-color: var(--identity-color);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    
+footer .top {
+  background-color: var(--identity-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 50px;
 }
-.bottom-footer{
-    height: 20px;
-    width: 100%;
-    background-color: rgb(204, 0, 0);
+.bottom-footer {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: rgb(196, 196, 196);
+  height: 60px;
+  width: 100%;
+  background-color: var(--black-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .left-footer,
-.right-footer{
-    flex: 1;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+.right-footer {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
-footer .info{
-    flex: 1;
+footer .info {
+  flex: 1;
 }
 
-footer .links-container{
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-block: 20px;
-    flex-direction: row;
+footer .links-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-block: 20px;
+  flex-direction: row;
 }
-footer .links-container a:hover{
-    transform: scale(1.5) translateY(-3px);
-    margin-inline: 3px;
+footer .links-container a:hover {
+  transform: scale(1.5) translateY(-3px);
+  margin-inline: 3px;
 }
-footer .links-container a{
-    color: #ffffff;
-    transition: transform 0.2s ease, margin 0.2s ease;
+footer .links-container a {
+  color: #ffffff;
+  transition: transform 0.2s ease, margin 0.2s ease;
 }
-footer .info-2 ul{
-    padding: 0;
+footer .info-2 ul {
+  padding: 0;
+  width: 100px;
 }
-footer .info-2 ul li{
-    margin-bottom: 8px;
+footer .info-2 > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
 }
-footer .info{
-    border-right: 2px solid grey;
-    padding-inline: 20px;
+footer .info-2 ul li {
+  margin-bottom: 8px;
 }
-footer .info.info-4{
-    border: none;
+footer .info {
+  border-right: 2px solid grey;
+  padding-inline: 20px;
+}
+footer .info.info-4 {
+  border: none;
+}
+footer .info.info-4 li {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: color 0.2s ease;
+}
+footer .info.info-4 li:hover {
+  color: #ffa000;
+}
+footer .info.info-4 a {
+  text-decoration: none;
+  color: white;
 }

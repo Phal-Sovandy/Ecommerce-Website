@@ -38,7 +38,7 @@ function Shopping() {
             {showFilter ? <h2>Filter Items</h2> : <h2>Show All Items</h2>}
           </div>
         </div>
-        <section className={showFilter ? "" : "hide-side-bar-section"}>
+        <section className={`shopping ${showFilter ? "" : "hide-side-bar-section"}`}>
           <SideBar
             products={products}
             setFilteredProducts={setFilteredProducts}

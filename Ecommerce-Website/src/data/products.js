@@ -1,5 +1,6 @@
 import menSweatShirt from "../assets/products/men-athestic-grey-sweater.png";
-import menSummerTShirt from "../assets/products/men-summer-t-shirt.jpg"
+import menSummerTShirt from "../assets/products/men-summer-t-shirt.jpg";
+import toyCar from "../assets/products/toy-car.jpg";
 import socksImage from "../assets/products/athletic-cotton-socks-6-pairs.jpg";
 import basketballImage from "../assets/products/intermediate-composite-basketball.jpg";
 import tshirtImage from "../assets/products/adults-plain-cotton-tshirt-2-pack-teal.jpg";
@@ -46,7 +47,7 @@ import fleeceZipUpHoodieImage from "../assets/products/men-cozy-fleece-zip-up-ho
 
 
 export const ALL_CATEGORIES = [
-  "socks",
+  "apparel",
   "sports",
   "kitchen",
   "bathroom",
@@ -71,25 +72,25 @@ export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c1",
     image: menSummerTShirt,
-    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+    name: "Men's Summer T-Shirt - Brand Summer Logo",
     rating: {
       stars: 4.5,
       count: 82,
     },
-    priceCents: 1090,
-    keywords: ["top", "sweater", "shirt", "apparel"],
+    priceCents: 6900,
+    keywords: ["top", "tShirt", "shirt", "apparel"],
     stock: 5,
   },
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c2",
-    image: socksImage,
-    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
+    image: toyCar,
+    name: "Yellow Lightning Maqueen Toy Car",
     rating: {
-      stars: 4.5,
-      count: 87,
+      stars: 5,
+      count: 35,
     },
-    priceCents: 1090,
-    keywords: ["socks", "sports", "apparel"],
+    priceCents: 2050,
+    keywords: ["toy", "sports", "kid"],
     stock: 5,
   },
   {
@@ -101,43 +102,7 @@ export const products = [
       count: 87,
     },
     priceCents: 1090,
-    keywords: ["socks", "sports", "apparel"],
-    stock: 5,
-  },
-  {
-    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c4",
-    image: socksImage,
-    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
-    rating: {
-      stars: 4.5,
-      count: 87,
-    },
-    priceCents: 1090,
-    keywords: ["socks", "sports", "apparel"],
-    stock: 5,
-  },
-  {
-    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c5",
-    image: socksImage,
-    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
-    rating: {
-      stars: 4.5,
-      count: 87,
-    },
-    priceCents: 1090,
-    keywords: ["socks", "sports", "apparel"],
-    stock: 5,
-  },
-  {
-    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-    image: socksImage,
-    name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
-    rating: {
-      stars: 4.5,
-      count: 87,
-    },
-    priceCents: 1090,
-    keywords: ["socks", "sports", "apparel"],
+    keywords: ["socks", "sports", "footwear"],
     stock: 5,
   },
   {
