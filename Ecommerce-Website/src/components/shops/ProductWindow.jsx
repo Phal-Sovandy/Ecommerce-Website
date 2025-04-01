@@ -181,7 +181,7 @@ function ProductWindow({ product, setShowState }) {
     return () => {
       window.removeEventListener("click", handleClick);
     };
-  }, []);
+  });
 
   return (
     <div className="overlay">

@@ -4,6 +4,11 @@
     width: 0;
   }
 }
+@keyframes fromRight {
+  from {
+    transform: translateX(100%);
+  }
+}
 .welcome-section {
   display: flex;
   justify-content: space-between;
@@ -33,6 +38,9 @@
 .left {
   min-width: 40%;
   max-width: 50%;
+}
+.right{
+  animation: fromRight 5s 1 normal;
 }
 
 .welcome-section .top h1 {
