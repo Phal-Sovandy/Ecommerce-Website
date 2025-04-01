@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ALL_CATEGORIES } from "../../data/products.js";
 import "../../styles/component-styles/shops/SideBar.css";
 
+// Filter products sidebar.
 function SideBar({ products, setFilteredProducts, showSideBar }) {
   const [filters, setFilters] = useState({
     available: false,
@@ -22,6 +23,14 @@ function SideBar({ products, setFilteredProducts, showSideBar }) {
       return { ...f, categories: newCategories };
     });
   }
+  function hasMatchingCategory(product, selectedCategories) {
+    for (let category of selectedCategories) {
+      if (product.keywords.includes(category)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   function handlePriceRangeChange(priceRange) {
     setFilters((f) => ({ ...f, priceRange: priceRange }));
@@ -34,14 +43,6 @@ function SideBar({ products, setFilteredProducts, showSideBar }) {
       : product.priceCents / 100 >= min;
   }
 
-  function hasMatchingCategory(product, selectedCategories) {
-    for (let category of selectedCategories) {
-      if (product.keywords.includes(category)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   function handleGenderChange(gender) {
     setFilters((f) => {

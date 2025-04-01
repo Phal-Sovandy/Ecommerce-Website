@@ -33,6 +33,7 @@ nav {
   gap: 5px;
 }
 #right-nav a {
+  position: relative;
   display: block;
   color: inherit; 
   font-weight: 600;
@@ -49,6 +50,27 @@ nav {
 .active-page{
   background-color: rgba(59, 59, 59, 0.452);
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+.cart-item-count{
+  font-size: 0.9rem;
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  background-color: rgb(255, 255, 255);
+  color: var(--identity-color);
+  width: 5px;
+  height: 5px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 2px 1px 5px var(--black-color);
+  transition: all 0.2s ease;
+}
+#right-nav a:hover > .cart-item-count{
+  background-color: orange;
+  color: white;
 }
 @media (max-width: 560px) {
   #left-nav {

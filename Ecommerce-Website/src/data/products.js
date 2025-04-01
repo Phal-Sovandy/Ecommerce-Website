@@ -53,7 +53,7 @@ export const ALL_CATEGORIES = [
   "bathroom",
   "bedroom",
   "footwear",
-  "accessories",
+  "accessories"
 ];
 
 export const products = [

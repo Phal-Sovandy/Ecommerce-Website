@@ -18,7 +18,7 @@ import shoesSizeChart from "../../assets/shoes-size-chart.webp";
 
 import "../../styles/component-styles/shops/ProductWindow.css";
 
-
+// Load product details.
 function ProductWindow({ product, setShowState }) {
   const { addToCart } = useCart();
   const [size, setSize] = useState(null);
