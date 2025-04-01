@@ -78,7 +78,7 @@ Ecommerce-Website/
 - React Router
 - Context
 - FontAwesome Icons
-- Vanilla CSS
+- CSS
 
 ## Conclusion
 This eCommerce website provides a smooth shopping experience with essential features like product filtering, cart management, and a streamlined checkout process. Built with modern web technologies, it ensures fast performance and an engaging user experience. Future enhancements may include user authentication, payment integration, and more advanced analytics.
