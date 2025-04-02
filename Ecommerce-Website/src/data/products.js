@@ -67,7 +67,7 @@ export const products = [
       count: 69,
     },
     priceCents: 1680,
-    keywords: ["top", "sweater", "shirt", "apparel"],
+    keywords: ["top", "sweater", "shirt", "apparel", "mens"],
     stock: 10,
   },
   {
@@ -79,7 +79,7 @@ export const products = [
       count: 82,
     },
     priceCents: 6900,
-    keywords: ["top", "tShirt", "shirt", "apparel"],
+    keywords: ["top", "tShirt", "shirt", "apparel", "mens"],
     stock: 5,
   },
   {
