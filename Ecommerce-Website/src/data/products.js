@@ -1,6 +1,7 @@
 import menSweatShirt from "../assets/products/men-athestic-grey-sweater.png";
 import menSummerTShirt from "../assets/products/men-summer-t-shirt.jpg";
 import toyCar from "../assets/products/toy-car.jpg";
+import bongTino from "../assets/products/bong-tino.jpg";
 import socksImage from "../assets/products/athletic-cotton-socks-6-pairs.jpg";
 import basketballImage from "../assets/products/intermediate-composite-basketball.jpg";
 import tshirtImage from "../assets/products/adults-plain-cotton-tshirt-2-pack-teal.jpg";
@@ -92,6 +93,18 @@ export const products = [
     priceCents: 2050,
     keywords: ["toy", "sports", "kid"],
     stock: 5,
+  },
+  {
+    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c234",
+    image: bongTino,
+    name: "Bong Tino Shampoo - Bong Tino boak sahav",
+    rating: {
+      stars: 5,
+      count: 69,
+    },
+    priceCents: 3299,
+    keywords: ["shampoo", "bathroom", "restroom", "washroom", "mens", "hair"],
+    stock: 20,
   },
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c3",
