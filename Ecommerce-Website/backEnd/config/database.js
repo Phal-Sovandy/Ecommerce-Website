@@ -2,9 +2,9 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 
 dotenv.config();
-const { DATABASE, HOSTNAME, PASSWORD } = process.env;
+const { DATABASE_NAME, HOST_NAME, PASSWORD } = process.env;
 
-const sequelize = new Sequelize(DATABASE, HOSTNAME, PASSWORD, {
+const sequelize = new Sequelize(DATABASE_NAME, HOST_NAME, PASSWORD, {
   host: "localhost",
   dialect: "postgres",
 });

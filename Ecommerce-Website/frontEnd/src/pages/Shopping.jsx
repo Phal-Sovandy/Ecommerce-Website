@@ -4,6 +4,7 @@ import { useCart } from "../context/CartContext.jsx";
 import ProductCard from "../components/shops/ProductCard.jsx";
 import SideBar from "../components/shops/SideBar.jsx";
 import ProductWindow from "../components/shops/ProductWindow.jsx";
+// import { getAllProducts } from "../api/getAllProduct.js";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faGlobe } from "@fortawesome/free-solid-svg-icons";
@@ -19,7 +20,18 @@ function Shopping() {
 
   useEffect(() => {
     document.title = "Shops at Sooner";
-  });
+    // async function fetchProducts() {
+    //   try {
+    //     const products = await getAllProducts();
+    //     setFilteredProducts(products);
+    //     console.log(products);
+    //   } catch (error) {
+    //     console.error("Failed to fetch products:", error);
+    //   }
+    // }
+
+    // fetchProducts();
+  }, []);
 
   return (
     <div>
