@@ -12,6 +12,7 @@ import CheckOut from "./pages/CheckOut.jsx";
 import Contacts from "./pages/Contacts.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import SignUp from "./pages/SignUp.jsx";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
       <Route path="/shopping" element={<Shopping />} />
       <Route path="/check-out" element={<CheckOut />} />
       <Route path="/contacts" element={<Contacts />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
