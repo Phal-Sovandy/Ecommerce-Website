@@ -44,16 +44,16 @@
 }
 
 .welcome-section .top h1 {
-  font-size: 5rem;
+  font-size: 7rem;
   font-weight: 700;
   font-family: Lexend;
   color: #222;
-  line-height: 1.2;
+  line-height: 1;
   margin: 0;
 }
 
 .welcome-section .top span {
-  font-size: 7rem;
+  font-size: 15rem;
   font-weight: 900;
   font-family: Lexend;
   color: var(--identity-color);
@@ -75,7 +75,7 @@
 .shop-now-btn,
 .learn-more-btn {
   padding: 14px 28px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   border: none;
   border-radius: 50px;

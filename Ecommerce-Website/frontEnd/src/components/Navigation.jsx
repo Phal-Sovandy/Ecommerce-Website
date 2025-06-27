@@ -23,6 +23,18 @@ function Navigation() {
         </NavLink>
         <NavLink
           className={({ isActive }) => (isActive ? "active-page" : "")}
+          to="/wishlist"
+        >
+          WISHLIST
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => (isActive ? "active-page" : "")}
+          to="/profile"
+        >
+          PROFILE
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => (isActive ? "active-page" : "")}
           to="/shopping"
         >
           SHOPS

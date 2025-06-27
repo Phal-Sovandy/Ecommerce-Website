@@ -21,32 +21,33 @@
   z-index: 200;
   border-bottom: 1px solid #1c2f36;
 }
-#remove-all-btn{
-    background-color: white;
-    border: none;
-    color: var(--black-color);
-    padding: 5px 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 50px;
-    outline: 1px solid var(--black-color);
-    transition: all 0.2s ease;
+#remove-all-btn {
+  background-color: white;
+  border: none;
+  color: var(--black-color);
+  padding: 5px 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  outline: 1px solid var(--black-color);
+  transition: all 0.2s ease;
 }
-#remove-all-btn:hover{
-    background-color: var(--black-color);
-    color: white;
+#remove-all-btn:hover {
+  background-color: var(--black-color);
+  color: white;
 }
-#remove-all-btn:active{
-    background-color: var(--red-color);
-    outline: 0;
+#remove-all-btn:active {
+  background-color: var(--red-color);
+  outline: 0;
 }
 #checkout h4 {
   font-size: 1.3rem;
   margin-block: 5px;
 }
 #checkout h2 {
-    font-size: 1.5rem;
-  }
+  font-size: 1.5rem;
+  margin-block: 15px;
+}
 .checkout-items-container {
   border-radius: 5px;
   background-color: white;

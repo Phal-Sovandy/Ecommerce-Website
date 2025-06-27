@@ -18,14 +18,16 @@ import { CartProvider } from "./context/CartContext";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<MainLayout />}>
-      <Route index element={<Home />} />
-      <Route path="/shopping" element={<Shopping />} />
-      <Route path="/check-out" element={<CheckOut />} />
-      <Route path="/contacts" element={<Contacts />} />
+    <>
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="/shopping" element={<Shopping />} />
+        <Route path="/check-out" element={<CheckOut />} />
+        <Route path="/contacts" element={<Contacts />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
       <Route path="/signup" element={<SignUp />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Route>
+    </>
   )
 );
 

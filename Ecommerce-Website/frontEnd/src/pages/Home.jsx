@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { TailChase } from "ldrs/react";
+import "ldrs/react/TailChase.css";
 
 import WelcomingSection from "../components/home/WelcomingSection.jsx";
 import BrandSection from "../components/home/BrandSection.jsx";
@@ -6,13 +8,18 @@ import WhyChooseUsSection from "../components/home/WhyChooseUsSection.jsx";
 
 import "../styles/Home.css";
 function Home() {
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     document.title = "Sooner's Home";
   });
   return (
     <main>
       <WelcomingSection />
-      <BrandSection />
+      {loading ? (
+        <TailChase size="40" speed="1.75" color="black" />
+      ) : (
+        <BrandSection />
+      )}
       <WhyChooseUsSection />
     </main>
   );

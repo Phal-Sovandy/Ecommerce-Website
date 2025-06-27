@@ -10,6 +10,10 @@
   border-radius: 10px;
   color: black;
 }
+.product-card h3{
+  font-size: 1.2rem;
+  margin-block: 10px;
+}
 .product-card .product-price{
   margin: 0;
 }

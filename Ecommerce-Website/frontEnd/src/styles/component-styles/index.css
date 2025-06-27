@@ -28,18 +28,36 @@
   --grey-color: #e7e7e7;
   --black-color: #1c2f36;
   --red-color: #ee2c00;
-  
+
   --product-cart-width: 250px;
   --product-cart-height: 400px;
+
+  font-size: 13px;
 }
 * {
   box-sizing: border-box;
-  font-family: Cabin, Roboto ,JosefinSans , Arial, Helvetica, sans-serif;
+  font-family: Cabin, Roboto, JosefinSans, Arial, Helvetica, sans-serif;
   scrollbar-width: thin;
 }
 h2 {
   font-size: 1.5rem;
 }
+
+a:hover {
+  text-decoration: none;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul {
+  margin: 0;
+}
+
 button {
   font-family: inherit;
   cursor: pointer;
