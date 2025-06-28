@@ -89,3 +89,9 @@ header {
     rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
   background-color: #fcfaee;
 }
+
+@media (max-width: 500px) {
+  :root{
+    font-size: 10px;
+  }
+}

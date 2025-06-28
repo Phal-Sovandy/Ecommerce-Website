@@ -11,7 +11,7 @@ function CheckOut() {
     useCart();
   useEffect(() => {
     document.title = "Check Out at Sooner";
-  });
+  }, []);
   return (
     <main id="checkout">
       <div className="checkout-items-container">

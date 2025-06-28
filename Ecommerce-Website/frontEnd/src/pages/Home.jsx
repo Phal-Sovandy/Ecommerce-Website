@@ -8,7 +8,7 @@ import WhyChooseUsSection from "../components/home/WhyChooseUsSection.jsx";
 
 import "../styles/Home.css";
 function Home() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     document.title = "Sooner's Home";
   });

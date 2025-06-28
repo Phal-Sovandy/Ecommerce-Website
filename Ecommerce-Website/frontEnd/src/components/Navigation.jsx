@@ -29,12 +29,6 @@ function Navigation() {
         </NavLink>
         <NavLink
           className={({ isActive }) => (isActive ? "active-page" : "")}
-          to="/profile"
-        >
-          PROFILE
-        </NavLink>
-        <NavLink
-          className={({ isActive }) => (isActive ? "active-page" : "")}
           to="/shopping"
         >
           SHOPS
@@ -53,6 +47,12 @@ function Navigation() {
           to="/contacts"
         >
           CONTACTS
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => (isActive ? "active-page" : "")}
+          to="/profile"
+        >
+          PROFILE
         </NavLink>
       </div>
     </nav>
