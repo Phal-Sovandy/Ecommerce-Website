@@ -25,3 +25,6 @@
   border-bottom: 1px solid #1c2f36;
   margin-bottom: 20px;
 }
+#wishlist #head button{
+    display: inline-block;
+}

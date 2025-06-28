@@ -31,6 +31,7 @@
   border-radius: 50px;
   outline: 1px solid var(--black-color);
   transition: all 0.2s ease;
+  margin: 0;
 }
 #remove-all-btn:hover {
   background-color: var(--black-color);
