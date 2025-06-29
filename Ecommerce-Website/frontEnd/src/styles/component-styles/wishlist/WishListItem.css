@@ -61,7 +61,7 @@
 }
 .wishlist-item .item-add:hover {
   background-color: #1db954;
-  color: var(--black-color);
+  color: white;
 }
 
 .wishlist-item .item-details h2 .wishlist-item .product-categories,

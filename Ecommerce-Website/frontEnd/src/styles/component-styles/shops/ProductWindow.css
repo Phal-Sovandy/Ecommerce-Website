@@ -50,10 +50,11 @@
 .product-window .image-holder {
   background-color: var(--grey-color);
   border-radius: 10px;
-  width: 30%;
+  flex: 1;
   overflow: hidden;
 }
 .product-window .item-details {
+  flex: 2;
   background-color: whitesmoke;
   padding-inline: 20px;
   padding-bottom: 10px;

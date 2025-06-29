@@ -1,0 +1,136 @@
+.modal-login-window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  font-size: 1.1rem;
+}
+.modal-login-window .modal-content {
+  background: white;
+  background-image: url("./image1.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: attatched;
+  padding: 50px 45px;
+  border-radius: 10px;
+  min-width: 500px;
+  max-width: 90%;
+  max-height: calc(100vh - 200px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+.modal-head.login {
+  border: none;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+.modal-head.login > h2 {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+.modal-login-window .input-wrapper {
+  position: relative;
+}
+.modal-login-window .input-wrapper > input {
+    background-color: #33333300;
+  border: 1px solid #333;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  display: block;
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  margin-bottom: 20px;
+  position: relative;
+  font-size: 1.2rem;
+}
+.modal-login-window .input-wrapper > input:focus {
+  outline: none;
+}
+.modal-login-window .input-wrapper:hover * {
+  color: var(--identity-color);
+}
+
+.modal-login-window .input-wrapper svg {
+  position: absolute;
+  top: 9px;
+  right: 0;
+}
+.remember-forgot {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.remember {
+  display: flex;
+  align-items: center;
+}
+.remember > input {
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  margin-right: 5px;
+  accent-color: var(--identity-color);
+}
+.remember label {
+  cursor: pointer;
+}
+
+.modal-login-window .btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  padding-block: 25px;
+}
+.modal-login-window button {
+  font-size: 1.2rem;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 50px;
+  transition: all 0.2s ease;
+}
+.modal-login-window button:first-child {
+  background-color: var(--identity-color);
+  color: white;
+  font-weight: bold;
+}
+.modal-login-window button:last-child {
+  background-color: white;
+  outline: 1px solid var(--identity-color);
+  color: var(--identity-color);
+}
+.modal-login-window button:first-child:hover {
+  background-color: var(--black-color);
+}
+.modal-login-window button:last-child:hover {
+  outline-color: orange;
+  color: orange;
+}
+.modal-login-window .modal-content form > p {
+  text-align: center;
+  width: 100%;
+}
+.modal-login-window a {
+  color: var(--identity-color);
+}
+.modal-login-window a:hover {
+  text-decoration: none;
+}

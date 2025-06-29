@@ -185,7 +185,7 @@
 #btn button:last-child:hover {
   background-color: #1db954;
   border-color: #1db954;
-  color: var(--black-color);
+  color: white;
 }
 #btn button:first-child:hover {
   background-color: var(--red-color);

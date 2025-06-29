@@ -156,7 +156,7 @@ const SignUpForm = () => {
               </select>
               <FontAwesomeIcon icon={faCaretDown} />
             </div>
-            <div className="form-wrapper">
+            <div className="form-wrapper birthdate">
               <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
@@ -217,7 +217,7 @@ const SignUpForm = () => {
             />
             <FontAwesomeIcon icon={faLock} />
           </div>
-          <button>
+          <button id="signup-btn">
             Sign Up
             <FontAwesomeIcon icon={faArrowRight} />
           </button>

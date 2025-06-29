@@ -15,6 +15,7 @@ import MainLayout from "./layouts/MainLayout.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import WishList from "./pages/WishList.jsx";
+import Profile from "./pages/Profile.jsx";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
         <Route path="/wishlist" element={<WishList />} />
         <Route path="/check-out" element={<CheckOut />} />
         <Route path="/contacts" element={<Contacts />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
       <Route path="/signup" element={<SignUp />} />

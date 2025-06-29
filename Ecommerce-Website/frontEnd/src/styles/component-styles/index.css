@@ -38,6 +38,7 @@
   box-sizing: border-box;
   font-family: Cabin, Roboto, JosefinSans, Arial, Helvetica, sans-serif;
   scrollbar-width: thin;
+  transition: all 0.2s ease;
 }
 h2 {
   font-size: 1.5rem;
