@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext } from "react";
-import ModalLogin from "../components/modals/ModalLogIn";
-import ModalSignUp from "../components/modals/ModalSignUp";
-import ModalForgotPassword from "../components/modals/ModalForgotPassword";
+import ModalLogin from "../components/common/modals/ModalLogIn";
+import ModalSignUp from "../components/common/modals/ModalSignUp";
+import ModalForgotPassword from "../components/common/modals/ModalForgotPassword";
 
 const UserAuthModalContext = createContext();
 
