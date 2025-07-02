@@ -5,19 +5,20 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import "./styles/component-styles/App.css";
-import "./styles/component-styles/index.css"
+import "./styles/App.css";
+import "./styles/index.css";
 import Home from "./pages/Home.jsx";
 import Shopping from "./pages/Shopping.jsx";
 import CheckOut from "./pages/CheckOut.jsx";
 import Contacts from "./pages/Contacts.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
-import SignUp from "./pages/SignUp.jsx";
 import WishList from "./pages/WishList.jsx";
-import Profile from "./pages/Profile.jsx";
+import CustomerProfile from "./pages/CustomerProfile.jsx";
+import SellerProfile from "./pages/SellerProfile.jsx";
 
 import { CartProvider } from "./context/CartContext";
+import { UserAuthModalProvider } from "./context/UserAuthModalContext.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,19 +29,21 @@ const router = createBrowserRouter(
         <Route path="/wishlist" element={<WishList />} />
         <Route path="/check-out" element={<CheckOut />} />
         <Route path="/contacts" element={<Contacts />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<CustomerProfile />} />
+        <Route path="/sellerprofile" element={<SellerProfile />} />
         <Route path="*" element={<NotFoundPage />} />
-      </Route>
-      <Route path="/signup" element={<SignUp />} />
+      </Route>{" "}
     </>
   )
 );
 
 function App() {
   return (
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <UserAuthModalProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </UserAuthModalProvider>
   );
 }
 

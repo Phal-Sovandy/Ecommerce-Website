@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import cartImage from "../../assets/cart-image.jpg";
-import "../../styles/component-styles/home/WelcomingSection.css";
+import "../../styles/customer/component-styles/home/WelcomingSection.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSquareXTwitter,

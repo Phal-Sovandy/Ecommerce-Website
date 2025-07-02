@@ -12,7 +12,7 @@ import logo11 from "../../assets/brands-logo/anker.jpg";
 import logo12 from "../../assets/brands-logo/apple.png";
 import logo13 from "../../assets/brands-logo/asus.png";
 import logo14 from "../../assets/brands-logo/logitech.png";
-import "../../styles/component-styles/home/BrandSection.css";
+import "../../styles/customer/component-styles/home/BrandSection.css";
 
 function BrandSection() {
   const brandLogos = [

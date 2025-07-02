@@ -22,7 +22,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
   transition: all 0.2s ease;
 }
 .product-window .head {
@@ -38,7 +39,7 @@
   border-radius: 3px;
   transition: all 0.2s ease;
 }
-.product-window .head .fa-minus:hover{
+.product-window .head .fa-minus:hover {
   background-color: var(--grey-color);
 }
 .product-window .bottom {
@@ -128,64 +129,110 @@
 
 .product-window h4 {
   font-size: 1.3rem;
-  margin-bottom: 10px;
+  margin-block: 10px;
 }
 
-.selection-container{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding-inline: 1px;
+.selection-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-inline: 1px;
 }
-.selection-container > div{
-    padding: 8px 15px;
-    border-radius: 5px;
-    outline: 1px solid grey;
-    transition: all 0.2s ease;
+.selection-container > div {
+  padding: 8px 15px;
+  border-radius: 5px;
+  outline: 1px solid grey;
+  transition: all 0.2s ease;
 }
-.selection-container > div:hover{
-    background-color: var(--identity-color);
-    color: white;
-    font-weight: 600;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
-    cursor: pointer;
-    outline: none;
+.selection-container > div:hover {
+  background-color: var(--identity-color);
+  color: white;
+  font-weight: 600;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  cursor: pointer;
+  outline: none;
 }
-.selection-container > div:active{
-    background-color: white;
-    color: var(--black-color);
-    outline: none;
+.selection-container > div:active {
+  background-color: white;
+  color: var(--black-color);
+  outline: none;
 }
 
-.selection-container > div.selected{
-    font-weight: 600;
-    background-color: var(--identity-color);
-    color: white;
-    outline: none;
+.selection-container > div.selected {
+  font-weight: 600;
+  background-color: var(--identity-color);
+  color: white;
+  outline: none;
 }
-.product-descriptions h4{
+.product-descriptions h4 {
   border-bottom: 1px solid grey;
   padding-bottom: 5px;
   margin-bottom: 10px;
 }
-.product-descriptions p{
+.product-descriptions p {
   margin: 0;
 }
 
-.size-chart-container{
+.size-chart-container {
   width: 100%;
   overflow: hidden;
 }
-.chart-holder{
+.chart-holder {
   width: 100%;
   height: 500px;
   overflow: hidden;
   background-color: white;
   border-radius: 5px;
 }
-.chart-holder img{
+.chart-holder img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: center;
+}
+
+.product-reviews-container {
+  position: relative;
+  width: 100%;
+}
+.product-reviews-container > h4 {
+  border-bottom: 1px solid grey;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+.product-review {
+  background-color: white;
+  padding: 20px;
+  border-radius: 7px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin-bottom: 10px;
+}
+.product-review.pin {
+  background-color: #fec84e;
+  background-image: linear-gradient(315deg, #fec84e 0%, #ffdea8 74%);
+}
+
+.product-review .header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.product-review .header h2 {
+  margin: 0;
+}
+
+.product-review .header .profile-image {
+  height: 30px;
+  aspect-ratio: 1 /1;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.product-review .header .profile-image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   object-position: center;
 }

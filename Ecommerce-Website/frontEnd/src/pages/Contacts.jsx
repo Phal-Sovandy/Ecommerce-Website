@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import ContactForm from "../components/contacts/ContactForm.jsx";
 import { COMMENTS } from "../data/comments.js";
 
-import "../styles/Contacts.css";
+import "../styles/customer/Contacts.css";
 
 function Comment({ name, title, comment, index }) {
   return (

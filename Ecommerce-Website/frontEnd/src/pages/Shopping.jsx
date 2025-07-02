@@ -9,7 +9,7 @@ import ProductWindow from "../components/shops/ProductWindow.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faGlobe } from "@fortawesome/free-solid-svg-icons";
 
-import "../styles/Shopping.css";
+import "../styles/customer/Shopping.css";
 
 function Shopping() {
   const { addToCart } = useCart();

@@ -1,44 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "../../styles/component-styles/modals/ModalLogin.css";
+import React, { useState } from "react";
+import { useUserAuthModal } from "../../context/UserAuthModalContext";
+import "../../styles/customer/component-styles/modals/ModalLogin.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 
-function ModalLogin({ show }) {
-  if (!show) return null;
+function ModalLogin() {
+  const { openSignupModal, openForgotPasswordModal, closeModal } =
+    useUserAuthModal();
+  const [type, setType] = useState("password");
   return (
     <div className="modal-login-window">
       <div className="modal-content">
         <div className="modal-head login">
           <h2>🛒 Welcome to Our Shop! 🛍️</h2>
         </div>
-        <form method="POST">
+        {/* // TODO */}
+        <form method="POST" action="/hello">
           <div className="input-wrapper">
-            <input type="email" placeholder="Enter your email" required />
-            <FontAwesomeIcon icon={faEnvelope} />
+            <input
+              type="text"
+              placeholder="Enter your Email or Phone Number"
+              required
+            />
+            <FontAwesomeIcon icon={faUser} />
           </div>
           <div className="input-wrapper">
-            <input type="tel" placeholder="Enter your phone number" required />
-            <FontAwesomeIcon icon={faPhone} />
-          </div>
-          <div className="input-wrapper">
-            <input type="password" placeholder="Enter your password" required />
-            <FontAwesomeIcon icon={faLock} />
+            <input type={type} placeholder="Enter your Password" required />
+            <FontAwesomeIcon
+              icon={type === "password" ? faEyeSlash : faEye}
+              onClick={() => setType(type === "password" ? "text" : "password")}
+            />
           </div>
           <div className="remember-forgot">
             <div className="remember">
               <input type="checkbox" id="rememberLogin" />
               <label htmlFor="rememberLogin">Remember Me?</label>
             </div>
-            <Link to="/forgetpassword">Forgot Password?</Link>
+            <p onClick={() => openForgotPasswordModal()}>Forgot Password?</p>
           </div>
           <div className="btn-wrapper">
             <button type="submit">Login</button>
-            <button type="button" onClick={() => {}}>Login later</button>
+            <button type="button" onClick={() => closeModal()}>
+              Login later
+            </button>
           </div>
           <p>
-            Don't have an account? <Link to="/signup">Register</Link>
+            Don't have an account?{" "}
+            <span onClick={() => openSignupModal()}>Register</span>
           </p>
         </form>
       </div>

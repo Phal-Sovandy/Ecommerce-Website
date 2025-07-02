@@ -1,4 +1,4 @@
-import "../../styles/component-styles/home/WhyChooseUsSection.css";
+import "../../styles/customer/component-styles/home/WhyChooseUsSection.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTruckFast, faHeadset, faCreditCard, faCoins, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 

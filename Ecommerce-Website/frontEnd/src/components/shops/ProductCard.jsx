@@ -5,7 +5,7 @@ import priceFormat from "../../utils/priceFormat.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faHeart } from "@fortawesome/free-solid-svg-icons";
 
-import "../../styles/component-styles/shops/ProductCard.css";
+import "../../styles/customer/component-styles/shops/ProductCard.css";
 
 function ProductCard({ product, showDetails, setShowItem }) {
   const { addToCart } = useCart();

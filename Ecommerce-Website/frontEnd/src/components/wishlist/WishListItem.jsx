@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/component-styles/wishlist/WishListItem.css";
+import "../../styles/customer/component-styles/wishlist/WishListItem.css";
 
 const WishListItem = ({ product }) => {
   return (

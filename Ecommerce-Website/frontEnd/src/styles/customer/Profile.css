@@ -26,6 +26,7 @@
   overflow: hidden;
   flex-shrink: 0;
   flex-grow: 0;
+  background-color: white;
 }
 .avatar img {
   width: 100%;
@@ -72,6 +73,29 @@
   margin-bottom: 5px;
   text-align: center;
 }
+.sidebar .log-out {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgb(195, 195, 195);
+  color: rgb(104, 104, 104);
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+  font-size: 1.3rem;
+  border-radius: 7px;
+  visibility: hidden;
+  opacity: 0;
+}
+.sidebar .log-out:hover {
+  color: black;
+  background-color: rgb(160, 160, 160);
+}
+
 .edit-user-info {
   padding: 0;
   position: absolute;
@@ -87,7 +111,9 @@
   right: 60px;
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-  display: none;
+  transition: all 0.2s ease;
+  visibility: hidden;
+  opacity: 0;
 }
 .edit-user-info:hover {
   background-color: var(--identity-color);
@@ -97,8 +123,10 @@
   background-color: white;
   color: orange;
 }
-.sidebar:hover .edit-user-info {
-  display: flex;
+.sidebar:hover .edit-user-info,
+.sidebar:hover .log-out {
+  visibility: visible;
+  opacity: 1;
 }
 
 .main {
@@ -124,10 +152,10 @@
   flex: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.stat-box h3{
+.stat-box h3 {
   margin-top: 20px;
 }
-.stat-box p{
+.stat-box p {
   margin-top: 5px;
 }
 .stat-box canvas {
@@ -176,7 +204,7 @@
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
-.profile-stats .order-details{
+.profile-stats .order-details {
   padding: 5px;
 }
 .profile-stats button {
@@ -213,7 +241,7 @@
   font-weight: bold;
 }
 
-.order-items-container{
+.order-items-container {
   flex: 1;
   min-width: 100%;
   width: 50vw;
@@ -224,7 +252,7 @@
   padding: 10px;
   padding-bottom: 0;
 }
-.order-item{
+.order-item {
   width: 100%;
   height: 70px;
   display: flex;
@@ -236,33 +264,33 @@
   border-radius: 5px;
   background-color: white;
 }
-.order-item .item-image{
+.order-item .item-image {
   background-color: var(--grey-color);
   width: 150px;
   height: 100%;
   overflow: hidden;
   border-radius: 5px;
 }
-.order-item .item-image > img{
+.order-item .item-image > img {
   border-radius: 10px;
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center;
 }
-.order-item > p{
+.order-item > p {
   color: grey;
 }
-.order-item .item-details > h4{
+.order-item .item-details > h4 {
   margin-top: 5px;
   color: green;
   font-size: 1.2rem;
 }
-.order-item .item-details > h2{
+.order-item .item-details > h2 {
   font-size: 1.3rem;
 }
 
-.order-item .item-buy-again{
+.order-item .item-buy-again {
   margin-left: auto;
   margin-right: 0;
   border: none;
@@ -274,12 +302,12 @@
   border-radius: 50px;
   transition: all 0.2s ease;
 }
-.order-item .item-buy-again:hover{
+.order-item .item-buy-again:hover {
   color: white;
   background-color: #1db954;
 }
 
-.ordered-item-quantity{
+.ordered-item-quantity {
   margin-left: auto;
   background-color: var(--grey-color);
   padding: 10px 20px;

@@ -9,14 +9,17 @@ import abaQr from "../../assets/paymentMethods/khqr_for_check_out.jpg";
 import masterVisa from "../../assets/paymentMethods/visa_master.png";
 import payPal from "../../assets/paymentMethods/paypal.png";
 
-import "../../styles/component-styles/check-out/CheckOutWindow.css";
+import "../../styles/customer/component-styles/check-out/CheckOutWindow.css";
 
 function CheckOutWindow() {
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const { cart } = useCart();
 
-  const DAY_TO_MIL = 86400000; {/*20 * 24 * 60 * 60 * 1000)*/}
+  const DAY_TO_MIL = 86400000;
+  {
+    /*20 * 24 * 60 * 60 * 1000)*/
+  }
   const DISCOUNT = 0.0;
   const TAX_RATE = 0.05;
 
@@ -121,10 +124,8 @@ function CheckOutWindow() {
             );
             return false;
           }
-          if (cart.length <= 0){
-            window.alert(
-              "Cart is empty. Please add some products"
-            );
+          if (cart.length <= 0) {
+            window.alert("Cart is empty. Please add some products");
             return false;
           }
           window.alert("Orders Received!");

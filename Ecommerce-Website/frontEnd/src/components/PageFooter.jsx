@@ -12,7 +12,7 @@ import {
   faPhone,
   faLocationPin,
 } from "@fortawesome/free-solid-svg-icons";
-import "../styles/component-styles/PageFooter.css";
+import "../styles/customer/component-styles/PageFooter.css";
 
 function PageFooter() {
   const year = new Date().getFullYear();

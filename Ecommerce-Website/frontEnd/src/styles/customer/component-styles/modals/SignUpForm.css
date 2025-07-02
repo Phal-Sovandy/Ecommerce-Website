@@ -164,16 +164,16 @@ select option[value=""][disabled] {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
   padding: 0;
-  background: #333;
+  background: var(--identity-color);
   font-size: 15px;
   color: #fff;
   vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+  transition: all 0.2s ease;
+}
+#signup-btn:hover{
+  background-color: var(--black-color);
 }
 
 @media (max-width: 1199px) {

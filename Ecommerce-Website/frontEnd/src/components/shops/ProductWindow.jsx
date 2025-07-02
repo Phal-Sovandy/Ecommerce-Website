@@ -16,7 +16,7 @@ import topSizeChart from "../../assets/top-size-chart.png";
 import bottomSizeChart from "../../assets/bottom-size-chart.webp";
 import shoesSizeChart from "../../assets/shoes-size-chart.webp";
 
-import "../../styles/component-styles/shops/ProductWindow.css";
+import "../../styles/customer/component-styles/shops/ProductWindow.css";
 
 // Load product details.
 function ProductWindow({ product, setShowState }) {
@@ -250,6 +250,38 @@ function ProductWindow({ product, setShowState }) {
                 aliquam tenetur ullam voluptatibus cumque totam sed!
               </p>
             </div>
+            <div className="product-reviews-container">
+              <h4>Review(s)</h4>
+
+              <ProductReview
+                userProfile="https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg"
+                username="John Cena"
+                title="Something is something and thing is not a thing good."
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
+        consequuntur perferendis eum fugit quibusdam ipsam earum eos quae
+        deleniti accusamus!"
+                reviewId={1}
+                pin={true}
+              />
+              <ProductReview
+                userProfile="https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg"
+                username="The Rock"
+                title="Something good not good bad yes not good best yes go."
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
+        consequuntur perferendis eum fugit quibusdam ipsam earum eos quae
+        deleniti accusamus!"
+                reviewId={1}
+              />
+              <ProductReview
+                userProfile="https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg"
+                username="Sting"
+                title="Wow hello amazing wonderful good man women bad worst"
+                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
+        consequuntur perferendis eum fugit quibusdam ipsam earum eos quae
+        deleniti accusamus!"
+                reviewId={1}
+              />
+            </div>
           </div>
         </div>
       </form>
@@ -258,3 +290,25 @@ function ProductWindow({ product, setShowState }) {
 }
 
 export default ProductWindow;
+
+function ProductReview({
+  userProfile,
+  username,
+  title,
+  description,
+  reviewId,
+  pin=false
+}) {
+  return (
+    <div className={pin ? `product-review pin` : `product-review`}>
+      <div className="header">
+        <div className="profile-image">
+          <img src={userProfile} />
+        </div>
+        <h2>{username}</h2>
+      </div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
+  );
+}

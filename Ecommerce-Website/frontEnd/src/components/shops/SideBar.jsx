@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ALL_CATEGORIES } from "../../data/products.js";
-import "../../styles/component-styles/shops/SideBar.css";
+import "../../styles/customer/component-styles/shops/SideBar.css";
 
 // Filter products sidebar.
 function SideBar({ products, setFilteredProducts, showSideBar }) {

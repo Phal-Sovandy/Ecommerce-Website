@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import "../../styles/component-styles/shops/ImageSlider.css";
+import "../../styles/customer/component-styles/shops/ImageSlider.css";
 
 // Product that have variations, load image slider.
 function ImageSlider({ images, selectedImageIndex }) {

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import "../styles/Profile.css";
+import "../styles/customer/Profile.css";
+import "../styles/seller/Profile.css";
 import ModalInfo from "../components/modals/ModalInfo";
+import ModalEditProfileInfo from "../components/modals/ModalEditProfileInfo";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,6 +14,7 @@ import {
   faPhone,
   faHouseFlag,
   faUserPen,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Pie, Doughnut, Line } from "react-chartjs-2";
@@ -25,6 +28,7 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(
   ArcElement,
@@ -36,8 +40,10 @@ ChartJS.register(
   PointElement
 );
 
-function Profile() {
+function SellerProfile() {
   const [showOrderItem, setShowOrderItem] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const navigate = useNavigate();
 
   const sampleItem = {
     asin: "1233234",
@@ -48,14 +54,14 @@ function Profile() {
     image_url:
       "https://images.pexels.com/photos/3094799/pexels-photo-3094799.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     availability: "Only 10 in stock",
-    quantity: 69
+    quantity: 69,
   };
 
-  const boughtProduct = {
-    labels: ["Technology", "Clothing", "Utensils", "Education"],
+  const soldProduct = {
+    labels: ["Iphone 77", "Yoink 28", "FootBall X91", "Water Jug", "Other"],
     datasets: [
       {
-        data: [2139, 2222, 3736, 1422],
+        data: [2139, 2222, 3736, 1422, 20000],
         backgroundColor: [
           "#081c15",
           "#1b4332",
@@ -76,8 +82,8 @@ function Profile() {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
-        label: "Total Expenditure",
-        data: [150, 200, 250, 180, 220, 300],
+        label: "Total Income",
+        data: [150, 10, 250, 90, 220, 400],
         borderColor: "#40916c",
         backgroundColor: "#1b4332",
         tension: 0.3, // smooth curve
@@ -103,16 +109,52 @@ function Profile() {
       },
     },
   };
+  const profileInfo = {
+    first_name: "Alice",
+    last_name: "Johnson",
+    username: "alicej",
+    email: "alice.johnson@example.com",
+    phone_number: "012-345-678",
+    address_line1: "123 Main Street",
+    address_line2: "Apt 4B",
+    gender: "female",
+    birthdate: new Date("1995-06-15"), // IMPORTANT: use Date object, not string
+    country: { value: "US", label: "United States" }, // for react-select
+    state: "California",
+    city: "Los Angeles",
+    zipcode: "90001",
+  };
+  const sampleTopCustomer = {
+    profile: "https://www.mensfitness.com/.image/c_fill,g_faces:center/MjEzNzIxNDM1OTcyMDUyODI5/screenshot-2025-03-24-at-7-33-00-pm.png",
+    name: "Mr. Micheal Jackson",
+    orderCount: 168
+}
 
+  const logOut = () => {
+    navigate("/");
+    // TODO
+  };
   return (
     <div className="profile-container">
+      <ModalEditProfileInfo
+        show={showEdit}
+        onClose={() => setShowEdit(false)}
+        profileInfo={profileInfo}
+      />
       <aside className="sidebar">
-        <div className="edit-user-info" title="Edit Your Info">
+        <div className="log-out" onClick={logOut}>
+          <FontAwesomeIcon icon={faRightFromBracket} />
+        </div>
+        <div
+          className="edit-user-info"
+          title="Edit Your Info"
+          onClick={() => setShowEdit(true)}
+        >
           <FontAwesomeIcon icon={faUserPen} />
         </div>
         <div className="avatar">
           <img
-            src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D"
+            src="https://seller.cayroshop.com/assets/Man_with_boxes-CrIb4Fdg.webp"
             alt="Profile"
           />
         </div>
@@ -153,24 +195,45 @@ function Profile() {
       <main className="main">
         <section className="stats">
           <div className="stat-box">
-            <Doughnut data={boughtProduct} options={{ cutout: "65%" }} />
-            <h3>Order By Category Stats</h3>
+            <Doughnut data={soldProduct} options={{ cutout: "65%" }} />
+            <h3>Top Ordered Product Stats</h3>
             <p>
-              <strong>Total:</strong> 10,365 orders
+              <strong>Total Order:</strong> 10,365 orders
+            </p>
+            <p>
+              <strong>Total Product Sell:</strong> 179
             </p>
           </div>
           <div className="stat-box">
             <Line data={lineData} options={lineOptions} />
-            <h3>Total Expenditure</h3>
+            <h3>Total Income</h3>
             <p>
               <strong>Total:</strong> $22099
             </p>
             <p>
-              <strong>Average Spent:</strong> $61
+              <strong>Average Income:</strong> $61
             </p>
           </div>
         </section>
-
+        <section className="top-customer">
+          <h3>Top Customer</h3>
+          <div className="customer-card-container">
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+            <CustomerCard customer={sampleTopCustomer} />
+          </div>
+        </section>
         <section className="profile-stats">
           <h3>Your Orders History</h3>
           <div className="table-wrapper">
@@ -178,6 +241,7 @@ function Profile() {
               <thead>
                 <tr>
                   <th>Order ID</th>
+                  <th>Customer ID</th>
                   <th>Date-Time</th>
                   <th>Status</th>
                   <th>Total Price</th>
@@ -188,6 +252,7 @@ function Profile() {
               <tbody>
                 <tr>
                   <td>93e32377DDD</td>
+                  <td>000001</td>
                   <td>25.08.2022</td>
                   <td className="status delivered">Delivered</td>
                   <td>9:32 AM</td>
@@ -201,6 +266,7 @@ function Profile() {
                 </tr>
                 <tr>
                   <td>93e32377DDD</td>
+                  <td>001232</td>
                   <td>25.08.2022</td>
                   <td className="status cancelled">Cancelled</td>
                   <td>9:32 AM</td>
@@ -214,6 +280,7 @@ function Profile() {
                 </tr>
                 <tr>
                   <td>93e32377DDD</td>
+                  <td>0312332</td>
                   <td>25.08.2022</td>
                   <td className="status processing">Processing</td>
                   <td>9:32 AM</td>
@@ -257,7 +324,7 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default SellerProfile;
 
 function OrderItem({ product }) {
   return (
@@ -281,12 +348,16 @@ function OrderItem({ product }) {
         </h4>
       </div>
       <div className="ordered-item-quantity">{product.quantity}</div>
-      <button
-        className="item-buy-again"
-        onClick={() => addItemToCart(customer.customer_id, product.asin)}
-      >
-        Buy Again
-      </button>
     </div>
   );
+}
+
+function CustomerCard({ customer }) {
+  return <div className="top-customer-card">
+    <div className="profile">
+        <img src={customer.profile} />
+    </div>
+    <h2>{customer.name}</h2>
+    <h3>Total Order From You: {customer.orderCount}</h3>
+  </div>;
 }

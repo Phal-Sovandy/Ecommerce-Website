@@ -13,14 +13,9 @@
 }
 .modal-login-window .modal-content {
   background: white;
-  background-image: url("./image1.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: attatched;
-  padding: 50px 45px;
+  padding: 40px 50px;
   border-radius: 10px;
-  min-width: 500px;
+  min-width: 450px;
   max-width: 90%;
   max-height: calc(100vh - 200px);
   overflow-x: hidden;
@@ -46,7 +41,7 @@
   position: relative;
 }
 .modal-login-window .input-wrapper > input {
-    background-color: #33333300;
+  background-color: #33333300;
   border: 1px solid #333;
   border-top: none;
   border-right: none;
@@ -55,7 +50,7 @@
   width: 100%;
   height: 30px;
   padding: 0;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   position: relative;
   font-size: 1.2rem;
 }
@@ -76,6 +71,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.remember-forgot > p,
+.modal-login-window form span {
+  color: var(--identity-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.remember-forgot > p:hover,
+.modal-login-window form span:hover {
+  text-decoration: none;
 }
 .remember {
   display: flex;
@@ -121,16 +126,12 @@
   background-color: var(--black-color);
 }
 .modal-login-window button:last-child:hover {
-  outline-color: orange;
-  color: orange;
+  font-weight: bold;
+  outline: none;
+  background-color: orange;
+  color: rgb(255, 255, 255);
 }
 .modal-login-window .modal-content form > p {
   text-align: center;
   width: 100%;
-}
-.modal-login-window a {
-  color: var(--identity-color);
-}
-.modal-login-window a:hover {
-  text-decoration: none;
 }
