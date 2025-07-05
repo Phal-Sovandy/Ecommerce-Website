@@ -102,7 +102,6 @@
     "tel tel tel"
     "com com com"
     "button button button";
-
     gap: 20px;
 }
 
@@ -149,10 +148,12 @@
     color: white;
     border-color: white;
 }
+#right-part #submit{
+    border: none;
+}
 #right-part #submit:hover{
     background-color: #ffa000;
     color: white;
-    border-color: #ffa000;
 }
 #right-part #submit:active{
     transition: none;

@@ -107,7 +107,8 @@
   color: var(--identity-color);
   margin-block: 20px;
 }
-.product-window .addToCart-btn {
+.product-window .addToCart-btn,
+.product-window .editProduct-btn {
   padding: 10px 25px;
   font-size: 1.1rem;
   font-weight: 700;

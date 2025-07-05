@@ -31,12 +31,21 @@ function Navigation() {
           HOME
         </NavLink>
 
-        {isLoggedIn && role !== "admin" && (
+        {isLoggedIn && role == "customer" && (
           <NavLink
             className={({ isActive }) => (isActive ? "active-page" : "")}
             to="/shopping"
           >
             SHOPS
+          </NavLink>
+        )}
+
+        {isLoggedIn && role == "seller" && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "active-page" : "")}
+            to="/myshop"
+          >
+            MY SHOPS
           </NavLink>
         )}
 

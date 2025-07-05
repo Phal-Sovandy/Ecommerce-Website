@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCart } from "../../../context/CartContext.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
 
 import priceFormat from "../../../utils/priceFormat.js";
 import ImageSlider from "./ImageSlider.jsx";
@@ -20,6 +21,7 @@ import "../../../styles/customer/component-styles/shops/ProductWindow.css";
 
 // Load product details.
 function ProductWindow({ product, setShowState }) {
+  const { isLoggedIn, role } = useAuth();
   const { addToCart } = useCart();
   const [size, setSize] = useState(null);
   const [option, setOption] = useState(null);
@@ -210,9 +212,12 @@ function ProductWindow({ product, setShowState }) {
                   </p>
                 </div>
               </div>
-              <button className="addToCart-btn" type="submit">
+              {isLoggedIn && role === "customer" ? <button className="addToCart-btn" type="submit">
                 Add to Cart
-              </button>
+              </button> : 
+              <button className="editProduct-btn" type="button">
+                Edit Product Info
+              </button>}
             </div>
             <div className="price">${priceFormat(product.priceCents)}</div>
 
@@ -297,7 +302,7 @@ function ProductReview({
   title,
   description,
   reviewId,
-  pin=false
+  pin = false,
 }) {
   return (
     <div className={pin ? `product-review pin` : `product-review`}>

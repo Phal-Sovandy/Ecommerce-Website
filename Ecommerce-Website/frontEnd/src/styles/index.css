@@ -66,6 +66,8 @@ button {
 button:hover {
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  background-color: var(--black-color);
+  color: white;
 }
 body {
   min-height: 100vh;
@@ -91,7 +93,7 @@ header {
 }
 
 @media (max-width: 500px) {
-  :root{
+  :root {
     font-size: 10px;
   }
 }

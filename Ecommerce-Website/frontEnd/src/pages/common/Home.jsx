@@ -9,7 +9,7 @@ import WhyChooseUsSection from "../../components/common/home/WhyChooseUsSection.
 import "../../styles/customer/Home.css";
 
 function Home() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Sooner's Home";

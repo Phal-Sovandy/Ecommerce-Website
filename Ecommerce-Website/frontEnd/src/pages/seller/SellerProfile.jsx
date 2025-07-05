@@ -120,7 +120,7 @@ function SellerProfile() {
     address_line1: "123 Main Street",
     address_line2: "Apt 4B",
     gender: "female",
-    birthdate: new Date("1995-06-15"), // IMPORTANT: use Date object, not string
+    birthdate: new Date("1995-06-15"), 
     country: { value: "US", label: "United States" }, // for react-select
     state: "California",
     city: "Los Angeles",

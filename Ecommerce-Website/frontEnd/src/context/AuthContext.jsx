@@ -6,7 +6,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [auth, setAuth] = useState({
     isLoggedIn: true,
-    role: "customer", //Change from "customer", "seller", "admin" to test
+    role: "seller", //Change from "customer", "seller", "admin" to test
     id: null,
     token: null,
   });

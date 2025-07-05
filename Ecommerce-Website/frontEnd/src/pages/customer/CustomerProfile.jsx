@@ -322,7 +322,7 @@ function OrderItem({ product }) {
       <div className="ordered-item-quantity">{product.quantity}</div>
       <button
         className="item-buy-again"
-        onClick={() => addItemToCart(customer.customer_id, product.asin)}
+        onClick={() => {}}
       >
         Buy Again
       </button>

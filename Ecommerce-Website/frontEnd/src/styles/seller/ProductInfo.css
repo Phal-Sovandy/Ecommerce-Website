@@ -1,0 +1,202 @@
+.inner.edit-product {
+  padding: 20px;
+  background: #fff;
+  max-width: 1500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inner.edit-product > section.image-section {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.inner.edit-product .image-holder {
+  border-radius: 10px;
+  max-width: 200px;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  margin-bottom: 10px;
+  background-color: rgb(159, 159, 159);
+  overflow: hidden;
+}
+
+.inner.edit-product .main-image-holder {
+  width: 50%;
+  max-width: 200px;
+}
+
+.inner.edit-product .additional-images {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.inner.edit-product .additional-image-holder {
+  width: 100px;
+  height: 100px;
+}
+
+.inner.edit-product .image-holder > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.inner.edit-product .change-image {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  width: 40px;
+  height: 40px;
+  color: var(--identity-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  right: 10px;
+  bottom: 7px;
+  transition: all 0.2s ease;
+}
+
+.inner.edit-product .change-image:hover {
+  background-color: var(--identity-color);
+  color: white;
+}
+
+.inner.edit-product .change-image:active {
+  background-color: orange;
+  color: white;
+}
+
+.inner.edit-product form {
+  min-width: 700px;
+  max-width: 1000px;
+  padding-top: 36px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.inner.edit-product h3 {
+  text-transform: uppercase;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* Floating label form groups */
+.inner.edit-product .form-group {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.form-group.react-select-wrapper{
+    z-index: 10000;
+}
+
+.inner.edit-product .form-group input,
+.inner.edit-product .form-group select {
+  width: 100%;
+  padding: 10px 0 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  margin-inline: 0;
+}
+
+.inner.edit-product .form-group select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.inner.edit-product .form-group label {
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  color: #999;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background-color: white;
+  padding: 0 4px;
+  z-index: 1000;
+  user-select: none;
+}
+
+.inner.edit-product .form-group input:focus + label,
+.inner.edit-product .form-group select:focus + label,
+.inner.edit-product .form-group.has-value label {
+  top: -7px;
+  font-size: 0.8rem;
+  color: var(--identity-color);
+}
+
+.inner.edit-product .form-group > svg {
+  position: absolute;
+  top: 8px;
+  right: 15px;
+  color: #888;
+}
+
+
+.inner.edit-product .react-select-wrapper,
+.inner.edit-product .css-b62m3t-container,
+.inner.edit-product .react-datepicker-wrapper{
+  width: 100%;
+}
+
+.inner.edit-product .form-group.datepicker-wrapper{
+  margin-bottom: 35px;
+}
+
+
+.inner.edit-product #edit-btn {
+  background-color: var(--identity-color);
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 1rem;
+  border-radius: 100px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.inner.edit-product #edit-btn:hover {
+  background-color: orange;
+}
+
+.form-group.react-select-wrapper.department{
+    z-index: 10001;
+}
+
+.error-section-form{
+  width: 100%;
+  text-align: left;
+  color: var(--red-color);
+  font-weight: 700;
+}

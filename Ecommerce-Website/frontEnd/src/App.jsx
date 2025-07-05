@@ -9,6 +9,7 @@ import "./styles/App.css";
 import "./styles/index.css";
 import Home from "./pages/common/Home.jsx";
 import Shopping from "./pages/customer/Shopping.jsx";
+import SellerShop from "./pages/seller/SellerShop.jsx";
 import CheckOut from "./pages/customer/CheckOut.jsx";
 import Contacts from "./pages/common/Contacts.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
@@ -30,8 +31,17 @@ const router = createBrowserRouter(
       <Route
         path="/shopping"
         element={
-          <ProtectedRoute allowedRoles={["customer", "seller"]}>
+          <ProtectedRoute allowedRoles={["customer"]}>
             <Shopping />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/myshop"
+        element={
+          <ProtectedRoute allowedRoles={["seller"]}>
+            <SellerShop />
           </ProtectedRoute>
         }
       />
@@ -54,14 +64,7 @@ const router = createBrowserRouter(
         }
       />
 
-      <Route
-        path="/contacts"
-        element={
-          <ProtectedRoute allowedRoles={["customer", "seller"]}>
-            <Contacts />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/contacts" element={<Contacts />} />
 
       <Route
         path="/profile"
