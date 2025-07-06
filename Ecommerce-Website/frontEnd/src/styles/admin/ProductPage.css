@@ -1,0 +1,25 @@
+.listing-page .product-price > span {
+  font-weight: 700;
+  color: grey;
+}
+
+.listing-page .badge > button {
+  font-weight: 700;
+  color: #7c7c7c;
+  background-color: #e3e3e3;
+  border-radius: 5px;
+  padding: 5px 10px;
+  text-align: center;
+  min-width: 50%;
+  display: inline;
+}
+
+.listing-page .badge > button.active {
+  color: #1f509a;
+  background-color: #d4ebf8;
+}
+
+.delete-btn {
+  background-color: var(--red-color);
+  color: white;
+}

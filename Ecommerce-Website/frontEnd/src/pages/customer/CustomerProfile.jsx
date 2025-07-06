@@ -14,6 +14,9 @@ import {
   faHouseFlag,
   faUserPen,
   faRightFromBracket,
+  faFilter,
+  faSort,
+  faArrowsUpDown
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Pie, Doughnut, Line } from "react-chartjs-2";
@@ -127,7 +130,7 @@ function CustomerProfile() {
   const logOut = () => {
     navigate("/");
     // TODO
-  }
+  };
   return (
     <div className="profile-container">
       <ModalEditProfileInfo
@@ -136,7 +139,9 @@ function CustomerProfile() {
         profileInfo={profileInfo}
       />
       <aside className="sidebar">
-        <div className="log-out" onClick={logOut}><FontAwesomeIcon icon={faRightFromBracket}/></div>
+        <div className="log-out" onClick={logOut}>
+          <FontAwesomeIcon icon={faRightFromBracket} />
+        </div>
         <div
           className="edit-user-info"
           title="Edit Your Info"
@@ -206,7 +211,49 @@ function CustomerProfile() {
         </section>
 
         <section className="profile-stats">
-          <h3>Your Orders History</h3>
+          <div className="table-title">
+            <h3>Your Orders History</h3>
+            <div className="table-title-right">
+              <div>
+                <h4>
+                  <span>
+                    <FontAwesomeIcon icon={faFilter} />
+                  </span>
+                  Status
+                </h4>
+                <select defaultValue={"date"}>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipping">Shipping</option>
+                </select>
+              </div>
+              <div>
+                <h4>
+                  <span>
+                    <FontAwesomeIcon icon={faSort} />
+                  </span>
+                  Sorting
+                </h4>
+                <select defaultValue={"date"}>
+                  <option value="date">Sort By Order Date</option>
+                  <option value="price">Sort By Order Price</option>
+                </select>
+              </div>
+              <div>
+                <h4>
+                  <span>
+                    <FontAwesomeIcon icon={faArrowsUpDown} />
+                  </span>
+                  Sorting Order
+                </h4>
+                <select defaultValue={"ascending"}>
+                  <option value="descending">Ascending Order</option>
+                  <option value="ascending">Descending Order</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <div className="table-wrapper">
             <table>
               <thead>
@@ -226,7 +273,7 @@ function CustomerProfile() {
                   <td>1020291</td>
                   <td>25.08.2022</td>
                   <td className="status delivered">Delivered</td>
-                  <td>9:32 AM</td>
+                  <td>$ 1235</td>
                   <td>ABA</td>
                   <td>Standard Delivery</td>
                   <td className="order-details">
@@ -240,7 +287,7 @@ function CustomerProfile() {
                   <td>10332291</td>
                   <td>25.08.2022</td>
                   <td className="status cancelled">Cancelled</td>
-                  <td>9:32 AM</td>
+                  <td>$ 1235</td>
                   <td>ABA</td>
                   <td>Standard Delivery</td>
                   <td className="order-details">
@@ -254,7 +301,21 @@ function CustomerProfile() {
                   <td>3323042</td>
                   <td>25.08.2022</td>
                   <td className="status processing">Processing</td>
-                  <td>9:32 AM</td>
+                  <td>$ 1235</td>
+                  <td>ABA</td>
+                  <td>Standard Delivery</td>
+                  <td className="order-details">
+                    <button onClick={() => setShowOrderItem(true)}>
+                      Details
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>93e32377DDD</td>
+                  <td>3323042</td>
+                  <td>25.08.2022</td>
+                  <td className="status shipping">Shipping</td>
+                  <td>$ 1235</td>
                   <td>ABA</td>
                   <td>Standard Delivery</td>
                   <td className="order-details">
@@ -267,7 +328,7 @@ function CustomerProfile() {
             </table>
           </div>
         </section>
-        
+
         <ModalInfo
           show={showOrderItem}
           title={"Order Item(s)"}
@@ -320,10 +381,7 @@ function OrderItem({ product }) {
         </h4>
       </div>
       <div className="ordered-item-quantity">{product.quantity}</div>
-      <button
-        className="item-buy-again"
-        onClick={() => {}}
-      >
+      <button className="item-buy-again" onClick={() => {}}>
         Buy Again
       </button>
     </div>

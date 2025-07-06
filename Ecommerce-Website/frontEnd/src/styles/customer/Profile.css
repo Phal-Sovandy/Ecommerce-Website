@@ -175,9 +175,40 @@
   border-radius: 8px;
   min-height: 350px;
 }
-.profile-stats > h3 {
+.profile-stats .table-title {
   margin-bottom: 10px;
   flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+}
+.profile-stats .table-title .table-title-right {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  border-radius: 10px;
+}
+.profile-stats .table-title .table-title-right > div {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.profile-stats .table-title .table-title-right > div span{
+  margin-right: 5px;
+}
+.profile-stats .table-title .table-title-right > div > select {
+  background-color: rgba(255, 255, 255, 0.208);
+  border-radius: 50px;
+  padding: 1px 15px;
+  padding-right: 0;
+  border: none;
+  outline: 1px solid var(--black-color);
+  appearance: auto;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+.profile-stats .table-title .table-title-right > div > select:hover{
+  background-color: var(--black-color);
+  color: white;
 }
 .profile-stats table {
   flex: 1;
@@ -238,6 +269,11 @@
 
 .status.cancelled {
   color: var(--red-color);
+  font-weight: bold;
+}
+
+.status.shipping {
+  color: #27548a;
   font-weight: bold;
 }
 

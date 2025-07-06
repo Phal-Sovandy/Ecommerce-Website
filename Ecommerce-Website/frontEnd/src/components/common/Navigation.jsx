@@ -43,7 +43,7 @@ function Navigation() {
         {isLoggedIn && role == "seller" && (
           <NavLink
             className={({ isActive }) => (isActive ? "active-page" : "")}
-            to="/myshop"
+            to="/sellerShop/:sellerId"
           >
             MY SHOPS
           </NavLink>
@@ -77,29 +77,77 @@ function Navigation() {
           </NavLink>
         )}
 
-        {isLoggedIn ? (
-          <div
-            className="profile login"
-            id="profile"
-            onClick={() =>
-              navigate(role === "customer" ? "/profile" : "/sellerprofile")
-            }
+        {role == "admin" && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "active-page" : "")}
+            to="/customer"
           >
-            <div>
-              <img
-                src="https://tinypng.com/images/social/website.jpg"
-                alt="profile"
+            CUSTOMER
+          </NavLink>
+        )}
+
+        {role == "admin" && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "active-page" : "")}
+            to="/seller"
+          >
+            SELLER
+          </NavLink>
+        )}
+
+        {role == "admin" && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "active-page" : "")}
+            to="/product"
+          >
+            PRODUCT
+          </NavLink>
+        )}
+
+        {role == "admin" && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "active-page" : "")}
+            to="/userEnquiry"
+          >
+            USER ENQUIRY
+          </NavLink>
+        )}
+
+        {role == "admin" && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "active-page" : "")}
+            to="/adminDashboard"
+          >
+            DASHBOARD
+          </NavLink>
+        )}
+
+        {role !== "admin" ? (
+          isLoggedIn ? (
+            <div
+              className="profile login"
+              id="profile"
+              onClick={() => {
+                if (role === "customer") navigate("/profile");
+                if (role === "seller") navigate("/sellerProfile");
+              }}
+            >
+              <div>
+                <img
+                  src="https://tinypng.com/images/social/website.jpg"
+                  alt="profile"
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="profile not-login">
+              <FontAwesomeIcon
+                icon={faArrowRightToBracket}
+                onClick={openLoginModal}
               />
             </div>
-          </div>
-        ) : (
-          <div className="profile not-login">
-            <FontAwesomeIcon
-              icon={faArrowRightToBracket}
-              onClick={openLoginModal}
-            />
-          </div>
-        )}
+          )
+        ) : null}
       </div>
     </nav>
   );

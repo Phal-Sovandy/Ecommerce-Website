@@ -1,0 +1,189 @@
+.listing-page {
+  position: relative;
+}
+
+.listing-page .loader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 20px;
+}
+
+.listing-page .listing-page-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: sticky;
+  width: 100%;
+  top: 70px;
+  padding: 20px;
+  z-index: 100000;
+}
+
+.listing-page .listing-page-head > *{
+    flex: 1;
+}
+
+.listing-page .listing-page-head .listing-action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.listing-page .listing-page-head select {
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid rgb(163, 163, 163);
+  background-color: rgba(255, 255, 255, 0.48);
+  appearance: auto;
+  transition: all 0.2s ease;
+}
+
+.listing-page .listing-page-head select:hover{
+    background-color: var(--identity-color);
+    color: white;
+    outline: none;
+}
+.listing-page .listing-page-head h1 {
+  font-size: 24px;
+  text-align: left;
+}
+
+.listing-search {
+  background-color: white;
+  padding: 8px 15px;
+  width: 500px;
+  min-width: 0;
+  border-radius: 100px;
+  border: none;
+  outline: 1px solid rgb(163, 163, 163);
+  transition: all 0.2s ease;
+}
+
+.listing-search:hover,
+.listing-search:focus {
+  outline: 1px solid var(--black-color);
+  border: none;
+  accent-color: none;
+}
+
+.listing-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: auto;
+}
+
+.table-wrapper {
+  width: 100%;
+  min-width: 890px;
+  border-radius: 10px;
+  position: relative;
+  /* height: calc(100vh - 70px - 145px); */
+  height: calc(100vh - 70px - 75px);
+  background-color: white;
+}
+
+.listing-table thead {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 100;
+  box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+    rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+}
+
+.listing-table th,
+.listing-table td {
+  padding: 10px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.listing-table td.status .status-toggle {
+  font-weight: 700;
+  color: var(--red-color);
+  background-color: #ffd8d8;
+  border-radius: 5px;
+  padding-block: 5px;
+  text-align: center;
+  width: 65px;
+  display: inline-block;
+}
+
+.listing-table td.status .status-toggle.active {
+  color: #508d4e;
+  background-color: #d6efd8;
+}
+
+.listing-table td.entity-id {
+  color: grey;
+}
+.listing-table th {
+  padding: 15px;
+  background-color: #f4f4f4;
+}
+
+.listing-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.listing-table button {
+  margin-right: 8px;
+  padding: 7px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.listing-table button:hover {
+  background-color: var(--black-color);
+  color: white;
+}
+
+.listing-table button:active {
+  background-color: white;
+  color: black;
+}
+
+.view-btn {
+  background-color: var(--identity-color);
+  color: white;
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: black;
+}
+
+.activate-btn,
+.deactivate-btn {
+  width: 100px;
+  padding-inline: 0;
+}
+.activate-btn {
+  background-color: #d2e0fb;
+  color: black;
+}
+
+.deactivate-btn {
+  background-color: var(--red-color);
+  color: white;
+}
+
+.end-loading-list {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-block: 20px;
+  text-align: center;
+  color: grey;
+}

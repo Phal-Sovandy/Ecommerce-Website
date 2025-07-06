@@ -16,6 +16,9 @@ import {
   faHouseFlag,
   faUserPen,
   faRightFromBracket,
+  faFilter,
+  faSort,
+  faArrowsUpDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Pie, Doughnut, Line } from "react-chartjs-2";
@@ -120,7 +123,7 @@ function SellerProfile() {
     address_line1: "123 Main Street",
     address_line2: "Apt 4B",
     gender: "female",
-    birthdate: new Date("1995-06-15"), 
+    birthdate: new Date("1995-06-15"),
     country: { value: "US", label: "United States" }, // for react-select
     state: "California",
     city: "Los Angeles",
@@ -240,13 +243,39 @@ function SellerProfile() {
           </div>
         </section>
         <section className="profile-stats">
-          <h3>Your Orders History</h3>
+          <div className="table-title">
+            <h3>Your Orders History</h3>
+            <div className="table-title-right">
+              <div>
+                <h4><span><FontAwesomeIcon icon={faFilter}/></span>Status</h4>
+                <select defaultValue={"date"}>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipping">Shipping</option>
+                </select>
+              </div>
+              <div>
+                <h4><span><FontAwesomeIcon icon={faSort}/></span>Sorting</h4>
+                <select defaultValue={"date"}>
+                  <option value="date">Sort By Order Date</option>
+                  <option value="price">Sort By Order Price</option>
+                </select>
+              </div>
+              <div>
+                <h4><span><FontAwesomeIcon icon={faArrowsUpDown}/></span>Sorting Order</h4>
+                <select defaultValue={"ascending"}>
+                  <option value="descending">Ascending Order</option>
+                  <option value="ascending">Descending Order</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <div className="table-wrapper">
             <table>
               <thead>
                 <tr>
                   <th>Order ID</th>
-                  <th>Customer ID</th>
                   <th>Date-Time</th>
                   <th>Status</th>
                   <th>Total Price</th>
@@ -257,10 +286,17 @@ function SellerProfile() {
               <tbody>
                 <tr>
                   <td>93e32377DDD</td>
-                  <td>000001</td>
                   <td>25.08.2022</td>
-                  <td className="status delivered">Delivered</td>
-                  <td>9:32 AM</td>
+                  <td className="status delivered">
+                    <select defaultValue="delivered">
+                      {/*Change class when the value change to change the color of the select element */}
+                      <option value="delivered">Delivered</option>
+                      <option value="shipping">Shipping</option>
+                      <option value="processing">Processing</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </td>
+                  <td>$ 1923</td>
                   <td>ABA</td>
                   <td>Standard Delivery</td>
                   <td className="order-details">
@@ -271,10 +307,18 @@ function SellerProfile() {
                 </tr>
                 <tr>
                   <td>93e32377DDD</td>
-                  <td>001232</td>
+
                   <td>25.08.2022</td>
-                  <td className="status cancelled">Cancelled</td>
-                  <td>9:32 AM</td>
+                  <td className="status cancelled">
+                    <select defaultValue="cancelled">
+                      {/*Change class when the value change to change the color of the select element */}
+                      <option value="delivered">Delivered</option>
+                      <option value="shipping">Shipping</option>
+                      <option value="processing">Processing</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </td>
+                  <td>$ 1923</td>
                   <td>ABA</td>
                   <td>Standard Delivery</td>
                   <td className="order-details">
@@ -285,10 +329,40 @@ function SellerProfile() {
                 </tr>
                 <tr>
                   <td>93e32377DDD</td>
-                  <td>0312332</td>
+
                   <td>25.08.2022</td>
-                  <td className="status processing">Processing</td>
-                  <td>9:32 AM</td>
+                  <td className="status processing">
+                    {/*Change class when the value change to change the color of the select element */}
+                    <select defaultValue="processing">
+                      <option value="delivered">Delivered</option>
+                      <option value="shipping">Shipping</option>
+                      <option value="processing">Processing</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </td>
+                  <td>$ 1923</td>
+                  <td>ABA</td>
+                  <td>Standard Delivery</td>
+                  <td className="order-details">
+                    <button onClick={() => setShowOrderItem(true)}>
+                      Details
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>93e32377DDD</td>
+
+                  <td>25.08.2022</td>
+                  <td className="status shipping">
+                    <select defaultValue="shipping">
+                      {/*Change class when the value change to change the color of the select element */}
+                      <option value="delivered">Delivered</option>
+                      <option value="shipping">Shipping</option>
+                      <option value="processing">Processing</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </td>
+                  <td>$ 1923</td>
                   <td>ABA</td>
                   <td>Standard Delivery</td>
                   <td className="order-details">
