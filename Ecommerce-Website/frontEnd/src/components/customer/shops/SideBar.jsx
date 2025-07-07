@@ -1,6 +1,29 @@
 import React, { useState } from "react";
-import { ALL_CATEGORIES } from "../../../data/products.js";
 import "../../../styles/customer/component-styles/shops/SideBar.css";
+
+const ALL_CATEGORIES = [
+  "t-shirts",
+  "jeans",
+  "sneakers",
+  "jackets",
+  "hats",
+  "dresses",
+  "shorts",
+  "sandals",
+  "socks",
+  "bags",
+];
+
+const ALL_DEPARTMENT = [
+  "men",
+  "women",
+  "kids",
+  "unisex",
+  "sportswear",
+  "casualwear",
+  "formalwear",
+  "accessories",
+];
 
 // Filter products sidebar.
 function SideBar({ setFilteredProducts, showSideBar }) {
@@ -24,12 +47,9 @@ function SideBar({ setFilteredProducts, showSideBar }) {
     });
   }
 
-
   function handlePriceRangeChange(priceRange) {
     setFilters((f) => ({ ...f, priceRange: priceRange }));
   }
-
-
 
   function handleGenderChange(gender) {
     setFilters((f) => {
@@ -39,7 +59,6 @@ function SideBar({ setFilteredProducts, showSideBar }) {
       return { ...f, gender: newGender };
     });
   }
-
 
   return (
     <aside className={showSideBar ? "" : "hide-side-bar"}>
@@ -53,7 +72,7 @@ function SideBar({ setFilteredProducts, showSideBar }) {
                 Available In Stock (123)
               </label>
             </li>
-          </ul> 
+          </ul>
         </div>
         <div className="constraint type">
           <h3>By Product Category</h3>
@@ -65,8 +84,7 @@ function SideBar({ setFilteredProducts, showSideBar }) {
                     type="checkbox"
                     onChange={() => handleCategoryChange(category)}
                   />
-                  {category[0].toUpperCase() + category.slice(1)} (
-                  {123})
+                  {category[0].toUpperCase() + category.slice(1)} ({123})
                 </label>
               </li>
             ))}
@@ -82,8 +100,7 @@ function SideBar({ setFilteredProducts, showSideBar }) {
                     type="checkbox"
                     onChange={() => handleCategoryChange(category)}
                   />
-                  {category[0].toUpperCase() + category.slice(1)} (
-                  {123})
+                  {category[0].toUpperCase() + category.slice(1)} ({123})
                 </label>
               </li>
             ))}

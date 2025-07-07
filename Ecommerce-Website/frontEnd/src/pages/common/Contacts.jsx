@@ -1,8 +1,42 @@
 import { useEffect } from "react";
 import ContactForm from "../../components/common/ContactForm.jsx";
-import { COMMENTS } from "../../data/comments.js";
-
 import "../../styles/customer/Contacts.css";
+
+
+const COMMENTS = [
+  {
+    name: "Sophia Lee",
+    title: "Great Customer Support!",
+    comment:
+      "I reached out about a sizing issue and got a response within an hour. The team was super helpful and processed my exchange smoothly. Thank you!",
+  },
+  {
+    name: "Marcus Nguyen",
+    title: "Fast Shipping, Awesome Products",
+    comment:
+      "Ordered a pair of sneakers and they arrived two days earlier than expected. Quality was even better than the photos!",
+  },
+  {
+    name: "Isabella Torres",
+    title: "Love the Contact Experience",
+    comment:
+      "It was super easy to get in touch with support when I had a payment issue. They resolved it quickly and professionally.",
+  },
+  {
+    name: "Jamal Carter",
+    title: "Helpful and Friendly",
+    comment:
+      "I accidentally placed the wrong order, but customer service helped me cancel and reorder in minutes. Great job!",
+  },
+  {
+    name: "Emily Zhao",
+    title: "Clear Communication",
+    comment:
+      "Appreciated the detailed follow-up emails and updates during my return process. Really shows you care about your customers.",
+  },
+];
+
+
 
 function Comment({ name, title, comment, index }) {
   return (

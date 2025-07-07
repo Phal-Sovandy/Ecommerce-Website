@@ -1,5 +1,4 @@
 import { useState } from "react";
-import priceFormat from "../../../utils/priceFormat.js";
 import { useCart } from "../../../context/CartContext.jsx";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -148,14 +147,14 @@ function CheckOutWindow() {
                 <tbody>
                   <tr>
                     <th className="title">Items:</th>
-                    <th>${priceFormat(calculateCartPrice())}</th>
+                    <th>${calculateCartPrice()}</th>
                   </tr>
                   <tr>
                     <th className="title">Delivery:</th>
                     <th>
                       {isNaN(handleDeliveryPrice())
                         ? handleDeliveryPrice()
-                        : `$${priceFormat(handleDeliveryPrice())}`}
+                        : `$${handleDeliveryPrice()}`}
                     </th>
                   </tr>
                   <tr>
@@ -164,13 +163,13 @@ function CheckOutWindow() {
                   </tr>
                   <tr>
                     <th className="title">Tax({TAX_RATE * 100}%):</th>
-                    <th>${priceFormat(calculateTax())}</th>
+                    <th>${calculateTax()}</th>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr id="total-final-price">
                     <th className="title">Total:</th>
-                    <th>${priceFormat(calculateTotal())}</th>
+                    <th>${calculateTotal()}</th>
                   </tr>
                 </tfoot>
               </table>
@@ -202,7 +201,7 @@ function CheckOutWindow() {
                     <h4>
                       {isNaN(delivery.price)
                         ? delivery.price
-                        : `$${priceFormat(delivery.price)}`}
+                        : `$${delivery.price}`}
                     </h4>
                     <FontAwesomeIcon
                       icon={faCircleCheck}

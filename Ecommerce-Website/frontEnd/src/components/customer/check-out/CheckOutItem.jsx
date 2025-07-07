@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import priceFormat from "../../../utils/priceFormat.js";
 import "../../../styles/customer/component-styles/check-out/CheckOutItem.css";
 
 function CheckOutItem({ item, itemChange, itemRemove }) {
@@ -30,7 +29,7 @@ function CheckOutItem({ item, itemChange, itemRemove }) {
             .slice(0, item.keywords.length > 3 ? 4 : item.keywords.length)
             .join(" | ")}
         </p>
-        <h4>${priceFormat(item.priceCents * item.quantity)}</h4>
+        <h4>${item.priceCents * item.quantity}</h4>
         {item.size ? <div className="product-size">{item.size}</div> : null}
         {item.option ? (
           <div className="product-option">{item.option}</div>
