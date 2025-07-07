@@ -55,6 +55,7 @@ const SellerShop = () => {
       { subcategory_name: "Automotive", subcategory_rank: 12 },
       { subcategory_name: "Wheel & Repair", subcategory_rank: 120 },
     ],
+    availability: "Only 10 in stock"
   };
 
   return (

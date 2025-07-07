@@ -45,7 +45,7 @@ ChartJS.register(
 );
 
 function SellerProfile() {
-  const { logOut } = useAuth();
+  const { logout } = useAuth();
   const [showOrderItem, setShowOrderItem] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const navigate = useNavigate();
@@ -147,8 +147,7 @@ function SellerProfile() {
         <div
           className="log-out"
           onClick={() => {
-            navigate("/");
-            logOut();
+            logout();
           }}
         >
           <FontAwesomeIcon icon={faRightFromBracket} />
@@ -247,7 +246,12 @@ function SellerProfile() {
             <h3>Your Orders History</h3>
             <div className="table-title-right">
               <div>
-                <h4><span><FontAwesomeIcon icon={faFilter}/></span>Status</h4>
+                <h4>
+                  <span>
+                    <FontAwesomeIcon icon={faFilter} />
+                  </span>
+                  Status
+                </h4>
                 <select defaultValue={"date"}>
                   <option value="delivered">Delivered</option>
                   <option value="cancelled">Cancelled</option>
@@ -256,14 +260,24 @@ function SellerProfile() {
                 </select>
               </div>
               <div>
-                <h4><span><FontAwesomeIcon icon={faSort}/></span>Sorting</h4>
+                <h4>
+                  <span>
+                    <FontAwesomeIcon icon={faSort} />
+                  </span>
+                  Sorting
+                </h4>
                 <select defaultValue={"date"}>
                   <option value="date">Sort By Order Date</option>
                   <option value="price">Sort By Order Price</option>
                 </select>
               </div>
               <div>
-                <h4><span><FontAwesomeIcon icon={faArrowsUpDown}/></span>Sorting Order</h4>
+                <h4>
+                  <span>
+                    <FontAwesomeIcon icon={faArrowsUpDown} />
+                  </span>
+                  Sorting Order
+                </h4>
                 <select defaultValue={"ascending"}>
                   <option value="descending">Ascending Order</option>
                   <option value="ascending">Descending Order</option>

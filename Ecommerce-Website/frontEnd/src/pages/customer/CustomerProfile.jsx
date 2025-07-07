@@ -31,6 +31,7 @@ import {
   PointElement,
 } from "chart.js";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 ChartJS.register(
   ArcElement,
@@ -45,6 +46,7 @@ ChartJS.register(
 function CustomerProfile() {
   const [showOrderItem, setShowOrderItem] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const {logout} = useAuth();
   const navigate = useNavigate();
 
   const sampleItem = {
@@ -127,10 +129,6 @@ function CustomerProfile() {
     zipcode: "90001",
   };
 
-  const logOut = () => {
-    navigate("/");
-    // TODO
-  };
   return (
     <div className="profile-container">
       <ModalEditProfileInfo
@@ -139,7 +137,7 @@ function CustomerProfile() {
         profileInfo={profileInfo}
       />
       <aside className="sidebar">
-        <div className="log-out" onClick={logOut}>
+        <div className="log-out" onClick={logout}>
           <FontAwesomeIcon icon={faRightFromBracket} />
         </div>
         <div
