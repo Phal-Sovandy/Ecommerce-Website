@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import ProductWindow from "../../components/customer/shops/ProductWindow";
+import ProductInfo from "../../components/seller/ProductInfo";
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
 import "../../styles/admin/ProductPage.css";
@@ -21,6 +23,35 @@ const allProducts = Array.from({ length: 5000 }, (_, i) => ({
   firstAvailableDate: "2025-07-25",
 }));
 
+const sampleProduct = {
+  id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c0",
+  image:
+    "https://wpengine.com/wp-content/uploads/2021/05/optimize-images-1024x681.jpg",
+  name: "Men's Athestic Sweater Color Grey",
+  rating: {
+    stars: 4.5,
+    count: 69,
+  },
+  priceCents: 1680,
+  keywords: ["top", "sweater", "shirt", "apparel", "mens"],
+  stock: 10,
+};
+
+const sampleProductInfo = {
+  title: "Wireless Bluetooth Headphones",
+  description: "Noise-cancelling over-ear headphones with long battery life.",
+  model_number: "WBH-100X",
+  feature: "Something Blah Blah Blah",
+  weight: "250g",
+  dimensions: "20 x 18 x 8 cm",
+  department: ["technology", "kitchen", "bedroom"],
+  variations: ["FJDDFDE:black", "FLENEFEF:blue", "FNELENFLE:red"],
+  parent_asin: "B09XKXY1R9,B09XKXY1S1",
+  input_asin: "B09XKXY2T2,B09XKXY3T3",
+  state: "Battery, Plastic, Circuit Board",
+  date_first_available: new Date("2024-08-15"),
+};
+
 const PAGE_SIZE = 20;
 
 const ProductPage = () => {
@@ -31,6 +62,10 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [loadingBadges, setLoadingBadges] = useState([]);
   const observer = useRef();
+
+  const [showEdit, setShowEdit] = useState(false);
+  const [showWindow, setShowWindow] = useState(false);
+  const [windowProduct, setWindowProduct] = useState(null);
 
   useEffect(() => {
     const loadProducts = () => {
@@ -100,6 +135,15 @@ const ProductPage = () => {
 
   return (
     <div className="listing-page">
+      {showWindow ? (
+        <ProductWindow product={windowProduct} setShowState={setShowWindow} />
+      ) : null}
+      <ProductInfo
+        show={showEdit}
+        onClose={() => setShowEdit(false)}
+        productInfo={sampleProductInfo}
+        add={false}
+      />
       <header className="listing-page-head">
         <h1>Product Management</h1>
         <input
@@ -191,8 +235,16 @@ const ProductPage = () => {
                   </td>
                   <td>{product.firstAvailableDate}</td>
                   <td>
-                    <button className="view-btn">View</button>
-                    <button className="edit-btn">Edit</button>
+                    <button
+                      className="view-btn"
+                      onClick={() => {
+                        setShowWindow(true);
+                        setWindowProduct(sampleProduct);
+                      }}
+                    >
+                      View
+                    </button>
+                    <button className="edit-btn" onClick={() => setShowEdit(true)}>Edit</button>
                     <button className="delete-btn">Delete</button>
                   </td>
                 </tr>

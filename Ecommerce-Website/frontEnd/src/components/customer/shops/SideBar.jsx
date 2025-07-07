@@ -3,7 +3,7 @@ import { ALL_CATEGORIES } from "../../../data/products.js";
 import "../../../styles/customer/component-styles/shops/SideBar.css";
 
 // Filter products sidebar.
-function SideBar({ products, setFilteredProducts, showSideBar }) {
+function SideBar({ setFilteredProducts, showSideBar }) {
   const [filters, setFilters] = useState({
     available: false,
     categories: [],
@@ -23,25 +23,12 @@ function SideBar({ products, setFilteredProducts, showSideBar }) {
       return { ...f, categories: newCategories };
     });
   }
-  function hasMatchingCategory(product, selectedCategories) {
-    for (let category of selectedCategories) {
-      if (product.keywords.includes(category)) {
-        return true;
-      }
-    }
-    return false;
-  }
+
 
   function handlePriceRangeChange(priceRange) {
     setFilters((f) => ({ ...f, priceRange: priceRange }));
   }
 
-  function isInPriceRange(product, selectedPriceRange) {
-    const [min, max] = selectedPriceRange;
-    return max !== null
-      ? product.priceCents / 100 >= min && product.priceCents / 100 <= max
-      : product.priceCents / 100 >= min;
-  }
 
 
   function handleGenderChange(gender) {
@@ -52,68 +39,7 @@ function SideBar({ products, setFilteredProducts, showSideBar }) {
       return { ...f, gender: newGender };
     });
   }
-  function handleMatchingGender(product, targetGender) {
-    for (let gender of targetGender) {
-      {
-        /*product contains its gender in its keyword, so if the product have the target gender in thier keywords or doesn't contain any gender in their keywords return true*/
-      }
-      if (
-        product.keywords.includes(gender) ||
-        (!product.keywords.includes("mens") &&
-          !product.keywords.includes("womens"))
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
 
-  function applyFilters() {
-    let filtered = products;
-
-    if (filters.available) {
-      filtered = filtered.filter((p) => p.stock > 0);
-    }
-    if (filters.categories.length > 0) {
-      filtered = filtered.filter((p) =>
-        hasMatchingCategory(p, filters.categories)
-      );
-    }
-    if (filters.priceRange) {
-      filtered = filtered.filter((p) => isInPriceRange(p, filters.priceRange));
-    }
-    if (filters.gender.length > 0) {
-      filtered = filtered.filter((p) =>
-        handleMatchingGender(p, filters.gender)
-      );
-    }
-    setFilteredProducts(filtered);
-  }
-
-  function countAvailableProduct() {
-    let filtered = products;
-    filtered = filtered.filter((p) => p.stock > 0);
-    return filtered.length;
-  }
-  function countProductInFilter(category) {
-    let filtered = products;
-    filtered = filtered.filter((p) => p.keywords.includes(category));
-    return filtered.length;
-  }
-  function countProductInPriceRange(priceRange) {
-    let filtered = products;
-    filtered = filtered.filter((p) => isInPriceRange(p, priceRange));
-    return filtered.length;
-  }
-  function countProductByGender(category) {
-    let filtered = products;
-    filtered = filtered.filter(
-      (p) =>
-        p.keywords.includes(category) ||
-        (!p.keywords.includes("mens") && !p.keywords.includes("womens"))
-    );
-    return filtered.length;
-  }
 
   return (
     <aside className={showSideBar ? "" : "hide-side-bar"}>
@@ -124,13 +50,13 @@ function SideBar({ products, setFilteredProducts, showSideBar }) {
             <li>
               <label>
                 <input type="checkbox" onChange={handleAvailabilityChange} />
-                Available In Stock ({countAvailableProduct()})
+                Available In Stock (123)
               </label>
             </li>
-          </ul>
+          </ul> 
         </div>
         <div className="constraint type">
-          <h3>By Product Type</h3>
+          <h3>By Product Category</h3>
           <ul>
             {ALL_CATEGORIES.map((category) => (
               <li>
@@ -140,7 +66,24 @@ function SideBar({ products, setFilteredProducts, showSideBar }) {
                     onChange={() => handleCategoryChange(category)}
                   />
                   {category[0].toUpperCase() + category.slice(1)} (
-                  {countProductInFilter(category)})
+                  {123})
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="constraint type">
+          <h3>By Product Department</h3>
+          <ul>
+            {ALL_CATEGORIES.map((category) => (
+              <li>
+                <label key={category}>
+                  <input
+                    type="checkbox"
+                    onChange={() => handleCategoryChange(category)}
+                  />
+                  {category[0].toUpperCase() + category.slice(1)} (
+                  {123})
                 </label>
               </li>
             ))}
@@ -177,30 +120,14 @@ function SideBar({ products, setFilteredProducts, showSideBar }) {
                   {`$${priceRange[0]} - $${
                     priceRange[1] ? priceRange[1] : "above"
                   }`}{" "}
-                  ({countProductInPriceRange(priceRange)})
-                </label>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="constraint gender">
-          <h3>By Gender</h3>
-          <ul>
-            {["mens", "womens"].map((gender, index) => (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={() => handleGenderChange(gender)}
-                  />
-                  {gender} ({countProductByGender(gender)})
+                  (123)
                 </label>
               </li>
             ))}
           </ul>
         </div>
 
-        <button id="apply-filter-btn" onClick={applyFilters}>
+        <button id="apply-filter-btn" onClick={() => {}}>
           Apply Filters
         </button>
       </div>

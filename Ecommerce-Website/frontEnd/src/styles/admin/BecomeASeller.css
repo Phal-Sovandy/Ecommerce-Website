@@ -1,0 +1,14 @@
+.listing-table td.status .status-toggle.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.listing-table td.status .status-toggle.approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.listing-table td.status .status-toggle.rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}

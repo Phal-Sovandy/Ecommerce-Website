@@ -7,6 +7,17 @@
   justify-content: center;
   padding-top: 50px;
   padding-bottom: 100px;
+  position: relative;
+}
+
+.products-container .loading-ui{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 .shopping {
   display: grid;
@@ -50,4 +61,26 @@
   position: sticky;
   top: 70px;
   z-index: 200;
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#top-product-menu input{
+  background-color: white;
+  padding: 8px 15px;
+  width: 500px;
+  min-width: 0;
+  border-radius: 100px;
+  border: none;
+  outline: 1px solid rgb(163, 163, 163);
+  transition: all 0.2s ease;
+  margin-right: 30px;
+}
+
+#top-product-menu input:hover,
+#top-product-menu input:focus {
+  outline: 1px solid var(--black-color);
+  border: none;
+  accent-color: none;
 }

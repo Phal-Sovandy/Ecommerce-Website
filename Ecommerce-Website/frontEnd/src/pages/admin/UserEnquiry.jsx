@@ -131,6 +131,10 @@ const UserEnquiry = () => {
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
+          <select defaultValue="">
+            <option value="dateAsc">Sort By Date ↑</option>
+            <option value="dateDesc">Sort By Date ↓</option>
+          </select>
         </div>
       </header>
 

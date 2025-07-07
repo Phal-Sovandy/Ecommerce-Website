@@ -12,8 +12,6 @@
   z-index: 1000;
   width: 80vw;
   height: 60vh;
-  overflow: hidden;
-  max-width: 1350px;
   background-color: white;
   padding: 20px;
   padding-bottom: 30px;
@@ -29,6 +27,7 @@
 .product-window .head {
   width: 100%;
   padding-bottom: 10px;
+  z-index: 10000000;
 }
 .product-window .head .fa-minus {
   cursor: pointer;
@@ -165,16 +164,53 @@
   color: white;
   outline: none;
 }
-.product-descriptions h4 {
+.product-descriptions h4,
+.product-reviews-container > h4,
+.product-details > h4,
+.product-features > h4 {
   border-bottom: 1px solid grey;
   padding-bottom: 5px;
+  margin-top: 20px;
   margin-bottom: 10px;
+  color: black;
+}
+.product-details p {
+  font-weight: 500;
+  margin-top: 3px;
+}
+.product-details .product-badge {
+  display: inline-block;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f509a;
+  padding: 7px 15px;
+  background-color: #d4ebf8;
+  border-radius: 5px;
+}
+.product-details .product-badge {
+  margin-block: 10px;
+}
+.product-details .product-badge span {
+  color: #1f509a;
+}
+.product-details span {
+  margin-left: 10px;
+  color: grey;
+}
+.product-features ul {
+  padding-left: 20px;
+}
+.product-features li {
+  list-style: disc;
+  font-size: 1.1rem;
 }
 .product-descriptions p {
   margin: 0;
 }
 
 .size-chart-container {
+  margin-top: 20px;
   width: 100%;
   overflow: hidden;
 }
@@ -196,11 +232,6 @@
   position: relative;
   width: 100%;
 }
-.product-reviews-container > h4 {
-  border-bottom: 1px solid grey;
-  padding-bottom: 5px;
-  margin-bottom: 10px;
-}
 .product-review {
   background-color: white;
   padding: 20px;
@@ -216,6 +247,7 @@
 .product-review .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 5px;
 }
@@ -231,9 +263,112 @@
   border-radius: 50%;
 }
 
+.product-review .header .review-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .product-review .header .profile-image > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.review-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.review-action > div {
+  width: 30px;
+  aspect-ratio: 1 / 1;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  outline: 1px solid var(--black-color);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.review-action > div.pin-review:hover {
+  background-color: #fec84e;
+  color: var(--black-color);
+  outline: none;
+}
+
+.product-review.pin .review-action > div.pin-review:hover,
+.product-review.pin .review-action > div.delete-review:hover {
+  background-color: white;
+  color: var(--black-color);
+  outline: none;
+}
+
+.review-action > div.delete-review:hover {
+  background-color: #f8d7da;
+  color: var(--red-color);
+  outline: none;
+}
+
+.product-review:hover .review-action > div {
+  visibility: visible;
+  opacity: 1;
+}
+
+.add-comment {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-radius: 100px;
+  margin-top: 30px;
+}
+
+.add-comment input {
+  padding: 10px;
+  padding-left: 15px;
+  border-radius: 100px;
+  background-color: white;
+  border: none;
+  flex: 1;
+  min-width: 0;
+  outline: 1px solid grey;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+.add-comment input:focus,
+.add-comment input:hover {
+  outline-color: black;
+}
+
+.add-comment .post-comment {
+  flex-shrink: 0 0;
+  width: 40px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  margin-right: 5px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  background-color: rgb(199, 206, 198);
+  transition: all 0.2s ease;
+}
+
+.add-comment .post-comment:hover {
+  background-color: var(--identity-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+.add-comment .post-comment:active {
+  background-color: orange;
 }

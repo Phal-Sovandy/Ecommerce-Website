@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import ViewModal from "../../components/admin/ViewModal";
+import EditModal from "../../components/admin/EditModal";
 
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
@@ -19,10 +21,27 @@ const allSellers = Array.from({ length: 5000 }, (_, i) => ({
   joined: "2025-02-01",
   status: i % 2 === 0 ? "Active" : "Inactive",
 }));
+const sampleSellerInfo = {
+  first_name: "Alice",
+  last_name: "Johnson",
+  username: "alicej",
+  email: "alice.johnson@example.com",
+  phone_number: "012-345-678",
+  address_line1: "123 Main Street",
+  address_line2: "Apt 4B",
+  gender: "female",
+  birthdate: new Date("1995-06-15"), // IMPORTANT: use Date object, not string
+  country: { value: "US", label: "United States" }, // for react-select
+  state: "California",
+  city: "Los Angeles",
+  zipcode: "90001",
+};
 
 const PAGE_SIZE = 50;
 
 const SellerPage = () => {
+  const [showSellerInfo, setShowSellerInfo] = useState(false);
+  const [showSellerEditInfo, setShowSellerEditInfo] = useState(false);
   const [visibleSellers, setVisibleSellers] = useState([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -76,6 +95,18 @@ const SellerPage = () => {
 
   return (
     <div className="listing-page">
+      <EditModal
+        show={showSellerEditInfo}
+        onClose={() => setShowSellerEditInfo(false)}
+        info={sampleSellerInfo}
+        titel="Seller"
+      />
+      <ViewModal
+        show={showSellerInfo}
+        onClose={() => setShowSellerInfo(false)}
+        info={sampleSellerInfo}
+        titel="Seller"
+      />
       <header className="listing-page-head">
         <h1>Seller Management</h1>
         <input
@@ -132,7 +163,7 @@ const SellerPage = () => {
                     SELLER{String(seller.seller_id).padStart(7, "0")}
                   </td>
                   <td>{seller.name}</td>
-                  <td>{seller.email}</td>
+                  <td><a href="mailto:seller@gmail.com">{seller.email}</a></td>
                   <td>{seller.phone}</td>
                   <td>{seller.gender}</td>
                   <td>{seller.country}</td>
@@ -147,8 +178,18 @@ const SellerPage = () => {
                     </div>
                   </td>
                   <td>
-                    <button className="view-btn">View</button>
-                    <button className="edit-btn">Edit</button>
+                    <button
+                      className="view-btn"
+                      onClick={() => setShowSellerInfo(true)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="edit-btn"
+                      onClick={() => setShowSellerEditInfo(true)}
+                    >
+                      Edit
+                    </button>
                     <button
                       className={
                         seller.status === "Inactive"

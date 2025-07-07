@@ -16,45 +16,69 @@ const SellerShop = () => {
   const [showWindow, setShowWindow] = useState(false);
   const [windowProduct, setWindowProduct] = useState(null);
 
-  const sampleProduct = {
-    id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c0",
-    image:
-      "https://wpengine.com/wp-content/uploads/2021/05/optimize-images-1024x681.jpg",
-    name: "Men's Athestic Sweater Color Grey",
-    rating: {
-      stars: 4.5,
-      count: 69,
-    },
-    priceCents: 1680,
-    keywords: ["top", "sweater", "shirt", "apparel", "mens"],
-    stock: 10,
-  };
-
   const sampleProductInfo = {
-  title: "Wireless Bluetooth Headphones",
-  description: "Noise-cancelling over-ear headphones with long battery life.",
-  model_number: "WBH-100X",
-  feature: "Something Blah Blah Blah",
-  weight: "250g",
-  dimensions: "20 x 18 x 8 cm",
-  department: ["technology", "kitchen", "bedroom"],
-  variations: ["FJDDFDE:black", "FLENEFEF:blue", "FNELENFLE:red"],
-  parent_asin: "B09XKXY1R9,B09XKXY1S1",
-  input_asin: "B09XKXY2T2,B09XKXY3T3",
-  state: "Battery, Plastic, Circuit Board",
-  date_first_available: new Date("2024-08-15"),
-};
-
+    title: "Men's Athletic Sneakers",
+    categories: ["footwear"],
+    departments: ["men", "sportswear"],
+    images: [
+      "https://images.pexels.com/photos/3680219/pexels-photo-3680219.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg",
+    ],
+    image: "https://img.freepik.com/free-photo/closeup-scarlet-macaw-from-side-view-scarlet-macaw-closeup-head_488145-3540.jpg?semt=ais_hybrid&w=740",
+    rating: 4.5,
+    sold: 128,
+    model_number: "SNKR-2025-XL",
+    brand: "ZoomStep",
+    manufacturer: "ZoomStep Inc.",
+    weight: "950g",
+    dimension: "30 x 18 x 12 cm",
+    date_first_available: new Date("2025-06-01T00:00:00Z"),
+    variations: ["Red", "Blue", "Black"],
+    currency: "$",
+    price: 69.99,
+    discount: "10% off",
+    description:
+      "These men's athletic sneakers combine performance and style, featuring breathable mesh and durable soles. Perfect for running, walking, and gym workouts.",
+    features: [
+      "Breathable mesh upper",
+      "Durable rubber sole",
+      "Lightweight design",
+      "Available in multiple colors",
+      "Designed for sports and casual wear",
+    ],
+    sellerId: "SEL1234",
+    seller_name: "Johny Bloke",
+    badge: "Amazon's choice",
+    root_bs_rank: 123,
+    bs_rank: 12,
+    subcategory_rank: [
+      { subcategory_name: "Automotive", subcategory_rank: 12 },
+      { subcategory_name: "Wheel & Repair", subcategory_rank: 120 },
+    ],
+  };
 
   return (
     <div className="seller-shop-wrapper">
       <div className="add-new-product" onClick={() => setShowAdd(true)}>
         <FontAwesomeIcon icon={faPlus} />
       </div>
-      <ProductInfo show={showAdd} onClose={() => setShowAdd(false)} add={true}/>
-      <ProductInfo show={showEdit} onClose={() => setShowEdit(false)} productInfo={sampleProductInfo} add={false}/>
+      <ProductInfo
+        show={showAdd}
+        onClose={() => setShowAdd(false)}
+        add={true}
+      />
+      <ProductInfo
+        show={showEdit}
+        onClose={() => setShowEdit(false)}
+        productInfo={sampleProductInfo}
+        add={false}
+      />
       {showWindow ? (
-        <ProductWindow product={windowProduct} setShowState={setShowWindow} />
+        <ProductWindow
+          product={windowProduct}
+          setShowState={setShowWindow}
+          showEdit={setShowEdit}
+        />
       ) : null}
       <ClarifyDelete show={sureDelete} onClose={() => setSureDelete(false)} />
       <header>
@@ -79,91 +103,90 @@ const SellerShop = () => {
       <main>
         <div className="products-container">
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
           <ProductCard
-            product={sampleProduct}
+            product={sampleProductInfo}
             setDeletePrompt={setSureDelete}
             showEdit={setShowEdit}
             showDetails={setShowWindow}
             setShowItem={setWindowProduct}
           />
         </div>
-        
       </main>
     </div>
   );

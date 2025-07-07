@@ -11,8 +11,10 @@ import {
   faFacebookF,
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../../context/AuthContext";
 
 function WelcomingSection() {
+  const { role } = useAuth();
   return (
     <section className="welcome-section">
       <div className="left">
@@ -27,9 +29,11 @@ function WelcomingSection() {
           </p>
 
           <div className="btn-container">
-            <Link to="/shopping">
-              <button className="shop-now-btn">Shop Now</button>
-            </Link>
+            {role === "customer" && (
+              <Link to="/shopping">
+                <button className="shop-now-btn">Shop Now</button>
+              </Link>
+            )}
             <Link to="/contacts">
               <button className="learn-more-btn">Contacts Us</button>
             </Link>

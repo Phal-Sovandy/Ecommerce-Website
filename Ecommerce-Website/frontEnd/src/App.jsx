@@ -22,6 +22,7 @@ import CustomerPage from "./pages/admin/CustomerPage.jsx";
 import SellerPage from "./pages/admin/SellerPage.jsx";
 import ProductPage from "./pages/admin/ProductPage.jsx";
 import UserEnquiry from "./pages/admin/UserEnquiry.jsx";
+import BecomeASeller from "./pages/admin/BecomeASeller.jsx";
 
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext";
@@ -130,6 +131,15 @@ const router = createBrowserRouter(
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <UserEnquiry />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/becomeASeller"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <BecomeASeller />
           </ProtectedRoute>
         }
       />

@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { useCart } from "../../../context/CartContext.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import { VARIATION_PRODUCT_IDS } from "../../../data/variationProducts.js";
-import priceFormat from "../../../utils/priceFormat.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartShopping,
@@ -22,8 +19,6 @@ function ProductCard({
 }) {
   const { isLoggedIn, role } = useAuth();
   const { addToCart } = useCart();
-  const hasVariation = VARIATION_PRODUCT_IDS.includes(product.id);
-
   return (
     <div
       key={product.id}
@@ -36,22 +31,22 @@ function ProductCard({
       }}
     >
       <div className="product-image-holder">
-        <img src={product.image} alt={product.name}></img>
+        <img src={product.image} alt={product.title}></img>
       </div>
       <div className="product-description">
         <div>
-          <h3 className="product-name">{product.name}</h3>
+          <h3 className="product-name">{product.title}</h3>
           <p className="product-keywords">
-            {product.keywords
+            {product.categories
               .slice(
                 0,
-                product.keywords.length > 3 ? 4 : product.keywords.length
+                product.categories.length > 3 ? 4 : product.categories.length
               )
               .join(" | ")}
           </p>
         </div>
         <div className="card-functions">
-          <h2 className="product-price">${priceFormat(product.priceCents)}</h2>
+          <h2 className="product-price">{product.currency}{product.price}</h2>
           {isLoggedIn && role === "customer" && (
             <div className="functions-product customer">
               <FontAwesomeIcon
@@ -59,9 +54,9 @@ function ProductCard({
                 size="lg"
                 onClick={() => {
                   if (
-                    product.keywords.includes("footwear") ||
-                    product.keywords.includes("apparel") ||
-                    hasVariation
+                    product.categories.includes("footwear") ||
+                    product.categories.includes("apparel") ||
+                    product.variations
                   ) {
                     showDetails(true);
                     setShowItem(product);

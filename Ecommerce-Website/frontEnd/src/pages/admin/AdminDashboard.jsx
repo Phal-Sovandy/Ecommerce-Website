@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import "../../styles/admin/AdminDashboard.css";
 
 import {
@@ -14,7 +15,8 @@ import {
 } from "chart.js";
 
 import { Bar, Line, Doughnut, Pie } from "react-chartjs-2";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 ChartJS.register(
   CategoryScale,
@@ -27,7 +29,7 @@ ChartJS.register(
   Legend
 );
 
-// Sample raw data (for demo)
+// Sample data
 const rawUserData = {
   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
@@ -53,7 +55,7 @@ const rawRevenueData = {
 };
 
 const rawOrderStatusData = {
-  labels: ["Pending", "Shipped", "Delivered", "Canceled"],
+  labels: ["Pending", "Shipping", "Delivered", "Canceled"],
   datasets: [
     {
       label: "Order Status",
@@ -85,6 +87,22 @@ const rawTopProductsData = {
   ],
 };
 
+const topCustomers = [
+  { name: "Alice Johnson", totalSpent: 12000 },
+  { name: "Bob Smith", totalSpent: 9500 },
+  { name: "Carol Lee", totalSpent: 8700 },
+  { name: "David Kim", totalSpent: 7900 },
+  { name: "Ella Brown", totalSpent: 7100 },
+];
+
+const topSellers = [
+  { name: "ElectroMart", totalSales: 24000 },
+  { name: "FashionHub", totalSales: 21000 },
+  { name: "BookNest", totalSales: 19800 },
+  { name: "HomeStyle", totalSales: 18500 },
+  { name: "GadgetCore", totalSales: 17200 },
+];
+
 const options = {
   responsive: true,
   plugins: {
@@ -94,9 +112,7 @@ const options = {
 };
 
 const AdminDashboard = () => {
-  const [dateFilter, setDateFilter] = useState({ type: "month" });
-
-  // Directly use raw data here (replace with your real filtered data logic)
+  const { logout } = useAuth();
   const filteredUserData = rawUserData;
   const filteredRevenueData = rawRevenueData;
   const filteredOrderStatusData = rawOrderStatusData;
@@ -105,9 +121,20 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <h1>Admin Dashboard</h1>
-
-      <DateFilter onChange={setDateFilter} />
+      <header>
+        <h1>Admin Dashboard</h1>
+        <div>
+          <select defaultValue={"allTime"}>
+            <option value="allTime">All time</option>
+            <option value="today">Today</option>
+            <option value="thisMonth">This Month</option>
+            <option value="thisYear">This Year</option>
+          </select>
+          <div className="log-out" onClick={logout}>
+            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+          </div>
+        </div>
+      </header>
 
       <div className="stats">
         <div className="stat-box">
@@ -124,30 +151,64 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      <div className="top-user-row">
+        <div className="top-user-section">
+          <h3>Top 5 Customers</h3>
+          <div className="user-cards-row">
+            {topCustomers.map((customer, idx) => (
+              <div className="user-card" key={idx}>
+                <h4>{customer.name}</h4>
+                <p>Total Spent: ${customer.totalSpent.toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="top-user-section">
+          <h3>Top 5 Sellers</h3>
+          <div className="user-cards-row">
+            {topSellers.map((seller, idx) => (
+              <div className="user-card" key={idx}>
+                <h4>{seller.name}</h4>
+                <p>Total Sales: ${seller.totalSales.toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="charts-grid">
-        <div className="chart-box">
-          <h3>New Users Per Month</h3>
-          <Bar data={filteredUserData} options={options} />
+        <div className="part-1">
+          <div className="chart-box">
+            <h3>New Users Per Month</h3>
+            <Bar data={filteredUserData} options={options} />
+          </div>
+
+          <div className="chart-box">
+            <h3>Top Selling Products</h3>
+            <Bar data={filteredTopProductsData} options={options} />
+          </div>
+
+          <div className="chart-box">
+            <h3>Revenue Over Time</h3>
+            <Line data={filteredRevenueData} options={options} />
+          </div>
         </div>
 
-        <div className="chart-box">
-          <h3>Revenue Over Time</h3>
-          <Line data={filteredRevenueData} options={options} />
-        </div>
+        <div className="part-2">
+          <div className="chart-box">
+            <h3>Order Status Breakdown</h3>
+            <div>
+              <Pie data={filteredOrderStatusData} options={options} />
+            </div>
+          </div>
 
-        <div className="chart-box">
-          <h3>Order Status Breakdown</h3>
-          <Pie data={filteredOrderStatusData} options={options} />
-        </div>
-
-        <div className="chart-box">
-          <h3>Sales by Category</h3>
-          <Doughnut data={filteredSalesByCategoryData} options={options} />
-        </div>
-
-        <div className="chart-box">
-          <h3>Top Selling Products</h3>
-          <Bar data={filteredTopProductsData} options={options} />
+          <div className="chart-box">
+            <h3>Sales by Category</h3>
+            <div>
+              <Doughnut data={filteredSalesByCategoryData} options={options} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -155,56 +216,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
-
-const DateFilter = ({ onChange }) => {
-  const [filter, setFilter] = useState("month");
-  const [customRange, setCustomRange] = useState({ from: "", to: "" });
-
-  const handleFilterChange = (e) => {
-    const val = e.target.value;
-    setFilter(val);
-    if (val !== "custom") {
-      onChange({ type: val });
-    }
-  };
-
-  const handleCustomDateChange = (e) => {
-    const { name, value } = e.target;
-    const newRange = { ...customRange, [name]: value };
-    setCustomRange(newRange);
-
-    if (newRange.from && newRange.to) {
-      onChange({ type: "custom", from: newRange.from, to: newRange.to });
-    }
-  };
-
-  return (
-    <div style={{ marginBottom: 20 }}>
-      <select value={filter} onChange={handleFilterChange}>
-        <option value="day">Last Day</option>
-        <option value="week">Last Week</option>
-        <option value="month">Last Month</option>
-        <option value="custom">Custom Range</option>
-      </select>
-
-      {filter === "custom" && (
-        <div style={{ marginTop: 10 }}>
-          <input
-            type="date"
-            name="from"
-            value={customRange.from}
-            onChange={handleCustomDateChange}
-          />
-          <input
-            type="date"
-            name="to"
-            value={customRange.to}
-            onChange={handleCustomDateChange}
-            style={{ marginLeft: 10 }}
-          />
-        </div>
-      )}
-    </div>
-  );
-};

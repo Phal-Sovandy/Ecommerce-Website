@@ -107,6 +107,15 @@ function Navigation() {
         {role == "admin" && (
           <NavLink
             className={({ isActive }) => (isActive ? "active-page" : "")}
+            to="/becomeASeller"
+          >
+            SELLER REQUEST
+          </NavLink>
+        )}
+
+        {role == "admin" && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "active-page" : "")}
             to="/userEnquiry"
           >
             USER ENQUIRY

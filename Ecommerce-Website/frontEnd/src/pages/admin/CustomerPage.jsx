@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import ViewModal from "../../components/admin/ViewModal";
+import EditModal from "../../components/admin/EditModal";
 
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
@@ -19,10 +21,28 @@ const allCustomers = Array.from({ length: 100 }, (_, i) => ({
   status: i % 2 === 0 ? "Active" : "Inactive",
 }));
 
+const sampleCustomerInfo = {
+  first_name: "Alice",
+  last_name: "Johnson",
+  username: "alicej",
+  email: "alice.johnson@example.com",
+  phone_number: "012-345-678",
+  address_line1: "123 Main Street",
+  address_line2: "Apt 4B",
+  gender: "female",
+  birthdate: new Date("1995-06-15"), // IMPORTANT: use Date object, not string
+  country: { value: "US", label: "United States" }, // for react-select
+  state: "California",
+  city: "Los Angeles",
+  zipcode: "90001",
+};
+
 const PAGE_SIZE = 50;
 
 const CustomerPage = () => {
   const [visibleCustomers, setVisibleCustomers] = useState([]);
+  const [showCustomerInfo, setShowCustomerInfo] = useState(false);
+  const [showCustomerEditInfo, setShowCustomerEditInfo] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -79,6 +99,19 @@ const CustomerPage = () => {
 
   return (
     <div className="listing-page">
+      <EditModal
+        show={showCustomerEditInfo}
+        onClose={() => setShowCustomerEditInfo(false)}
+        info={sampleCustomerInfo}
+        title="Customer"
+      />
+      <ViewModal
+        show={showCustomerInfo}
+        onClose={() => setShowCustomerInfo(false)}
+        info={sampleCustomerInfo}
+        title="Customer"
+      />
+
       <header className="listing-page-head">
         <h1>Customer Management</h1>
         <input
@@ -138,7 +171,7 @@ const CustomerPage = () => {
                     CUST{String(customer.customer_id).padStart(7, "0")}
                   </td>
                   <td>{customer.name}</td>
-                  <td>{customer.email}</td>
+                  <td><a href="mailto:customer@gmail.com">{customer.email}</a></td>
                   <td>{customer.phone}</td>
                   <td>{customer.gender}</td>
                   <td>{customer.country}</td>
@@ -153,8 +186,18 @@ const CustomerPage = () => {
                     </div>
                   </td>
                   <td>
-                    <button className="view-btn">View</button>
-                    <button className="edit-btn">Edit</button>
+                    <button
+                      className="view-btn"
+                      onClick={() => setShowCustomerInfo(true)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="edit-btn"
+                      onClick={() => setShowCustomerEditInfo(true)}
+                    >
+                      Edit
+                    </button>
                     <button
                       className={
                         customer.status === "Inactive"
