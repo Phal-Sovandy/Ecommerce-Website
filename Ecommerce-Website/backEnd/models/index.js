@@ -145,22 +145,6 @@ const ProductDetail = sequelize.define(
       },
       onDelete: "SET NULL",
     },
-    parent_asin: {
-      type: DataTypes.STRING(20),
-      references: {
-        model: "products",
-        key: "asin",
-      },
-      onDelete: "SET NULL",
-    },
-    input_asin: {
-      type: DataTypes.STRING(20),
-      references: {
-        model: "products",
-        key: "asin",
-      },
-      onDelete: "SET NULL",
-    },
     ingredients: {
       type: DataTypes.TEXT,
     },
@@ -260,6 +244,84 @@ const Seller = sequelize.define(
     timestamps: true,
     createdAt: "created_at",
     updatedAt: "updated_at",
+  }
+);
+
+const SellerDetail = sequelize.define(
+  "SellerDetail",
+  {
+    seller_id: {
+      type: DataTypes.TEXT,
+      primaryKey: true,
+      references: {
+        model: "sellers",
+        key: "seller_id",
+      },
+      onDelete: "CASCADE",
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      unique: true,
+      allowNull: false,
+    },
+    password_hash: {
+      type: DataTypes.TEXT,
+    },
+    contact_person: {
+      type: DataTypes.STRING(255),
+    },
+    phone: {
+      type: DataTypes.STRING(20),
+    },
+    profile_picture: {
+      type: DataTypes.TEXT,
+    },
+    login_method: {
+      type: DataTypes.STRING(20),
+      defaultValue: "email",
+    },
+    registration_date: {
+      type: DataTypes.DATEONLY,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    tableName: "seller_detail",
+    timestamps: false,
+  }
+);
+
+const SellerLocation = sequelize.define(
+  "SellerLocation",
+  {
+    seller_id: {
+      type: DataTypes.TEXT,
+      primaryKey: true,
+      references: {
+        model: "seller_detail",
+        key: "seller_id",
+      },
+      onDelete: "CASCADE",
+    },
+    city: {
+      type: DataTypes.STRING(100),
+    },
+    state: {
+      type: DataTypes.STRING(100),
+    },
+    zipcode: {
+      type: DataTypes.STRING(10),
+    },
+    address_line1: {
+      type: DataTypes.TEXT,
+    },
+    address_line2: {
+      type: DataTypes.TEXT,
+    },
+  },
+  {
+    tableName: "seller_locations",
+    timestamps: false,
   }
 );
 
@@ -783,6 +845,97 @@ const CustomerReview = sequelize.define(
   }
 );
 
+const UserEnquiry = sequelize.define(
+  "UserEnquiry",
+  {
+    enquiry_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    full_name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.ENUM("Guess", "Customer", "Seller"),
+      allowNull: false,
+    },
+    gender: {
+      type: DataTypes.ENUM("Male", "Female"),
+      allowNull: false,
+    },
+    country: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    region: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      unique: true,
+      allowNull: false,
+    },
+    phone: {
+      type: DataTypes.STRING(20),
+    },
+    comment: {
+      type: DataTypes.TEXT,
+    },
+    badge: {
+      type: DataTypes.ENUM("Priority", "Regular"),
+      allowNull: false,
+    },
+    enquiry_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    tableName: "user_enquiries",
+    timestamps: false, // Set to false as per your SQL schema
+  }
+);
+
+const SellerRequest = sequelize.define(
+  "SellerRequest",
+  {
+    request_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    customer_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "customers",
+        key: "customer_id",
+      },
+      onDelete: "CASCADE",
+    },
+    request_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    status: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      defaultValue: "pending",
+    },
+  },
+  {
+    tableName: "seller_requests",
+    timestamps: false,
+  }
+);
+
 // --- Model Associations ---
 
 // Product to Brand, Manufacturer, Department
@@ -810,10 +963,6 @@ Department.hasMany(ProductDetail, {
 // Product details
 Product.hasOne(ProductDetail, { foreignKey: "asin", as: "details" });
 ProductDetail.belongsTo(Product, { foreignKey: "asin" });
-
-// Product self-referencing for parent/input ASIN
-Product.belongsTo(Product, { foreignKey: "parent_asin", as: "parentProduct" });
-Product.hasMany(Product, { foreignKey: "parent_asin", as: "childProducts" }); // For products that have children
 
 Product.belongsTo(Product, { foreignKey: "input_asin", as: "inputProduct" });
 
@@ -924,6 +1073,25 @@ Customer.hasMany(CustomerReview, {
   as: "customerReviews",
 });
 
+Seller.hasOne(SellerDetail, { foreignKey: "seller_id", as: "details" });
+SellerDetail.belongsTo(Seller, { foreignKey: "seller_id" });
+
+SellerDetail.hasOne(SellerLocation, {
+  foreignKey: "seller_id",
+  as: "location",
+});
+SellerLocation.belongsTo(SellerDetail, { foreignKey: "seller_id" });
+
+// Seller requests
+Customer.hasMany(SellerRequest, {
+  foreignKey: "customer_id",
+  as: "sellerRequests",
+});
+SellerRequest.belongsTo(Customer, {
+  foreignKey: "customer_id",
+  as: "customer",
+});
+
 export default {
   Manufacturer,
   Department,
@@ -949,4 +1117,8 @@ export default {
   Wishlist,
   WishlistItem,
   CustomerReview,
+  UserEnquiry,
+  SellerRequest,
+  SellerDetail,
+  SellerLocation
 };
