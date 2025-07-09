@@ -5,6 +5,7 @@ import { initDatabase } from "./config/database.js";
 import customerRouter from "./routes/customerRoutes.js";
 import productRouter from "./routes/productRoutes.js";
 import reviewRouter from "./routes/reviewRoutes.js";
+import wishlistRouter from "./routes/wishlistRoutes.js";
 
 dotenv.config();
 const { BASE_API_URL, PORT } = process.env;
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(`${BASE_API_URL}/customers`, customerRouter);
 app.use(`${BASE_API_URL}/products`, productRouter);
 app.use(`${BASE_API_URL}/reviews`, reviewRouter);
+app.use(`${BASE_API_URL}/wishlists`, wishlistRouter);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
