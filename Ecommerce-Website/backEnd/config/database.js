@@ -9,9 +9,17 @@ const sequelize = new Sequelize(DATABASE_NAME, HOST_NAME, PASSWORD, {
   dialect: "postgres",
 });
 
-sequelize
-  .authenticate()
-  .then(() => console.log("Database Connected"))
-  .catch((err) => console.log(err));
+async function initDatabase(){
+  try{
+    await sequelize.authenticate();
+    console.log("DATABASE CONNECTED!");
+    await sequelize.sync();
+    console.log("DATABASE MODEL SYNCED!");
+  }
+  catch(error){
+    console.error(`ERROR: ${error}`);
+  }
 
-export default sequelize;
+}
+
+export {sequelize, initDatabase};

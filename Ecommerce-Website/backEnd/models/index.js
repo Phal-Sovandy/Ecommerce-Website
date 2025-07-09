@@ -1,4 +1,5 @@
 import { DataTypes } from "sequelize";
+import { sequelize } from "../config/database";
 
 // Product Related Tables
 const Manufacturer = sequelize.define(
@@ -1147,5 +1148,6 @@ export default {
   UserEnquiry,
   SellerRequest,
   SellerDetail,
-  SellerLocation
+  SellerLocation,
+  Admin
 };
