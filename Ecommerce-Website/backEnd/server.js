@@ -13,9 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => console.log('Hello! Testing 1 2 3... :)'));
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "wassup! connected." });
+  console.log("Hello! Testing 1 2 3... :)");
+});
 
 app.listen(PORT, () => {
   console.log(`SERVER IS LISTEN TO PORT: ${PORT}`);
 });
- 
