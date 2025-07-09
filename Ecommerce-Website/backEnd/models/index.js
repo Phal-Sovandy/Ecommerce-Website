@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database";
+import { sequelize } from "../config/database.js";
 
 // Product Related Tables
 const Manufacturer = sequelize.define(
@@ -99,7 +99,7 @@ const Product = sequelize.define(
   },
   {
     tableName: "products",
-    timestamps: true,
+    timestamps: false,
     updatedAt: "updated_at",
   }
 );
@@ -991,8 +991,6 @@ Department.hasMany(ProductDetail, {
 // Product details
 Product.hasOne(ProductDetail, { foreignKey: "asin", as: "details" });
 ProductDetail.belongsTo(Product, { foreignKey: "asin" });
-
-Product.belongsTo(Product, { foreignKey: "input_asin", as: "inputProduct" });
 
 // Product to Pricing, Rankings, Media, Reviews
 Product.hasOne(Pricing, { foreignKey: "asin", as: "pricing" });

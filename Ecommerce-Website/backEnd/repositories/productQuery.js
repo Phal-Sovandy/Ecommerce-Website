@@ -1,13 +1,13 @@
-import sequelize from "../config/database.js";
+import models from "../models/index.js";
 
 // Query All Products
-export async function getAllProducts() {
+export async function queryAllProducts(req, res) {
   try {
-    const [results, metadata] = await sequelize.query("SELECT * FROM products");
-    return results;
+    const allProducts = await models.Product.findAll();
+    res.status(200).json(allProducts);
   } catch (error) {
-    console.error("Error querying products:", error);
-    throw error;
+    console.error("Error fetching customers:", error);
+    res.status(500).json({ error: "Failed to retrieve customers" });
   }
 };
 // Query Product by Category

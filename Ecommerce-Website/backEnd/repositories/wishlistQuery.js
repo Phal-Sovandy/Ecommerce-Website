@@ -1,4 +1,4 @@
-import sequelize from "../config/database.js";
+import models from "../models/index.js";
 
 // Qeury all product in wishlist by customer_id
 // TODO

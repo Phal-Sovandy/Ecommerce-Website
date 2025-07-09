@@ -1,4 +1,4 @@
-import sequelize from "../config/database.js";
+import models from "../models/index.js";
 
 // Query all sellers
 // TODO
