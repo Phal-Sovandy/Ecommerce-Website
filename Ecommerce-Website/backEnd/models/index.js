@@ -897,7 +897,7 @@ const UserEnquiry = sequelize.define(
   },
   {
     tableName: "user_enquiries",
-    timestamps: false, // Set to false as per your SQL schema
+    timestamps: false, 
   }
 );
 
@@ -936,6 +936,33 @@ const SellerRequest = sequelize.define(
   }
 );
 
+const Admin = sequelize.define('Admin', {
+  admin_id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  email: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true
+    }
+  },
+  phone: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    unique: true
+  },
+  hashed_password: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  }
+}, {
+  tableName: 'admin',
+  timestamps: true
+});
 // --- Model Associations ---
 
 // Product to Brand, Manufacturer, Department
