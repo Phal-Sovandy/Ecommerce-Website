@@ -187,3 +187,11 @@
   text-align: center;
   color: grey;
 }
+
+.null {
+  color: grey;
+}
+
+.long-content-cell{
+  max-width: 350px;
+}

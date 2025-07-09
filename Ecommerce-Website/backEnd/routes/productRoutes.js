@@ -1,9 +1,12 @@
 import express from 'express';
-import { queryAllProducts } from '../repositories/productQuery.js';
+import {queryAllProducts, queryAProductInfo, queryAllProductsBySearch} from '../repositories/productQuery.js';
 
 const productRouters = express.Router();
 
-productRouters.get("/", queryAllProducts);
+productRouters.route("/").get(queryAllProducts);
+productRouters.route("/:productId").get(queryAProductInfo);
+productRouters.get("/search", queryAllProductsBySearch);
+
 
 // TODO
 

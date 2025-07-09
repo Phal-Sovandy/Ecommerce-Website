@@ -2,26 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import ProductWindow from "../../components/customer/shops/ProductWindow";
 import ProductInfo from "../../components/seller/ProductInfo";
 import { Quantum } from "ldrs/react";
+import {
+  getAllProducts,
+  getAProductsInfo,
+} from "../../api/admin/productsPage.js";
 import "ldrs/react/Quantum.css";
 import "../../styles/admin/ProductPage.css";
-
-const currencies = ["USD", "EUR", "GBP", "JPY", "AUD"];
-
-const allProducts = Array.from({ length: 5000 }, (_, i) => ({
-  product_id: i + 1,
-  asin: `ASIN${String(i + 1).padStart(6, "0")}`,
-  seller_id: `SELLER${(i % 100) + 1}`,
-  title: `Product ${i + 1}`,
-  brand: ["Sony", "Nike", "Apple", "Samsung", "Adidas"][i % 5],
-  category: i % 3 === 0 ? "Electronics" : i % 3 === 1 ? "Clothing" : "Home",
-  price: (Math.random() * 100).toFixed(2),
-  currency: currencies[i % currencies.length],
-  discount: `${(Math.random() * 30).toFixed(0)}%`,
-  rating: (Math.random() * 5).toFixed(1),
-  sold: Math.floor(Math.random() * 1000),
-  badge: i % 4 === 0 ? "Amazon's Choice" : "",
-  firstAvailableDate: "2025-07-25",
-}));
 
 const sampleProduct = {
   id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c0",
@@ -55,11 +41,13 @@ const sampleProductInfo = {
 const PAGE_SIZE = 20;
 
 const ProductPage = () => {
+  const [products, setProducts] = useState([]);
+  const [showProduct, setShowProducts] = useState({});
   const [visibleProducts, setVisibleProducts] = useState([]);
-  const [products, setProducts] = useState(allProducts);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [loadingBadges, setLoadingBadges] = useState([]);
   const observer = useRef();
 
@@ -68,57 +56,45 @@ const ProductPage = () => {
   const [windowProduct, setWindowProduct] = useState(null);
 
   useEffect(() => {
-    const loadProducts = () => {
-      setLoading(true);
-
-      setTimeout(() => {
-        const filtered = products.filter(
-          (p) =>
-            p.title.toLowerCase().includes(search.toLowerCase().trim()) ||
-            p.seller_id.toLowerCase().includes(search.toLowerCase().trim()) ||
-            p.asin.toLowerCase().includes(search.toLowerCase().trim()) ||
-            p.firstAvailableDate
-              .toLowerCase()
-              .includes(search.toLowerCase().trim())
-        );
-        const start = 0;
-        const end = PAGE_SIZE * page;
-        setVisibleProducts(filtered.slice(start, end));
+    async function fetchAllProducts() {
+      try {
+        const data = await getAllProducts();
+        console.log(data);
+        setProducts(data);
+      } catch (error) {
+        setError(error);
+      } finally {
         setLoading(false);
-      }, 600); // Simulate network delay
-    };
+      }
+    }
+    fetchAllProducts();
+  }, []);
 
-    loadProducts();
-  }, [page, search, products]);
+  useEffect(() => {
+    const start = 0;
+    const end = PAGE_SIZE * page;
+    setVisibleProducts(products.slice(start, end));
+  }, [page, products]);
 
   const toggleBadge = async (productId) => {
     setLoadingBadges((l) => [...l, productId]);
 
     setProducts((p) =>
       p.map((p) =>
-        p.product_id === productId
+        p.asin === productId
           ? { ...p, badge: p.badge ? "" : "Amazon's Choice" }
           : p
       )
     );
-
     // Testing
     await new Promise((resolve) => setTimeout(resolve, 600));
 
     setLoadingBadges((l) => l.filter((id) => id !== productId));
   };
 
-  const filteredTotal = allProducts.filter(
-    (p) =>
-      p.title.toLowerCase().includes(search.toLowerCase().trim()) ||
-      p.seller_id.toLowerCase().includes(search.toLowerCase().trim()) ||
-      p.asin.toLowerCase().includes(search.toLowerCase().trim()) ||
-      p.firstAvailableDate.toLowerCase().includes(search.toLowerCase().trim())
-  ).length;
-
   const lastProductRef = useCallback(
     (node) => {
-      if (loading || visibleProducts.length >= filteredTotal) return;
+      if (loading || visibleProducts.length >= products.length) return;
 
       if (observer.current) observer.current.disconnect();
 
@@ -130,7 +106,7 @@ const ProductPage = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, visibleProducts.length, filteredTotal]
+    [loading, visibleProducts.length, products]
   );
 
   return (
@@ -148,7 +124,7 @@ const ProductPage = () => {
         <h1>Product Management</h1>
         <input
           type="text"
-          placeholder="Search by ASIN or title or Seller ID or Available Date..."
+          placeholder="Search by ASIN or title, Seller ID, Brand, Category or Available Date..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -159,16 +135,17 @@ const ProductPage = () => {
         />
         <div className="listing-action">
           <select defaultValue={""}>
-            <option value="">Filter Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="">Filter Badge</option>
+            <option value="amzonChoice">Amazon's Choice</option>
+            <option value="bestSeller">#1 Best Seller</option>
+            <option value="newRelease">#1 New Release</option>
           </select>
           <select defaultValue={""}>
-            <option value="">Filter Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="">Filter Discount</option>
+            <option value="discount">Discount</option>
+            <option value="noDiscount">No Discount</option>
           </select>
-          <select defaultValue={"nameAsc"}>
+          <select defaultValue={"titleAsc"}>
             <option value="titleAsc">Sort By Title ↑</option>
             <option value="titleDesc">Sort By Title ↓</option>
             <option value="priceAsc">Sort By Price ↑</option>
@@ -177,6 +154,8 @@ const ProductPage = () => {
             <option value="soldDesc">Sort By Sold Unit ↓</option>
             <option value="dateAsc">Sort By Date ↑</option>
             <option value="dateDesc">Sort By Date ↓</option>
+            <option value="ratingAsc">Sort By Rating ↑</option>
+            <option value="ratingDesc">Sort By Rating ↓</option>
           </select>
         </div>
       </header>
@@ -207,15 +186,25 @@ const ProductPage = () => {
                   ref={isLast ? lastProductRef : null}
                 >
                   <td className="entity-id">{product.asin}</td>
-                  <td>{product.seller_id}</td>
-                  <td>{product.title}</td>
-                  <td className="product-price">
-                    {product.price} <span>{product.currency}</span>
+                  <td className={product.seller_id ? "" : "null"}>
+                    {product.seller_id || "NO RECORD"}
+                  </td>
+                  <td className="long-content-cell">{product.title}</td>
+                  <td className={`product-price ${!product.price && "null"}`}>
+                    {product.price ? (
+                      <>
+                        {product.price} <span>{product.currency}</span>
+                      </>
+                    ) : (
+                      "NO RECORD"
+                    )}
                   </td>
                   <td>{product.discount}</td>
                   <td>{product.rating}</td>
                   <td>{product.sold}</td>
-                  <td>{product.brand}</td>
+                  <td className={product.brand ? "" : "null"}>
+                    {product.brand || "NO RECORD"}
+                  </td>
                   <td className="badge">
                     <button
                       className={`badge-toggle ${
@@ -233,18 +222,34 @@ const ProductPage = () => {
                       )}
                     </button>
                   </td>
-                  <td>{product.firstAvailableDate}</td>
+                  <td className={product.firstAvailableDate ? "" : "null"}>
+                    {product.firstAvailableDate || "NO RECORD"}
+                  </td>
                   <td>
                     <button
                       className="view-btn"
-                      onClick={() => {
-                        setShowWindow(true);
-                        setWindowProduct(sampleProduct);
+                      onClick={async () => {
+                        try {
+                          console.log(product.asin)
+                          const data = await getAProductsInfo(
+                            product.asin
+                          );
+                          setShowProducts(data);
+                          setShowWindow(true);
+                          setWindowProduct(showProduct);
+                        } catch (err) {
+                          setError(err);
+                        }
                       }}
                     >
                       View
                     </button>
-                    <button className="edit-btn" onClick={() => setShowEdit(true)}>Edit</button>
+                    <button
+                      className="edit-btn"
+                      onClick={() => setShowEdit(true)}
+                    >
+                      Edit
+                    </button>
                     <button className="delete-btn">Delete</button>
                   </td>
                 </tr>
@@ -258,7 +263,7 @@ const ProductPage = () => {
           </div>
         )}
 
-        {!loading && visibleProducts.length >= filteredTotal && (
+        {!loading && visibleProducts.length >= products && (
           <p className="end-loading-list">No more products to load.</p>
         )}
       </div>

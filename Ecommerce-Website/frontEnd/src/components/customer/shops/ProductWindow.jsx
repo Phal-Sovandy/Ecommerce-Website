@@ -163,10 +163,10 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
               <div className="product-title">
                 <h2>{product.title}</h2>
                 <p className="product-categories">
-                  {product.categories.join(" | ")}
+                  {product.categories}
                 </p>
                 <p className="product-departments">
-                  {product.departments.join(" | ")}
+                  {product.departments}
                 </p>
                 <div className="product-rating">
                   <img
@@ -226,7 +226,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
             <div className="selection choice">
               <h4>Choice Selections</h4>
               <div className="selection-container">
-                {product.variations.map((optionItem, index) => (
+                {/* {product.variations.map((optionItem, index) => (
                   <div
                     key={optionItem}
                     className={optionItem === option ? "selected" : ""}
@@ -237,7 +237,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                   >
                     {optionItem}
                   </div>
-                ))}
+                ))} */}
               </div>
             </div>
 
@@ -257,9 +257,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                     </span>
                   </p>
                 )}
-                <p>
-                  {product.availability}
-                </p>
+                <p>{product.availability}</p>
                 <p>
                   Rank in all category <span>{product.root_bs_rank}</span>
                 </p>
@@ -299,7 +297,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                 )}
                 <p>
                   Date first available{" "}
-                  <span>{product.date_first_available.toLocaleString()}</span>
+                  <span>{product.date_first_available}</span>
                 </p>
               </div>
             </div>

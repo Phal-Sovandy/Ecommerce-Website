@@ -489,7 +489,7 @@ const Feature = sequelize.define(
       },
       onDelete: "CASCADE",
     },
-    feature: {
+    features: {
       type: DataTypes.ARRAY(DataTypes.TEXT),
     },
   },
@@ -516,12 +516,41 @@ const Variation = sequelize.define(
       },
       onDelete: "CASCADE",
     },
-    variation: {
+    variations: {
       type: DataTypes.JSONB,
     },
   },
   {
     tableName: "variations",
+    timestamps: false,
+  }
+);
+
+// Add to database pgAdmin
+const ProductVariation = sequelize.define(
+  "ProductVariation",
+  {
+    asin: {
+      type: DataTypes.STRING(20),
+      primaryKey: true,
+      references: {
+        model: "products",
+        key: "asin",
+      },
+      onDelete: "CASCADE",
+    },
+    variation_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: "variations",
+        key: "variation_id",
+      },
+      onDelete: "CASCADE",
+    },
+  },
+  {
+    tableName: "product_variations",
     timestamps: false,
   }
 );
@@ -1018,11 +1047,26 @@ Seller.belongsToMany(Product, {
   otherKey: "asin",
   as: "products",
 });
-// Also define direct relations for the join table
+
+Product.hasMany(ProductSeller, { foreignKey: "asin" });
 ProductSeller.belongsTo(Product, { foreignKey: "asin" });
+
+Seller.hasMany(ProductSeller, { foreignKey: "seller_id" });
 ProductSeller.belongsTo(Seller, { foreignKey: "seller_id" });
 
-// Product to Categories (Many-to-Many through ProductCategory)
+Product.belongsToMany(Seller, {
+  through: ProductSeller,
+  foreignKey: "asin",
+  otherKey: "seller_id",
+});  
+
+Seller.belongsToMany(Product, {
+  through: ProductSeller,
+  foreignKey: "seller_id",
+  otherKey: "asin",
+});
+
+
 Product.belongsToMany(Category, {
   through: ProductCategory,
   foreignKey: "asin",
@@ -1035,25 +1079,47 @@ Category.belongsToMany(Product, {
   otherKey: "asin",
   as: "products",
 });
-// Also define direct relations for the join table
-ProductCategory.belongsTo(Product, { foreignKey: "asin" });
-ProductCategory.belongsTo(Category, { foreignKey: "category_id" });
+Product.belongsToMany(Category, {
+  through: ProductCategory,
+  foreignKey: 'asin',
+  otherKey: 'category_id',
+});
 
-// Product to Features, Variations
+Category.belongsToMany(Product, {
+  through: ProductCategory,
+  foreignKey: 'category_id',
+  otherKey: 'asin',
+});
+
+ProductVariation.belongsTo(Product, { foreignKey: "asin" });
+ProductVariation.belongsTo(Variation, { foreignKey: "variation_id" });
+
+Product.hasMany(ProductVariation, { foreignKey: "asin" });
+Variation.hasMany(ProductVariation, { foreignKey: "variation_id" });
+
+Product.belongsToMany(Variation, {
+  through: ProductVariation,
+  foreignKey: "asin",
+  otherKey: "variation_id",
+});
+
+Variation.belongsToMany(Product, {
+  through: ProductVariation,
+  foreignKey: "variation_id",
+  otherKey: "asin",
+});
+
 Product.hasMany(Feature, { foreignKey: "asin", as: "features" });
 Feature.belongsTo(Product, { foreignKey: "asin" });
 
-Product.hasMany(Variation, { foreignKey: "asin", as: "variations" });
-Variation.belongsTo(Product, { foreignKey: "asin" });
 
-// Customer to CustomerDetail, CustomerLocations
 Customer.hasOne(CustomerDetail, { foreignKey: "customer_id", as: "details" });
 CustomerDetail.belongsTo(Customer, { foreignKey: "customer_id" });
 
 CustomerDetail.hasOne(CustomerLocation, {
   foreignKey: "customer_id",
   as: "location",
-}); // Assuming one location per customer for simplicity based on SQL
+}); 
 CustomerLocation.belongsTo(CustomerDetail, { foreignKey: "customer_id" });
 
 // Orders
