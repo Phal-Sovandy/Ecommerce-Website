@@ -1,27 +1,15 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, use } from "react";
 import ProductWindow from "../../components/customer/shops/ProductWindow";
 import ProductInfo from "../../components/seller/ProductInfo";
 import { Quantum } from "ldrs/react";
 import {
   getAllProducts,
   getAProductsInfo,
+  filterProduct,
+  changeProductBadge,
 } from "../../api/admin/productsPage.js";
 import "ldrs/react/Quantum.css";
 import "../../styles/admin/ProductPage.css";
-
-const sampleProduct = {
-  id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c0",
-  image:
-    "https://wpengine.com/wp-content/uploads/2021/05/optimize-images-1024x681.jpg",
-  name: "Men's Athestic Sweater Color Grey",
-  rating: {
-    stars: 4.5,
-    count: 69,
-  },
-  priceCents: 1680,
-  keywords: ["top", "sweater", "shirt", "apparel", "mens"],
-  stock: 10,
-};
 
 const sampleProductInfo = {
   title: "Wireless Bluetooth Headphones",
@@ -42,14 +30,17 @@ const PAGE_SIZE = 20;
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
-  const [showProduct, setShowProducts] = useState({});
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [loadingBadges, setLoadingBadges] = useState([]);
   const observer = useRef();
+
+  const [search, setSearch] = useState("");
+  const [badge, setBadge] = useState("");
+  const [discount, setDiscount] = useState("");
+  const [sort, setSort] = useState("");
 
   const [showEdit, setShowEdit] = useState(false);
   const [showWindow, setShowWindow] = useState(false);
@@ -58,8 +49,7 @@ const ProductPage = () => {
   useEffect(() => {
     async function fetchAllProducts() {
       try {
-        const data = await getAllProducts();
-        console.log(data);
+        const data = await filterProduct();
         setProducts(data);
       } catch (error) {
         setError(error);
@@ -68,29 +58,13 @@ const ProductPage = () => {
       }
     }
     fetchAllProducts();
-  }, []);
+  }, [search, badge, discount, sort]);
 
   useEffect(() => {
     const start = 0;
     const end = PAGE_SIZE * page;
     setVisibleProducts(products.slice(start, end));
   }, [page, products]);
-
-  const toggleBadge = async (productId) => {
-    setLoadingBadges((l) => [...l, productId]);
-
-    setProducts((p) =>
-      p.map((p) =>
-        p.asin === productId
-          ? { ...p, badge: p.badge ? "" : "Amazon's Choice" }
-          : p
-      )
-    );
-    // Testing
-    await new Promise((resolve) => setTimeout(resolve, 600));
-
-    setLoadingBadges((l) => l.filter((id) => id !== productId));
-  };
 
   const lastProductRef = useCallback(
     (node) => {
@@ -108,6 +82,14 @@ const ProductPage = () => {
     },
     [loading, visibleProducts.length, products]
   );
+
+  const badgeClass = (product) => {
+    const badge = product.badge?.toLowerCase().trim();
+    if (badge === "amazon's  choice") return "amazon-choice";
+    if (badge === "#1 best seller") return "best-seller";
+    if (badge === "#1 new release") return "new-release";
+    return "";
+  };
 
   return (
     <div className="listing-page">
@@ -134,18 +116,25 @@ const ProductPage = () => {
           autoCorrect="true"
         />
         <div className="listing-action">
-          <select defaultValue={""}>
+          <select
+            defaultValue={badge}
+            onChange={(e) => setBadge(e.target.value)}
+          >
             <option value="">Filter Badge</option>
-            <option value="amzonChoice">Amazon's Choice</option>
-            <option value="bestSeller">#1 Best Seller</option>
-            <option value="newRelease">#1 New Release</option>
+            <option value="no badge">No Badge</option>
+            <option value="Amazon's  Choice">Amazon's Choice</option>
+            <option value="#1 Best Seller">#1 Best Seller</option>
+            <option value="#1 New Release">#1 New Release</option>
           </select>
-          <select defaultValue={""}>
+          <select
+            defaultValue={discount}
+            onChange={(e) => setDiscount(e.target.value)}
+          >
             <option value="">Filter Discount</option>
             <option value="discount">Discount</option>
             <option value="noDiscount">No Discount</option>
           </select>
-          <select defaultValue={"titleAsc"}>
+          <select defaultValue={sort} onChange={(e) => setSort(e.target.value)}>
             <option value="titleAsc">Sort By Title ↑</option>
             <option value="titleDesc">Sort By Title ↓</option>
             <option value="priceAsc">Sort By Price ↑</option>
@@ -206,21 +195,27 @@ const ProductPage = () => {
                     {product.brand || "NO RECORD"}
                   </td>
                   <td className="badge">
-                    <button
-                      className={`badge-toggle ${
-                        product.badge ? "active" : ""
-                      }`}
-                      onClick={() => toggleBadge(product.product_id)}
-                      disabled={loadingBadges.includes(product.product_id)}
+                    <select
+                      className={`badge-select ${badgeClass(product)}`}
+                      onChange={async (e) => {
+                        try {
+                          await changeProductBadge(
+                            product.asin,
+                            e.target.value
+                          );
+                          const data = await filterProduct();
+                          setProducts(data);
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      value={product.badge || "No Badge"}
                     >
-                      {loadingBadges.includes(product.product_id) ? (
-                        <Quantum size="15" speed="1.75" color="black" />
-                      ) : product.badge ? (
-                        "Amazon's Choice"
-                      ) : (
-                        "No Badge"
-                      )}
-                    </button>
+                      <option value="No Badge">No Badge</option>
+                      <option value="Amazon's  Choice">Amazon's Choice</option>
+                      <option value="#1 Best Seller">#1 Best Seller</option>
+                      <option value="#1 New Release">#1 New Release</option>
+                    </select>
                   </td>
                   <td className={product.firstAvailableDate ? "" : "null"}>
                     {product.firstAvailableDate || "NO RECORD"}
@@ -230,13 +225,9 @@ const ProductPage = () => {
                       className="view-btn"
                       onClick={async () => {
                         try {
-                          console.log(product.asin)
-                          const data = await getAProductsInfo(
-                            product.asin
-                          );
-                          setShowProducts(data);
+                          const data = await getAProductsInfo(product.asin);
+                          setWindowProduct(data);
                           setShowWindow(true);
-                          setWindowProduct(showProduct);
                         } catch (err) {
                           setError(err);
                         }

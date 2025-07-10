@@ -46,7 +46,7 @@ const router = createBrowserRouter(
       <Route
         path="/sellerShop/:sellerId"
         element={
-          <ProtectedRoute allowedRoles={["seller"]}>
+          <ProtectedRoute allowedRoles={["seller", "customer", "admin"]}>
             <SellerShop />
           </ProtectedRoute>
         }

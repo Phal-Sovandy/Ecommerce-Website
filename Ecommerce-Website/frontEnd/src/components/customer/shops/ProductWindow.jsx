@@ -125,6 +125,15 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
       setShowState(false);
     }
   }
+  function ratingPhotoManage(rating) {
+    const ratingPhoto = rating * 10;
+    if (ratingPhoto > 0 && ratingPhoto < 10) return 5;
+    else if (ratingPhoto > 10 && ratingPhoto < 20) return 15;
+    else if (ratingPhoto > 20 && ratingPhoto < 30) return 25;
+    else if (ratingPhoto > 30 && ratingPhoto < 40) return 35;
+    else if (ratingPhoto > 40 && ratingPhoto < 50) return 45;
+    return ratingPhoto;
+  }
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -144,7 +153,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
         </div>
         <div className="bottom">
           <div className="image-holder">
-            {product.images ? (
+            {product.images.length > 1 ? (
               <ImageSlider
                 images={product.images}
                 selectedImageIndex={selectedImageIndex}
@@ -153,7 +162,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
               <img
                 className="product-images"
                 src={product.image}
-                alt="product image"
+                alt="product image1"
               />
             )}
           </div>
@@ -163,16 +172,16 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
               <div className="product-title">
                 <h2>{product.title}</h2>
                 <p className="product-categories">
-                  {product.categories}
+                  {product.categories.join(" | ")}
                 </p>
-                <p className="product-departments">
-                  {product.departments}
-                </p>
+                {product.departments && (
+                  <p className="product-departments">{product.departments}</p>
+                )}
                 <div className="product-rating">
                   <img
-                    src={`../../public/ratings/rating-${
-                      product.rating * 10
-                    }.png`}
+                    src={`../../public/ratings/rating-${ratingPhotoManage(
+                      product.rating
+                    )}.png`}
                     alt="rating"
                   ></img>
                   <p>
@@ -180,13 +189,10 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                   </p>
                 </div>
                 <p>
-                  Sell By{" "}
-                  <span>
-                    {`(${product.sellerId})`}{" "}
-                    <Link to={`/sellerShop/${product.sellerId}`}>
-                      {product.seller_name}
-                    </Link>
-                  </span>
+                  Sell By <span className="sellerId">{`(${product.sellerId})`} </span>
+                  <Link to={`/sellerShop/${product.sellerId}`}>
+                    {product.seller_name}
+                  </Link>
                 </p>
               </div>
               {isLoggedIn && (
@@ -223,41 +229,54 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
             */}
 
             {/*Options for products with variations*/}
-            <div className="selection choice">
-              <h4>Choice Selections</h4>
-              <div className="selection-container">
-                {/* {product.variations.map((optionItem, index) => (
-                  <div
-                    key={optionItem}
-                    className={optionItem === option ? "selected" : ""}
-                    onClick={() => {
-                      setOption(optionItem);
-                      setSelectedIndex(index);
-                    }}
-                  >
-                    {optionItem}
-                  </div>
-                ))} */}
+            {product.variations?.length > 0 && (
+              <div className="selection choice">
+                <h4>Choice Selections</h4>
+                <div className="selection-container">
+                  {product.variations?.map((optionItem, index) => (
+                    <div
+                      key={optionItem}
+                      className={optionItem === option ? "selected" : ""}
+                      onClick={() => {
+                        setOption(optionItem);
+                        setSelectedIndex(index);
+                      }}
+                    >
+                      {optionItem}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="product-details">
               <h4>Details</h4>
               <div className="product-source">
                 {product.badge && (
                   <p className="product-badge">
-                    {product.badge}{" "}
+                    {product.badge?.trim()}{" "}
                     <span>
-                      {" "}
-                      {product.badge.toLowerCase() === "amazon's choice" ? (
+                      {product.badge?.toLowerCase().trim() ===
+                        "amazon's  choice" && (
                         <FontAwesomeIcon icon={faMedal} />
-                      ) : product.badge.toLowerCase() === "best seller" ? (
+                      )}
+                      {product.badge?.toLowerCase().trim() ===
+                        "best seller" && (
                         <FontAwesomeIcon icon={faWebAwesome} />
-                      ) : null}
+                      )}
                     </span>
                   </p>
                 )}
-                <p>{product.availability}</p>
+                <p
+                  className={`product-availability ${
+                    product.availability
+                      ? product.availability.toLowerCase() !== "in stock" &&
+                        "availability-warning"
+                      : "not-available"
+                  }`}
+                >
+                  {product.availability}
+                </p>
                 <p>
                   Rank in all category <span>{product.root_bs_rank}</span>
                 </p>
@@ -282,7 +301,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                 <p>
                   Manufacturer <span>{product.manufacturer}</span>
                 </p>
-                {product.wieght && (
+                {product.weight && (
                   <p>
                     Weight <span>{product.weight}</span>
                   </p>
@@ -296,8 +315,8 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                   </p>
                 )}
                 <p>
-                  Date first available{" "}
-                  <span>{product.date_first_available}</span>
+                  Date first available
+                  <span> {product.date_first_available || "NO RECORD"}</span>
                 </p>
               </div>
             </div>
@@ -314,14 +333,16 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
               <h4>Description</h4>
               <p>{product.description}</p>
             </div>
-            <div className="product-features">
-              <h4>Features</h4>
-              <ul>
-                {product.features.map((feature) => (
-                  <li>{feature}</li>
-                ))}
-              </ul>
-            </div>
+            {product.features.length > 0 && (
+              <div className="product-features">
+                <h4>Features</h4>
+                <ul>
+                  {product.features.map((feature) => (
+                    <li>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="product-reviews-container">
               <h4>Review(s)</h4>

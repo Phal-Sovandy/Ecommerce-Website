@@ -149,6 +149,9 @@ const ProductDetail = sequelize.define(
     ingredients: {
       type: DataTypes.TEXT,
     },
+    features: {
+      type: DataTypes.ARRAY(DataTypes.TEXT),
+    },
   },
   {
     tableName: "product_details",
@@ -159,14 +162,9 @@ const ProductDetail = sequelize.define(
 const Ranking = sequelize.define(
   "Ranking",
   {
-    ranking_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
     asin: {
       type: DataTypes.STRING(20),
+      primaryKey: true,
       references: {
         model: "products",
         key: "asin",
@@ -472,44 +470,12 @@ const ProductCategory = sequelize.define(
   }
 );
 
-const Feature = sequelize.define(
-  "Feature",
-  {
-    feature_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    asin: {
-      type: DataTypes.STRING(20),
-      references: {
-        model: "products",
-        key: "asin",
-      },
-      onDelete: "CASCADE",
-    },
-    features: {
-      type: DataTypes.ARRAY(DataTypes.TEXT),
-    },
-  },
-  {
-    tableName: "features",
-    timestamps: false,
-  }
-);
-
 const Variation = sequelize.define(
   "Variation",
   {
-    variation_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
     asin: {
       type: DataTypes.STRING(20),
+      primaryKey: true,
       references: {
         model: "products",
         key: "asin",
@@ -522,35 +488,6 @@ const Variation = sequelize.define(
   },
   {
     tableName: "variations",
-    timestamps: false,
-  }
-);
-
-// Add to database pgAdmin
-const ProductVariation = sequelize.define(
-  "ProductVariation",
-  {
-    asin: {
-      type: DataTypes.STRING(20),
-      primaryKey: true,
-      references: {
-        model: "products",
-        key: "asin",
-      },
-      onDelete: "CASCADE",
-    },
-    variation_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      references: {
-        model: "variations",
-        key: "variation_id",
-      },
-      onDelete: "CASCADE",
-    },
-  },
-  {
-    tableName: "product_variations",
     timestamps: false,
   }
 );
@@ -927,7 +864,7 @@ const UserEnquiry = sequelize.define(
   },
   {
     tableName: "user_enquiries",
-    timestamps: false, 
+    timestamps: false,
   }
 );
 
@@ -966,33 +903,37 @@ const SellerRequest = sequelize.define(
   }
 );
 
-const Admin = sequelize.define('Admin', {
-  admin_id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
+const Admin = sequelize.define(
+  "Admin",
+  {
+    admin_id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    phone: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      unique: true,
+    },
+    hashed_password: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
   },
-  email: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: true
-    }
-  },
-  phone: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    unique: true
-  },
-  hashed_password: {
-    type: DataTypes.TEXT,
-    allowNull: false
+  {
+    tableName: "admin",
+    timestamps: true,
   }
-}, {
-  tableName: 'admin',
-  timestamps: true
-});
+);
 // --- Model Associations ---
 
 // Product to Brand, Manufacturer, Department
@@ -1025,7 +966,7 @@ ProductDetail.belongsTo(Product, { foreignKey: "asin" });
 Product.hasOne(Pricing, { foreignKey: "asin", as: "pricing" });
 Pricing.belongsTo(Product, { foreignKey: "asin" });
 
-Product.hasMany(Ranking, { foreignKey: "asin", as: "rankings" });
+Product.hasOne(Ranking, { foreignKey: "asin", as: "rankings" });
 Ranking.belongsTo(Product, { foreignKey: "asin" });
 
 Product.hasOne(Media, { foreignKey: "asin", as: "media" });
@@ -1033,6 +974,9 @@ Media.belongsTo(Product, { foreignKey: "asin" });
 
 Product.hasOne(Review, { foreignKey: "asin", as: "aggregatedReviews" });
 Review.belongsTo(Product, { foreignKey: "asin" });
+
+Product.hasOne(Variation, { foreignKey: "asin", as: "variation" });
+Variation.belongsTo(Product, { foreignKey: "asin" });
 
 // Product to Sellers (Many-to-Many through ProductSeller)
 Product.belongsToMany(Seller, {
@@ -1054,19 +998,6 @@ ProductSeller.belongsTo(Product, { foreignKey: "asin" });
 Seller.hasMany(ProductSeller, { foreignKey: "seller_id" });
 ProductSeller.belongsTo(Seller, { foreignKey: "seller_id" });
 
-Product.belongsToMany(Seller, {
-  through: ProductSeller,
-  foreignKey: "asin",
-  otherKey: "seller_id",
-});  
-
-Seller.belongsToMany(Product, {
-  through: ProductSeller,
-  foreignKey: "seller_id",
-  otherKey: "asin",
-});
-
-
 Product.belongsToMany(Category, {
   through: ProductCategory,
   foreignKey: "asin",
@@ -1081,36 +1012,15 @@ Category.belongsToMany(Product, {
 });
 Product.belongsToMany(Category, {
   through: ProductCategory,
-  foreignKey: 'asin',
-  otherKey: 'category_id',
+  foreignKey: "asin",
+  otherKey: "category_id",
 });
 
 Category.belongsToMany(Product, {
   through: ProductCategory,
-  foreignKey: 'category_id',
-  otherKey: 'asin',
-});
-
-ProductVariation.belongsTo(Product, { foreignKey: "asin" });
-ProductVariation.belongsTo(Variation, { foreignKey: "variation_id" });
-
-Product.hasMany(ProductVariation, { foreignKey: "asin" });
-Variation.hasMany(ProductVariation, { foreignKey: "variation_id" });
-
-Product.belongsToMany(Variation, {
-  through: ProductVariation,
-  foreignKey: "asin",
-  otherKey: "variation_id",
-});
-
-Variation.belongsToMany(Product, {
-  through: ProductVariation,
-  foreignKey: "variation_id",
+  foreignKey: "category_id",
   otherKey: "asin",
 });
-
-Product.hasMany(Feature, { foreignKey: "asin", as: "features" });
-Feature.belongsTo(Product, { foreignKey: "asin" });
 
 
 Customer.hasOne(CustomerDetail, { foreignKey: "customer_id", as: "details" });
@@ -1119,7 +1029,7 @@ CustomerDetail.belongsTo(Customer, { foreignKey: "customer_id" });
 CustomerDetail.hasOne(CustomerLocation, {
   foreignKey: "customer_id",
   as: "location",
-}); 
+});
 CustomerLocation.belongsTo(CustomerDetail, { foreignKey: "customer_id" });
 
 // Orders
@@ -1198,7 +1108,6 @@ export default {
   Review,
   Category,
   ProductCategory,
-  Feature,
   Variation,
   DeliveryOption,
   Customer,
@@ -1213,5 +1122,5 @@ export default {
   SellerRequest,
   SellerDetail,
   SellerLocation,
-  Admin
+  Admin,
 };

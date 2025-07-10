@@ -3,7 +3,7 @@
   color: grey;
 }
 
-.listing-page .badge > button {
+.listing-page .badge > select {
   font-weight: 700;
   color: #7c7c7c;
   background-color: #e3e3e3;
@@ -12,11 +12,22 @@
   text-align: center;
   min-width: 50%;
   display: inline;
+  border: none;
 }
 
-.listing-page .badge > button.active {
+.listing-page .badge > select.badge-select.amazon-choice {
   color: #1f509a;
   background-color: #d4ebf8;
+}
+
+.listing-page .badge > select.badge-select.best-seller {
+  background-color: #ffd05071;
+  color: #e58d0a;
+}
+
+.listing-page .badge > select.badge-select.new-release {
+  background-color: #90c67c6e;
+  color: #06923e;
 }
 
 .delete-btn {

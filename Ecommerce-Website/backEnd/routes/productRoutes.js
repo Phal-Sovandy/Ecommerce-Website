@@ -1,11 +1,13 @@
 import express from 'express';
-import {queryAllProducts, queryAProductInfo, queryAllProductsBySearch} from '../repositories/productQuery.js';
+import {getAllProducts, getAProducts, getProductBySearch, changeProductBadge} from "../controllers/products.js";
 
 const productRouters = express.Router();
 
-productRouters.route("/").get(queryAllProducts);
-productRouters.route("/:productId").get(queryAProductInfo);
-productRouters.get("/search", queryAllProductsBySearch);
+productRouters.get("/search", getProductBySearch);
+productRouters.route("/").get(getAllProducts);
+productRouters.route("/:asin/badge").patch(changeProductBadge);
+productRouters.route("/:asin").get(getAProducts);
+//.put().delete()
 
 
 // TODO
