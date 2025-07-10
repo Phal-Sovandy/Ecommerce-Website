@@ -63,7 +63,7 @@ const ListInput = ({ data, setData, isKeyValue = true, label = "Add Item"}) => {
         </button>
       </div>
 
-      {data.length > 0 && (
+      {data?.length > 0 && (
         <div className="listing-list">
           {data.map((item, index) => {
             const [key, value] = item.split(":").map((s) => s.trim());

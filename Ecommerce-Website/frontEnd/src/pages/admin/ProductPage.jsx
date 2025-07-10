@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, use } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import ProductWindow from "../../components/customer/shops/ProductWindow";
 import ProductInfo from "../../components/seller/ProductInfo";
 import { Quantum } from "ldrs/react";
@@ -7,6 +7,7 @@ import {
   getAProductsInfo,
   filterProduct,
   changeProductBadge,
+  deleteProduct,
 } from "../../api/admin/productsPage.js";
 import "ldrs/react/Quantum.css";
 import "../../styles/admin/ProductPage.css";
@@ -20,8 +21,6 @@ const sampleProductInfo = {
   dimensions: "20 x 18 x 8 cm",
   department: ["technology", "kitchen", "bedroom"],
   variations: ["FJDDFDE:black", "FLENEFEF:blue", "FNELENFLE:red"],
-  parent_asin: "B09XKXY1R9,B09XKXY1S1",
-  input_asin: "B09XKXY2T2,B09XKXY3T3",
   state: "Battery, Plastic, Circuit Board",
   date_first_available: new Date("2024-08-15"),
 };
@@ -30,26 +29,32 @@ const PAGE_SIZE = 20;
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
+
+  // For Lazy-Loading implementation for web efficiency
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [loadingBadges, setLoadingBadges] = useState([]);
   const observer = useRef();
 
+  // For header functionalities
   const [search, setSearch] = useState("");
   const [badge, setBadge] = useState("");
   const [discount, setDiscount] = useState("");
   const [sort, setSort] = useState("");
 
-  const [showEdit, setShowEdit] = useState(false);
+  // For showing the product window
   const [showWindow, setShowWindow] = useState(false);
   const [windowProduct, setWindowProduct] = useState(null);
+
+  // For editing product info
+  const [showEdit, setShowEdit] = useState(false);
+  const [productEditInfo, setProductEditInfo] = useState({});
 
   useEffect(() => {
     async function fetchAllProducts() {
       try {
-        const data = await filterProduct();
+        const data = await filterProduct(search, badge, discount, sort);
         setProducts(data);
       } catch (error) {
         setError(error);
@@ -63,12 +68,12 @@ const ProductPage = () => {
   useEffect(() => {
     const start = 0;
     const end = PAGE_SIZE * page;
-    setVisibleProducts(products.slice(start, end));
+    setVisibleProducts(products?.slice(start, end));
   }, [page, products]);
 
   const lastProductRef = useCallback(
     (node) => {
-      if (loading || visibleProducts.length >= products.length) return;
+      if (loading || visibleProducts?.length >= products?.length) return;
 
       if (observer.current) observer.current.disconnect();
 
@@ -80,7 +85,7 @@ const ProductPage = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, visibleProducts.length, products]
+    [loading, visibleProducts?.length, products]
   );
 
   const badgeClass = (product) => {
@@ -99,8 +104,9 @@ const ProductPage = () => {
       <ProductInfo
         show={showEdit}
         onClose={() => setShowEdit(false)}
-        productInfo={sampleProductInfo}
+        productInfo={productEditInfo}
         add={false}
+        setProductInfo={setProductEditInfo}
       />
       <header className="listing-page-head">
         <h1>Product Management</h1>
@@ -167,8 +173,8 @@ const ProductPage = () => {
           </thead>
 
           <tbody>
-            {visibleProducts.map((product, index) => {
-              const isLast = index === visibleProducts.length - 1;
+            {visibleProducts?.map((product, index) => {
+              const isLast = index === visibleProducts?.length - 1;
               return (
                 <tr
                   key={product.product_id}
@@ -237,11 +243,26 @@ const ProductPage = () => {
                     </button>
                     <button
                       className="edit-btn"
-                      onClick={() => setShowEdit(true)}
+                      onClick={async () => {
+                        const data = await getAProductsInfo(product.asin);
+                        setProductEditInfo(data);
+                        setShowEdit(true);
+                      }}
                     >
                       Edit
                     </button>
-                    <button className="delete-btn">Delete</button>
+                    <button
+                      className="delete-btn"
+                      onClick={async () => {
+                        try {
+                          await deleteProduct(product.asin, product.seller_id);
+                        } catch (err) {
+                          setError(err.message);
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
@@ -254,7 +275,7 @@ const ProductPage = () => {
           </div>
         )}
 
-        {!loading && visibleProducts.length >= products && (
+        {!loading && visibleProducts?.length >= products && (
           <p className="end-loading-list">No more products to load.</p>
         )}
       </div>

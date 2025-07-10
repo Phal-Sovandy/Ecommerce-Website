@@ -1,5 +1,4 @@
 import models from "../models/index.js";
-import { sequelize } from "../config/database.js";
 import { Sequelize, Op } from "sequelize";
 
 export async function queryAllProducts() {
@@ -33,8 +32,8 @@ export async function queryAllProducts() {
     });
     return allProducts;
   } catch (error) {
-    console.error("Error fetching customers:", error);
-    throw new Error("Failed to retrieve customers");
+    console.error("Error fetching products:", error);
+    throw new Error("Failed to retrieve products");
   }
 }
 
@@ -191,7 +190,7 @@ export async function queryAProductInfo(asin) {
             {
               model: models.Department,
               as: "department",
-              attributes: ["name"],
+              attributes: ["department_id", "name"],
             },
           ],
         },
@@ -263,6 +262,10 @@ export async function queryAProductInfo(asin) {
       asin: product.asin,
       title: product.title,
       categories: product.categories?.map((category) => category.name),
+      department_id:
+        product.details && product.details.department
+          ? product.details.department.department_id
+          : null,
       departments:
         product.details && product.details.department
           ? product.details.department.name
@@ -334,5 +337,19 @@ export async function alterProductBadge(asin, badge) {
   } catch (error) {
     console.log("Error Failed to update badge", error.message);
     throw new Error("Failed to update badge");
+  }
+}
+
+export async function deleteProduct(asin, seller_id) {
+  try {
+    const [deletedRow] = await models.Product.destroy({
+      where: {
+        [Op.and]: [{ asin }, { seller_id }],
+      },
+    });
+    return {message: "Product have been deleted", rowDeleted: deletedRow};
+  } catch (err) {
+    console.error("Error delete product:", err);
+    throw new Error("Failed to delete product");
   }
 }

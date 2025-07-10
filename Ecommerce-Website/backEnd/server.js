@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { initDatabase } from "./config/database.js";
 import customerRouter from "./routes/customerRoutes.js";
 import productRouter from "./routes/productRoutes.js";
+import departmentRouters from "./routes/departmentRoutes.js";
 import reviewRouter from "./routes/reviewRoutes.js";
 import wishlistRouter from "./routes/wishlistRoutes.js";
 
@@ -19,6 +20,7 @@ app.use(express.json());
 
 app.use(`${BASE_API_URL}/customers`, customerRouter);
 app.use(`${BASE_API_URL}/products`, productRouter);
+app.use(`${BASE_API_URL}/departments`, departmentRouters);
 app.use(`${BASE_API_URL}/reviews`, reviewRouter);
 app.use(`${BASE_API_URL}/wishlists`, wishlistRouter);
 

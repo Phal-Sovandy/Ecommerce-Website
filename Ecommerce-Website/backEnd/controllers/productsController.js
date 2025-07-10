@@ -3,14 +3,15 @@ import {
   queryAllProducts,
   queryAllProductsBySearch,
   alterProductBadge,
+  deleteProduct
 } from "../repositories/productQuery.js";
 
 export async function getAllProducts(req, res) {
   try {
     const products = await queryAllProducts();
     return res.json(products);
-  } catch (err) {
-    console.error(`Error: ${err.message}`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
     return res.status(500).json({ message: "Internal server error" });
   }
 }
@@ -20,8 +21,8 @@ export async function getAProducts(req, res) {
     const { asin } = req.params;
     const products = await queryAProductInfo(asin);
     return res.json(products);
-  } catch (err) {
-    console.error(`Error: ${err.message}`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
     return res.status(500).json({ message: "Internal server error" });
   }
 }
@@ -40,8 +41,8 @@ export async function getProductBySearch(req, res) {
       sort
     );
     return res.json(products);
-  } catch (err) {
-    console.error(`Error: ${err.message}`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
     return res.status(500).json({ message: "Internal server error" });
   }
 }
@@ -53,6 +54,18 @@ export async function changeProductBadge(req, res) {
     const result = await alterProductBadge(asin, badge);
     res.status(200).json(result);
   } catch (error) {
+    console.error(`Error: ${error.message}`);
+    res.status(500).json({ error: "Failed to update badge" });
+  }
+}
+
+export async function removeProduct(req, res) {
+  try {
+    const { sellerId, asin } = req.body;
+    const deleteProduct = await deleteProduct(asin, sellerId);
+    res.status(200).json(deleteProduct);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
     res.status(500).json({ error: "Failed to update badge" });
   }
 }

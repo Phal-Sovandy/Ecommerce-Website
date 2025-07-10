@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/seller/ProductInfo.css";
 import ModalInfo from "../common/modals/ModalInfo";
 import ListInput from "../common/ListInput";
+import { getAllDepartments } from "../../api/common/departments";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,47 +16,51 @@ import {
   faBarcode,
   faNewspaper,
   faSun,
-  faCodeBranch,
-  faCodeFork,
   faPenToSquare,
   faMoneyBill,
   faCoins,
   faTag,
   faFlask,
   faFlag,
-  faCube,
   faIndustry,
   faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
 
-const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
+const ProductInfo = ({
+  show,
+  onClose,
+  productInfo = {},
+  setProductInfo = {},
+  add,
+}) => {
+  const [allDeparments, setAllDepartments] = useState([]);
+  const [categories, setCategories] = useState(productInfo.categories || []);
   const [variations, setVariations] = useState(productInfo.variations || []);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState(productInfo.description || "");
-  const [price, setPrice] = useState(productInfo.price || "");
-  const [currency, setCurrency] = useState(productInfo.currency || "");
-  const [discount, setDiscount] = useState(productInfo.discount || "");
-  const [modelNumber, setModelNumber] = useState(
-    productInfo.model_number || ""
-  );
-  const [department, setDepartment] = useState(productInfo.department || "");
-  const [weight, setWeight] = useState(productInfo.weight || "");
-  const [dimensions, setDimensions] = useState(productInfo.dimensions || "");
-  const [state, setState] = useState(productInfo.state || "");
-  const [parentAsin, setParentAsin] = useState(productInfo.parent_asin || "");
-  const [inputAsin, setInputAsin] = useState(productInfo.input_asin || "");
-  const [selectedDate, setSelectedDate] = useState(
-    productInfo.date_first_available || null
-  );
+  const [features, setFeatures] = useState(productInfo.features || []);
 
-  const departmentOptions = [
-    { value: "technology", label: "Technologies" },
-    { value: "kitchen", label: "Kitchen" },
-  ];
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const [departmentSelect, setDepartmentSelect] = useState(
-    departmentOptions.find((option) => option.value === "kitchen")
-  );
+  useEffect(() => {
+    if (productInfo?.date_first_available) {
+      const parsedDate = new Date(productInfo.date_first_available);
+      setSelectedDate(parsedDate);
+    }
+    setCategories(productInfo.categories);
+    setFeatures(productInfo.features);
+    setVariations(productInfo.variations);
+  }, [productInfo]);
+
+  useEffect(() => {
+    async function fetchDepartments() {
+      let departmentOptions = await getAllDepartments();
+      departmentOptions = departmentOptions.map((option) => ({
+        value: option.department_id,
+        label: option.name,
+      }));
+      setAllDepartments(departmentOptions);
+    }
+    fetchDepartments();
+  }, []);
 
   const mainImageRef = useRef(null);
   const additionalImageRefs = [useRef(null), useRef(null), useRef(null)];
@@ -126,7 +131,7 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
             onClick={handleMainImageClick}
           >
             <img
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFuZHNjYXBlfGVufDB8fDB8fHww"
+              src={productInfo.image}
               alt="Main Product"
               className="product-image"
             />
@@ -150,7 +155,9 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
                 onClick={() => handleAdditionalImageClick(index)}
               >
                 <img
-                  src={`https://iso.500px.com/wp-content/uploads/2023/01/By-Donghao-2.jpeg`}
+                  src={
+                    productInfo.images?.length > 0 && productInfo.images[index]
+                  }
                   alt={`Additional ${index + 1}`}
                   className="product-image"
                 />
@@ -174,12 +181,14 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
         {/* Product Form */}
         <form action="" onSubmit={(e) => e.preventDefault()}>
           {/* Title */}
-          <div className={`form-group ${title ? "has-value" : ""}`}>
+          <div className={`form-group ${productInfo.title ? "has-value" : ""}`}>
             <input
               type="text"
               id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={productInfo.title}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, title: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -188,12 +197,18 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Description */}
-          <div className={`form-group ${description ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${
+              productInfo.description ? "has-value" : ""
+            }`}
+          >
             <input
               type="text"
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={productInfo.description}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, description: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -201,13 +216,34 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
             <FontAwesomeIcon icon={faNewspaper} />
           </div>
 
-          {/* Price */}
-          <div className={`form-group ${price ? "has-value" : ""}`}>
+          {/* Availability */}
+          <div
+            className={`form-group ${
+              productInfo.availability ? "has-value" : ""
+            }`}
+          >
             <input
               type="text"
               id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={productInfo.availability}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, availability: e.target.value }))
+              }
+              className="form-control"
+              autoComplete="off"
+            />
+            <label htmlFor="price">Availability</label>
+            <FontAwesomeIcon icon={faMoneyBill} />
+          </div>
+          {/* Price */}
+          <div className={`form-group ${productInfo.price ? "has-value" : ""}`}>
+            <input
+              type="text"
+              id="price"
+              value={productInfo.price}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, price: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -216,12 +252,16 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Currency */}
-          <div className={`form-group ${currency ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${productInfo.currency ? "has-value" : ""}`}
+          >
             <input
               type="text"
               id="currency"
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
+              value={productInfo.currency}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, currency: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -230,12 +270,16 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Discount */}
-          <div className={`form-group ${discount ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${productInfo.discount ? "has-value" : ""}`}
+          >
             <input
               type="text"
               id="discount"
-              value={price}
-              onChange={(e) => setDiscount(e.target.value)}
+              value={productInfo.discount}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, discount: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -244,12 +288,18 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Model Number */}
-          <div className={`form-group ${modelNumber ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${
+              productInfo.model_number ? "has-value" : ""
+            }`}
+          >
             <input
               type="text"
               id="modelNumber"
-              value={modelNumber}
-              onChange={(e) => setModelNumber(e.target.value)}
+              value={productInfo.model_number}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, model_number: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -258,12 +308,14 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Brand */}
-          <div className={`form-group ${modelNumber ? "has-value" : ""}`}>
+          <div className={`form-group ${productInfo.brand ? "has-value" : ""}`}>
             <input
               type="text"
               id="brand"
-              value={modelNumber}
-              onChange={(e) => setModelNumber(e.target.value)}
+              value={productInfo.brand}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, brand: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -272,12 +324,18 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Manufacturer */}
-          <div className={`form-group ${modelNumber ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${
+              productInfo.manufacturer ? "has-value" : ""
+            }`}
+          >
             <input
               type="text"
               id="manufacturer"
-              value={modelNumber}
-              onChange={(e) => setModelNumber(e.target.value)}
+              value={productInfo.manufacturer}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, manufacturer: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -288,14 +346,18 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           {/* Department */}
           <div
             className={`form-group ${
-              department ? "has-value" : ""
+              productInfo.departments ? "has-value" : ""
             } react-select-wrapper department`}
           >
             <label className="floating-label">Department</label>
             <Select
-              options={departmentOptions}
-              value={department}
-              onChange={setDepartment}
+              options={allDeparments}
+              value={allDeparments.find(
+                (option) => option.value === productInfo.department_id
+              )}
+              onChange={(option) =>
+                setProductInfo((p) => ({ ...p, departments: option.label, department_id: option.value }))
+              }
               placeholder=""
               classNamePrefix="react-select"
               styles={blankStyles}
@@ -306,18 +368,22 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           {/* Cateogory */}
           <ListInput
             isKeyValue={false}
-            data={department}
-            setData={setDepartment}
+            data={categories}
+            setData={setCategories}
             label="Add Category"
           />
 
           {/* Weight */}
-          <div className={`form-group ${weight ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${productInfo.weight ? "has-value" : ""}`}
+          >
             <input
               type="text"
               id="weight"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
+              value={productInfo.weight}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, weight: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -326,12 +392,16 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Dimensions */}
-          <div className={`form-group ${dimensions ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${productInfo.dimension ? "has-value" : ""}`}
+          >
             <input
               type="text"
               id="dimensions"
-              value={dimensions}
-              onChange={(e) => setDimensions(e.target.value)}
+              value={productInfo.dimension}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, dimension: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -340,12 +410,18 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Ingredients / State */}
-          <div className={`form-group ${state ? "has-value" : ""}`}>
+          <div
+            className={`form-group ${
+              productInfo.ingredients ? "has-value" : ""
+            }`}
+          >
             <input
               type="text"
               id="state"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
+              value={productInfo.ingredients}
+              onChange={(e) =>
+                setProductInfo((p) => ({ ...p, ingredients: e.target.value }))
+              }
               className="form-control"
               autoComplete="off"
             />
@@ -354,55 +430,20 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
           </div>
 
           {/* Feature */}
-          <div className={`form-group ${weight ? "has-value" : ""}`}>
-            <input
-              // TODO: Change to feature
-              type="text"
-              id="feature"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              className="form-control"
-              autoComplete="off"
-            />
-            <label htmlFor="feature">Features</label>
-            <FontAwesomeIcon icon={faCube} />
-          </div>
+          <ListInput
+            isKeyValue={false}
+            data={features}
+            setData={setFeatures}
+            label="Add Features"
+          />
 
           {/* Product Variation */}
           <ListInput
-            isKeyValue={true}
+            isKeyValue={false}
             data={variations}
             setData={setVariations}
             label="Add Variation"
           />
-
-          {/* Parent ASIN */}
-          <div className={`form-group ${parentAsin ? "has-value" : ""}`}>
-            <input
-              type="text"
-              id="parentAsin"
-              value={parentAsin}
-              onChange={(e) => setParentAsin(e.target.value)}
-              className="form-control"
-              autoComplete="off"
-            />
-            <label htmlFor="parentAsin">Parent ASIN (Separated by comma)</label>
-            <FontAwesomeIcon icon={faCodeBranch} />
-          </div>
-
-          {/* Input ASIN */}
-          <div className={`form-group ${inputAsin ? "has-value" : ""}`}>
-            <input
-              type="text"
-              id="inputAsin"
-              value={inputAsin}
-              onChange={(e) => setInputAsin(e.target.value)}
-              className="form-control"
-              autoComplete="off"
-            />
-            <label htmlFor="inputAsin">Input ASIN (Separated by comma)</label>
-            <FontAwesomeIcon icon={faCodeFork} />
-          </div>
 
           {/* Date First Available */}
           {!add ? (
@@ -416,19 +457,19 @@ const ProductInfo = ({ show, onClose, productInfo = {}, add }) => {
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
                 dateFormat="yyyy-MM-dd"
-                placeholderText=""
                 className="form-control"
                 showYearDropdown
                 showMonthDropdown
                 scrollableYearDropdown
                 yearDropdownItemNumber={100}
+                placeholderText=""
               />
               <FontAwesomeIcon icon={faCalendar} />
             </div>
           ) : null}
 
           {/* Submit Button */}
-          <button id="edit-btn" type="submit">
+          <button id="edit-btn" type="submit" onClick={() => {}}>
             {add ? "Add Product" : "Edit Product"}{" "}
             <FontAwesomeIcon icon={faPenToSquare} />
           </button>

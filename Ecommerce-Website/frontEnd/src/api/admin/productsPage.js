@@ -1,21 +1,21 @@
 import axios from "axios";
 
 const PORT = 3002;
-const BASE_API_URL = `http://localhost:${PORT}/api/v1`;
+const BASE_API_URL = `http://localhost:${PORT}/api/v1/products`;
 
 export async function getAllProducts() {
   try {
-    const allProducts = await axios.get(`${BASE_API_URL}/products`);
+    const allProducts = await axios.get(`${BASE_API_URL}`);
     return allProducts.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error(error);
   }
 }
 export async function filterProduct(search, badge, discount, sort) {
   try {
     const filteredProduct = await axios.get(
-      `${BASE_API_URL}/products/search?search=${encodeURIComponent(
+      `${BASE_API_URL}/search?search=${encodeURIComponent(
         search || ""
       )}&badge=${encodeURIComponent(badge || "")}&discount=${encodeURIComponent(
         discount || ""
@@ -23,33 +23,42 @@ export async function filterProduct(search, badge, discount, sort) {
     );
     return filteredProduct.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error(error);
   }
 }
 
 export async function getAProductsInfo(asin) {
   try {
-    const product = await axios.get(`${BASE_API_URL}/products/${asin}`);
+    const product = await axios.get(`${BASE_API_URL}/${asin}`);
     return product.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error(error);
   }
 }
 
 export async function changeProductBadge(asin, newBadge) {
   try {
-    const response = await axios.patch(
-      `${BASE_API_URL}/products/${asin}/badge`,
-      {
-        badge: newBadge,
-      }
-    );
+    const response = await axios.patch(`${BASE_API_URL}/${asin}/badge`, {
+      badge: newBadge,
+    });
     return response.data;
   } catch (error) {
     console.error("Failed to update product badge", error);
 
+    throw new Error(error);
+  }
+}
+
+export async function deleteProduct(asin, sellerId) {
+  try {
+    const deleted = await axios.delete(BASE_API_URL, {
+      data: { asin, sellerId },
+    });
+    return deleted.data;
+  } catch (error) {
+    console.error(error);
     throw new Error(error);
   }
 }
