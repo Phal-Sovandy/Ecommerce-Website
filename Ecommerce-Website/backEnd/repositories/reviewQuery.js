@@ -25,7 +25,6 @@ export async function queryReviewsByCustomerId(customer_id) {
   }
 }
 
-// Query all reviews by ASIN (product id)
 export async function queryReviewsByAsin(asin) {
   try {
     const reviewData = await models.TopReview.findByPk(asin);
@@ -35,19 +34,39 @@ export async function queryReviewsByAsin(asin) {
       include: [
         {
           model: models.Customer,
-          include: [{ model: models.CustomerDetail, as: "customer_details" , attributes: ["first_name", "last_name", "profile_picture"]}],
           as: "customer",
-        },
-      ],
+          include: [
+            {
+              model: models.CustomerDetail,
+              as: "details",
+              attributes: ["first_name", "last_name", "profile_picture"]
+            }
+          ]
+        }
+      ]
     });
+
+    const customer_review = customerReviews.map((review) => ({
+      review_id: review.review_id,
+      rating: review.rating,
+      comment: review.comment,
+      created_at: review.created_at,
+      customer: {
+        first_name: review.customer?.details?.first_name,
+        last_name: review.customer?.details?.last_name,
+        profile_picture: review.customer?.details?.profile_picture,
+      }
+    }));
+
     return {
       top_review: reviewData?.top_review,
-      customer_review: {profile: customerReviews.customer.customer_details},
+      customer_review
     };
   } catch (error) {
     throw error;
   }
 }
+
 
 // Add a new customer review
 export async function addCustomerReview(reviewData) {

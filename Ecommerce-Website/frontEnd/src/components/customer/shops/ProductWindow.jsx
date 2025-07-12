@@ -373,18 +373,16 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
               />
 
               {/* //TODO: The rest reviews, just map it*/}
-              {reviews.customer_reviews?.map((rev) => (
+              {reviews.customer_review?.map((rev) => (
                 <ProductReview
                   userProfile={
-                    rev.profile ||
+                    rev.customer?.profile_picture ||
                     "https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
                   }
-                  username="The Rock"
-                  title="Something good not good bad yes not good best yes go."
-                  description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-        consequuntur perferendis eum fugit quibusdam ipsam earum eos quae
-        deleniti accusamus!"
-                  reviewId={1}
+                  createAt={rev.created_at}
+                  username={`${rev.customer?.first_name} ${rev.customer?.last_name}`}
+                  description={rev.comment}
+                  reviewId={"review-" + rev.review_id}
                 />
               ))}
 
@@ -413,9 +411,9 @@ export default ProductWindow;
 function ProductReview({
   userProfile,
   username,
-  title,
   description,
   reviewId,
+  createAt = "No Record",
   pin = false,
 }) {
   const { role } = useAuth();
@@ -429,7 +427,10 @@ function ProductReview({
           <div className="profile-image">
             <img src={userProfile} />
           </div>
-          <h2>{username}</h2>
+          <div>
+            <h2>{username}</h2>
+            <p>{createAt}</p>
+          </div>
         </div>
         {role === "seller" && (
           <div className="review-action">
@@ -442,7 +443,6 @@ function ProductReview({
           </div>
         )}
       </div>
-      <h3>{title}</h3>
       <p>{description}</p>
     </div>
   );
