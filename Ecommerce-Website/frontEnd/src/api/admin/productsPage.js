@@ -27,7 +27,6 @@ export async function filterProduct(search, badge, discount, sort) {
     throw new Error(error);
   }
 }
-
 export async function getAProductsInfo(asin) {
   try {
     const product = await axios.get(`${BASE_API_URL}/${asin}`);
@@ -37,7 +36,6 @@ export async function getAProductsInfo(asin) {
     throw new Error(error);
   }
 }
-
 export async function changeProductBadge(asin, newBadge) {
   try {
     const response = await axios.patch(`${BASE_API_URL}/${asin}/badge`, {
@@ -50,15 +48,25 @@ export async function changeProductBadge(asin, newBadge) {
     throw new Error(error);
   }
 }
-
-export async function deleteProduct(asin, sellerId) {
+export async function deleteProduct(asin) {
   try {
     const deleted = await axios.delete(BASE_API_URL, {
-      data: { asin, sellerId },
+      data: { asin },
     });
     return deleted.data;
   } catch (error) {
     console.error(error);
     throw new Error(error);
+  }
+}
+export async function editProductInfo(asin, data) {
+  try {
+    const response = await axios.put(`${BASE_API_URL}/${asin}`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error editing product info:", error.message);
+    throw new Error(error.message);
   }
 }

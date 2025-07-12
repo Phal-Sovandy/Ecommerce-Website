@@ -380,9 +380,6 @@ const Media = sequelize.define(
     images_count: {
       type: DataTypes.INTEGER,
     },
-    plus_content: {
-      type: DataTypes.TEXT,
-    },
   },
   {
     tableName: "media",
@@ -1010,18 +1007,12 @@ Category.belongsToMany(Product, {
   otherKey: "asin",
   as: "products",
 });
-Product.belongsToMany(Category, {
-  through: ProductCategory,
-  foreignKey: "asin",
-  otherKey: "category_id",
-});
 
-Category.belongsToMany(Product, {
-  through: ProductCategory,
-  foreignKey: "category_id",
-  otherKey: "asin",
-});
+Product.hasMany(ProductCategory, { foreignKey: "asin" });
+ProductCategory.belongsTo(Product, { foreignKey: "asin" });
 
+Category.hasMany(ProductCategory, { foreignKey: "category_id" });
+ProductCategory.belongsTo(Category, { foreignKey: "category_id" });
 
 Customer.hasOne(CustomerDetail, { foreignKey: "customer_id", as: "details" });
 CustomerDetail.belongsTo(Customer, { foreignKey: "customer_id" });

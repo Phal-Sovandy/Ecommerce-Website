@@ -6,6 +6,7 @@ import "../../styles/seller/ProductInfo.css";
 import ModalInfo from "../common/modals/ModalInfo";
 import ListInput from "../common/ListInput";
 import { getAllDepartments } from "../../api/common/departments";
+import { editProductInfo } from "../../api/admin/productsPage";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -30,10 +31,12 @@ const ProductInfo = ({
   show,
   onClose,
   productInfo = {},
-  setProductInfo = {},
+  setProductInfo = () => {},
   add,
+  triggerRefetch
 }) => {
   const [allDeparments, setAllDepartments] = useState([]);
+
   const [categories, setCategories] = useState(productInfo.categories || []);
   const [variations, setVariations] = useState(productInfo.variations || []);
   const [features, setFeatures] = useState(productInfo.features || []);
@@ -41,13 +44,18 @@ const ProductInfo = ({
   const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
-    if (productInfo?.date_first_available) {
-      const parsedDate = new Date(productInfo.date_first_available);
-      setSelectedDate(parsedDate);
-    }
     setCategories(productInfo.categories);
     setFeatures(productInfo.features);
     setVariations(productInfo.variations);
+  }, [productInfo]);
+
+  useEffect(() => {
+    if (productInfo?.date_first_available) {
+      const parsedDate = new Date(productInfo.date_first_available);
+      setSelectedDate(parsedDate);
+    } else {
+      setSelectedDate(null);
+    }
   }, [productInfo]);
 
   useEffect(() => {
@@ -68,6 +76,108 @@ const ProductInfo = ({
   const handleMainImageClick = () => mainImageRef.current.click();
   const handleAdditionalImageClick = (index) =>
     additionalImageRefs[index].current.click();
+
+  const [mainImageFile, setMainImageFile] = useState(null);
+  const [additionalImageFiles, setAdditionalImageFiles] = useState([
+    null,
+    null,
+    null,
+  ]);
+  const [updatedImageIndexes, setUpdatedImageIndexes] = useState([]);
+
+  const [mainImagePreview, setMainImagePreview] = useState(null);
+  const [additionalImagePreviews, setAdditionalImagePreviews] = useState([
+    null,
+    null,
+    null,
+  ]);
+
+  const clearImageInputs = () => {
+    setAdditionalImagePreviews([null, null, null]);
+    setMainImagePreview(null);
+    setMainImageFile(null);
+    setAdditionalImageFiles([null, null, null]);
+  };
+
+  const handleMainImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setMainImageFile(file);
+      setMainImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleAdditionalImageChange = (index, e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const updatedFiles = [...additionalImageFiles];
+      const updatedPreviews = [...additionalImagePreviews];
+
+      updatedFiles[index] = file;
+      updatedPreviews[index] = URL.createObjectURL(file);
+
+      setAdditionalImageFiles(updatedFiles);
+      setAdditionalImagePreviews(updatedPreviews);
+
+      setUpdatedImageIndexes((u) => (u.includes(index) ? u : [...u, index]));
+    }
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+
+    formData.append("asin", productInfo.asin);
+    formData.append("title", productInfo.title);
+    formData.append("description", productInfo.description);
+    formData.append("price", productInfo.price);
+    formData.append("currency", productInfo.currency);
+    formData.append("discount", productInfo.discount);
+    formData.append("model_number", productInfo.model_number);
+    formData.append("brand", productInfo.brand);
+    formData.append("manufacturer", productInfo.manufacturer);
+    formData.append("availability", productInfo.availability || "");
+    formData.append("weight", productInfo.weight || "");
+    formData.append("dimension", productInfo.dimension || "");
+    formData.append("ingredients", productInfo.ingredients || "");
+    if (
+      productInfo.department_id !== null &&
+      productInfo.department_id !== undefined
+    ) {
+      formData.append("department_id", productInfo.department_id);
+    }
+    formData.append("departments", productInfo.departments);
+    formData.append(
+      "date_first_available",
+      selectedDate ? selectedDate.toISOString().split("T")[0] : ""
+    );
+    formData.append("categories", JSON.stringify(categories));
+    formData.append("features", JSON.stringify(features));
+    formData.append("variations", JSON.stringify(variations));
+
+    if (mainImageFile) {
+      formData.append("image_url", mainImageFile);
+    }
+
+    updatedImageIndexes.forEach((index) => {
+      const file = additionalImageFiles[index];
+      if (file) {
+        formData.append("images", file);
+      }
+    });
+    formData.append("imageIndexes", JSON.stringify(updatedImageIndexes));
+
+    try {
+      await editProductInfo(productInfo.asin, formData);
+      alert("Product updated successfully");
+      onClose();
+      clearImageInputs();
+      triggerRefetch();
+      
+    } catch (error) {
+      console.error("Failed to update product:", error);
+      alert("Failed to update product");
+    }
+  };
 
   const blankStyles = {
     control: () => ({
@@ -119,7 +229,14 @@ const ProductInfo = ({
   };
 
   return (
-    <ModalInfo head={false} show={show} onClose={onClose}>
+    <ModalInfo
+      head={false}
+      show={show}
+      onClose={() => {
+        onClose();
+        clearImageInputs();
+      }}
+    >
       <div className="inner edit-product">
         <h3>{add ? "Add Product To Shop" : "Edit Product Information"}</h3>
 
@@ -131,10 +248,11 @@ const ProductInfo = ({
             onClick={handleMainImageClick}
           >
             <img
-              src={productInfo.image}
+              src={mainImagePreview || productInfo.image}
               alt="Main Product"
               className="product-image"
             />
+
             <div className="change-image" title="Main Image">
               <FontAwesomeIcon icon={faImage} />
             </div>
@@ -143,6 +261,7 @@ const ProductInfo = ({
               accept="image/png, image/jpeg"
               ref={mainImageRef}
               style={{ display: "none" }}
+              onChange={handleMainImageChange}
             />
           </div>
 
@@ -156,7 +275,8 @@ const ProductInfo = ({
               >
                 <img
                   src={
-                    productInfo.images?.length > 0 && productInfo.images[index]
+                    additionalImagePreviews[index] ||
+                    productInfo.images?.[index]
                   }
                   alt={`Additional ${index + 1}`}
                   className="product-image"
@@ -172,6 +292,7 @@ const ProductInfo = ({
                   accept="image/png, image/jpeg"
                   ref={additionalImageRefs[index]}
                   style={{ display: "none" }}
+                  onChange={(e) => handleAdditionalImageChange(index, e)}
                 />
               </div>
             ))}
@@ -179,7 +300,17 @@ const ProductInfo = ({
         </section>
 
         {/* Product Form */}
-        <form action="" onSubmit={(e) => e.preventDefault()}>
+        <form
+          onSubmit={(e) => {
+            handleSubmit();
+            e.preventDefault();
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+            }
+          }}
+        >
           {/* Title */}
           <div className={`form-group ${productInfo.title ? "has-value" : ""}`}>
             <input
@@ -356,7 +487,11 @@ const ProductInfo = ({
                 (option) => option.value === productInfo.department_id
               )}
               onChange={(option) =>
-                setProductInfo((p) => ({ ...p, departments: option.label, department_id: option.value }))
+                setProductInfo((p) => ({
+                  ...p,
+                  departments: option.label,
+                  department_id: option.value,
+                }))
               }
               placeholder=""
               classNamePrefix="react-select"
@@ -439,7 +574,7 @@ const ProductInfo = ({
 
           {/* Product Variation */}
           <ListInput
-            isKeyValue={false}
+            isKeyValue={true}
             data={variations}
             setData={setVariations}
             label="Add Variation"
@@ -455,7 +590,14 @@ const ProductInfo = ({
               <label className="floating-label">Date First Available</label>
               <DatePicker
                 selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  setProductInfo((p) => ({
+                    ...p,
+                    date_first_available:
+                      date?.toISOString().split("T")[0] || "",
+                  }));
+                }}
                 dateFormat="yyyy-MM-dd"
                 className="form-control"
                 showYearDropdown

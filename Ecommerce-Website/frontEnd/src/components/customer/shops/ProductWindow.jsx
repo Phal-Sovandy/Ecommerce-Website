@@ -235,14 +235,14 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                 <div className="selection-container">
                   {product.variations?.map((optionItem, index) => (
                     <div
-                      key={optionItem}
-                      className={optionItem === option ? "selected" : ""}
+                      key={optionItem.asin}
+                      className={optionItem.asin === option?.asin ? "selected" : ""}
                       onClick={() => {
                         setOption(optionItem);
                         setSelectedIndex(index);
                       }}
                     >
-                      {optionItem}
+                      {optionItem.name}
                     </div>
                   ))}
                 </div>

@@ -20,7 +20,7 @@ export async function queryAllProducts() {
         ],
         [Sequelize.col("brand.name"), "brand"],
         [Sequelize.col("rankings.badge"), "badge"],
-        [Sequelize.col("details.date_first_available"), "firstAvailableDate"],
+        [Sequelize.col("details.date_first_available"), "date_first_available"],
       ],
       include: [
         { model: models.ProductSeller, attributes: [] },
@@ -36,7 +36,6 @@ export async function queryAllProducts() {
     throw new Error("Failed to retrieve products");
   }
 }
-
 export async function queryAllProductsBySearch(search, badge, discount, sort) {
   try {
     const whereConditions = [];
@@ -125,7 +124,7 @@ export async function queryAllProductsBySearch(search, badge, discount, sort) {
         ],
         [Sequelize.col("brand.name"), "brand"],
         [Sequelize.col("rankings.badge"), "badge"],
-        [Sequelize.col("details.date_first_available"), "firstAvailableDate"],
+        [Sequelize.col("details.date_first_available"), "date_first_available"],
       ],
       include: [
         { model: models.ProductSeller, attributes: [] },
@@ -144,7 +143,6 @@ export async function queryAllProductsBySearch(search, badge, discount, sort) {
     throw new Error("No Product found");
   }
 }
-
 export async function queryAProductInfo(asin) {
   try {
     const product = await models.Product.findByPk(asin, {
@@ -282,7 +280,7 @@ export async function queryAProductInfo(asin) {
       variations:
         product.variation.variations &&
         Array.isArray(product.variation.variations)
-          ? product.variation.variations.map((v) => v.name)
+          ? product.variation.variations
           : [],
       badge: product.rankings.badge,
       availability: product.availability,
@@ -323,7 +321,6 @@ export async function queryAProductInfo(asin) {
     throw new Error("Failed to fetch product's data");
   }
 }
-
 export async function alterProductBadge(asin, badge) {
   try {
     const [updated] = await models.Ranking.update(
@@ -339,17 +336,180 @@ export async function alterProductBadge(asin, badge) {
     throw new Error("Failed to update badge");
   }
 }
-
-export async function deleteProduct(asin, seller_id) {
+export async function deleteProduct(asin) {
   try {
-    const [deletedRow] = await models.Product.destroy({
-      where: {
-        [Op.and]: [{ asin }, { seller_id }],
-      },
+    const deletedRow = await models.Product.destroy({
+      where: { asin },
     });
-    return {message: "Product have been deleted", rowDeleted: deletedRow};
+
+    return {
+      message: deletedRow
+        ? "Product has been deleted"
+        : "No product found to delete",
+      rowDeleted: deletedRow,
+    };
   } catch (err) {
-    console.error("Error delete product:", err);
+    console.error("Error deleting product:", err);
     throw new Error("Failed to delete product");
+  }
+}
+export async function alterProductInfo(asin, updatedData) {
+  try {
+    const product = await models.Product.findByPk(asin, {
+      include: [
+        { model: models.Media, as: "media" },
+        { model: models.ProductDetail, as: "details" },
+        { model: models.Pricing, as: "pricing" },
+        { model: models.Variation, as: "variation" },
+        { model: models.Category, as: "categories" },
+        { model: models.Manufacturer, as: "manufacturer" },
+        { model: models.Brand, as: "brand" },
+      ],
+    });
+
+    if (!product) throw new Error("No Product Found");
+
+    await product.update({
+      title: updatedData.title,
+      availability: updatedData.availability,
+    });
+
+    if (product.details) {
+      await product.details.update({
+        model_number: updatedData.model_number,
+        item_weight: updatedData.weight,
+        product_dimensions: updatedData.dimension,
+        date_first_available: updatedData.date_first_available,
+        description: updatedData.description,
+        features: updatedData.features,
+        ingredients: updatedData.ingredients,
+        department_id:
+          updatedData.department_id ?? product.details.department_id,
+      });
+    }
+
+    if (product.media) {
+      let finalImages = [...(product.media.images || [])];
+
+      if (
+        updatedData.images &&
+        updatedData.images.files &&
+        updatedData.images.indexes
+      ) {
+        updatedData.images.indexes.forEach((index, i) => {
+          while (finalImages.length <= index) {
+            finalImages.push("");
+          }
+          finalImages[index] = updatedData.images.files[i];
+        });
+      }
+
+      await product.media.update({
+        image_url: updatedData.image_url ?? product.media.image,
+        images: finalImages,
+      });
+    }
+
+    if (product.pricing) {
+      await product.pricing.update({
+        final_price: updatedData.price,
+        currency: updatedData.currency,
+        discount: updatedData.discount,
+      });
+    }
+
+    if (product.variation) {
+      await product.variation.update({
+        variations: updatedData.variations || [],
+      });
+    }
+
+    if (product.categories && updatedData.categories) {
+      const existingNames = product.categories.map((cat) => cat.name);
+      const updatedNames = updatedData.categories;
+
+      const newNames = updatedNames.filter(
+        (cat) => !existingNames.includes(cat)
+      );
+
+      const removedNames = existingNames.filter(
+        (cat) => !updatedNames.includes(cat)
+      );
+
+      if (newNames.length > 0) {
+        const existingCategoriesInDB = await models.Category.findAll({
+          where: { name: newNames },
+          attributes: ["category_id", "name"],
+        });
+
+        const existingNamesInDB = existingCategoriesInDB.map((c) => c.name);
+        const newNamesToCreate = newNames.filter(
+          (n) => !existingNamesInDB.includes(n)
+        );
+
+        let createdCategoryIds = [];
+        if (newNamesToCreate.length > 0) {
+          const createdCategories = await models.Category.bulkCreate(
+            newNamesToCreate.map((name) => ({ name })),
+            { validate: true, returning: true }
+          );
+          createdCategoryIds = createdCategories.map((cat) => cat.category_id);
+        }
+
+        // const existingIds = existingCategoriesInDB.map((cat) => cat.category_id);
+
+        await models.ProductCategory.bulkCreate(
+          createdCategoryIds.map((id) => ({ asin, category_id: id })),
+          { validate: true }
+        );
+      }
+
+      if (removedNames.length > 0) {
+        const removedCategories = await models.Category.findAll({
+          where: { name: removedNames },
+          attributes: ["category_id"],
+        });
+
+        const removedIds = removedCategories.map((cat) => cat.category_id);
+
+        await models.ProductCategory.destroy({
+          where: {
+            asin,
+            category_id: removedIds,
+          },
+        });
+      }
+    }
+
+    if (updatedData.brand && product.brand) {
+      const currentBrand = product.brand.name;
+
+      if (updatedData.brand !== currentBrand) {
+        let [brand] = await models.Brand.findOrCreate({
+          where: { name: updatedData.brand },
+          defaults: { name: updatedData.brand_id },
+        });
+
+        await product.update({ brand_id: brand.brand_id });
+      }
+    }
+
+    if (updatedData.manufacturer && product.manufacturer) {
+      const currentManufacturer = product.manufacturer.name;
+
+      if (updatedData.manufacturer !== currentManufacturer) {
+        let [manufacturer] = await models.Manufacturer.findOrCreate({
+          where: { name: updatedData.manufacturer },
+          defaults: { name: updatedData.manufacturer },
+        });
+
+        await product.update({ manufacturer_id: manufacturer.manufacturer_id });
+      }
+    }
+
+    return { message: "Product updated", asin };
+  } catch (err) {
+    console.error("Error in alterProductInfo:", err);
+    throw new Error("Product update failed");
   }
 }

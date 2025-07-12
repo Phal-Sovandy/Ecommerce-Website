@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import logger from "./middlewares/logger.js";
 import { initDatabase } from "./config/database.js";
 import customerRouter from "./routes/customerRoutes.js";
 import productRouter from "./routes/productRoutes.js";
@@ -17,6 +18,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(BASE_API_URL, logger);
+app.use("/uploads", express.static("public/uploads"));
 
 app.use(`${BASE_API_URL}/customers`, customerRouter);
 app.use(`${BASE_API_URL}/products`, productRouter);

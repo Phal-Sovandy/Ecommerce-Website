@@ -4,7 +4,12 @@ import { faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import "../../styles/common/ListInput.css";
 
-const ListInput = ({ data, setData, isKeyValue = true, label = "Add Item"}) => {
+const ListInput = ({
+  data,
+  setData,
+  isKeyValue = true,
+  label = "Add Item",
+}) => {
   const [input, setInput] = useState("");
 
   const isValidInput = (str) => {
@@ -26,7 +31,14 @@ const ListInput = ({ data, setData, isKeyValue = true, label = "Add Item"}) => {
       return;
     }
     if (!data.includes(trimmed)) {
-      setData([...data, trimmed]);
+      if (isKeyValue) {
+        setData([
+          ...data,
+          { asin: trimmed.split(":")[0], name: trimmed.split(":")[1] },
+        ]);
+      } else {
+        setData([...data, trimmed]);
+      }
       setInput("");
     }
   };
@@ -66,18 +78,18 @@ const ListInput = ({ data, setData, isKeyValue = true, label = "Add Item"}) => {
       {data?.length > 0 && (
         <div className="listing-list">
           {data.map((item, index) => {
-            const [key, value] = item.split(":").map((s) => s.trim());
             return (
               <div key={index} className=" list-item">
                 {isKeyValue ? (
                   <>
-                    <span className="key">{key}</span>:{" "}
-                    <span className="value">{value}</span>
+                    <span className="key">{item.asin}</span>:{" "}
+                    <span className="value">{item.name}</span>
                   </>
                 ) : (
                   <span className="value">{item}</span>
                 )}
                 <button
+                  type="button"
                   className="delete-btn"
                   onClick={() => handleDelete(index)}
                 >

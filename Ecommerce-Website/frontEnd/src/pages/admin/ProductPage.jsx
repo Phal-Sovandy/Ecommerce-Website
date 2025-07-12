@@ -12,19 +12,6 @@ import {
 import "ldrs/react/Quantum.css";
 import "../../styles/admin/ProductPage.css";
 
-const sampleProductInfo = {
-  title: "Wireless Bluetooth Headphones",
-  description: "Noise-cancelling over-ear headphones with long battery life.",
-  model_number: "WBH-100X",
-  feature: "Something Blah Blah Blah",
-  weight: "250g",
-  dimensions: "20 x 18 x 8 cm",
-  department: ["technology", "kitchen", "bedroom"],
-  variations: ["FJDDFDE:black", "FLENEFEF:blue", "FNELENFLE:red"],
-  state: "Battery, Plastic, Circuit Board",
-  date_first_available: new Date("2024-08-15"),
-};
-
 const PAGE_SIZE = 20;
 
 const ProductPage = () => {
@@ -50,20 +37,23 @@ const ProductPage = () => {
   // For editing product info
   const [showEdit, setShowEdit] = useState(false);
   const [productEditInfo, setProductEditInfo] = useState({});
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const fetchAllProducts = useCallback(async () => {
+    setLoading(true); // Reset at start
+    try {
+      const data = await filterProduct(search, badge, discount, sort);
+      setProducts(data);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [search, badge, discount, sort]);
 
   useEffect(() => {
-    async function fetchAllProducts() {
-      try {
-        const data = await filterProduct(search, badge, discount, sort);
-        setProducts(data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchAllProducts();
-  }, [search, badge, discount, sort]);
+  }, [fetchAllProducts, refreshTrigger]);
 
   useEffect(() => {
     const start = 0;
@@ -107,6 +97,7 @@ const ProductPage = () => {
         productInfo={productEditInfo}
         add={false}
         setProductInfo={setProductEditInfo}
+        triggerRefetch={() => setRefreshTrigger(p => p + 1)}
       />
       <header className="listing-page-head">
         <h1>Product Management</h1>
@@ -223,8 +214,8 @@ const ProductPage = () => {
                       <option value="#1 New Release">#1 New Release</option>
                     </select>
                   </td>
-                  <td className={product.firstAvailableDate ? "" : "null"}>
-                    {product.firstAvailableDate || "NO RECORD"}
+                  <td className={product.date_first_available ? "" : "null"}>
+                    {product.date_first_available || "NO RECORD"}
                   </td>
                   <td>
                     <button
@@ -255,7 +246,8 @@ const ProductPage = () => {
                       className="delete-btn"
                       onClick={async () => {
                         try {
-                          await deleteProduct(product.asin, product.seller_id);
+                          await deleteProduct(product.asin);
+                          fetchAllProducts();
                         } catch (err) {
                           setError(err.message);
                         }
