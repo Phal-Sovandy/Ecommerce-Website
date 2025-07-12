@@ -28,10 +28,22 @@ export async function queryReviewsByCustomerId(customer_id) {
 // Query all reviews by ASIN (product id)
 export async function queryReviewsByAsin(asin) {
   try {
-    return await models.CustomerReview.findAll({
+    const reviewData = await models.TopReview.findByPk(asin);
+
+    const customerReviews = await models.CustomerReview.findAll({
       where: { asin },
-      include: [{ model: models.Customer, as: "customer" }],
+      include: [
+        {
+          model: models.Customer,
+          include: [{ model: models.CustomerDetail, as: "customer_details" , attributes: ["first_name", "last_name", "profile_picture"]}],
+          as: "customer",
+        },
+      ],
     });
+    return {
+      top_review: reviewData?.top_review,
+      customer_review: {profile: customerReviews.customer.customer_details},
+    };
   } catch (error) {
     throw error;
   }

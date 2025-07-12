@@ -481,23 +481,27 @@ export async function alterProductInfo(asin, updatedData) {
       }
     }
 
-    if (updatedData.brand && product.brand) {
+    if (updatedData.brand !== undefined && product.brand) {
       const currentBrand = product.brand.name;
 
-      if (updatedData.brand !== currentBrand) {
+      if (updatedData.brand === "") {
+        await product.update({ brand_id: null });
+      } else if (updatedData.brand !== currentBrand) {
         let [brand] = await models.Brand.findOrCreate({
           where: { name: updatedData.brand },
-          defaults: { name: updatedData.brand_id },
+          defaults: { name: updatedData.brand },
         });
 
         await product.update({ brand_id: brand.brand_id });
       }
     }
 
-    if (updatedData.manufacturer && product.manufacturer) {
+    if (updatedData.manufacturer !== undefined && product.manufacturer) {
       const currentManufacturer = product.manufacturer.name;
 
-      if (updatedData.manufacturer !== currentManufacturer) {
+      if (updatedData.manufacturer === "") {
+        await product.update({ manufacturer_id: null });
+      } else if (updatedData.manufacturer !== currentManufacturer) {
         let [manufacturer] = await models.Manufacturer.findOrCreate({
           where: { name: updatedData.manufacturer },
           defaults: { name: updatedData.manufacturer },

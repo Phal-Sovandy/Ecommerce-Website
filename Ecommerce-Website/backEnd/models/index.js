@@ -101,6 +101,7 @@ const Product = sequelize.define(
     tableName: "products",
     timestamps: false,
     updatedAt: "updated_at",
+    createdAt: "created_at",
   }
 );
 
@@ -387,8 +388,8 @@ const Media = sequelize.define(
   }
 );
 
-const Review = sequelize.define(
-  "Review",
+const TopReview = sequelize.define(
+  "TopReview",
   {
     asin: {
       type: DataTypes.STRING(20),
@@ -399,21 +400,12 @@ const Review = sequelize.define(
       },
       onDelete: "CASCADE",
     },
-    reviews_count: {
-      type: DataTypes.INTEGER,
-    },
-    answered_questions: {
-      type: DataTypes.INTEGER,
-    },
     top_review: {
       type: DataTypes.TEXT,
     },
-    bought_past_month: {
-      type: DataTypes.INTEGER,
-    },
   },
   {
-    tableName: "reviews",
+    tableName: "top_review",
     timestamps: false,
   }
 );
@@ -969,8 +961,8 @@ Ranking.belongsTo(Product, { foreignKey: "asin" });
 Product.hasOne(Media, { foreignKey: "asin", as: "media" });
 Media.belongsTo(Product, { foreignKey: "asin" });
 
-Product.hasOne(Review, { foreignKey: "asin", as: "aggregatedReviews" });
-Review.belongsTo(Product, { foreignKey: "asin" });
+Product.hasOne(TopReview, { foreignKey: "asin", as: "topReview" });
+TopReview.belongsTo(Product, { foreignKey: "asin" });
 
 Product.hasOne(Variation, { foreignKey: "asin", as: "variation" });
 Variation.belongsTo(Product, { foreignKey: "asin" });
@@ -1013,6 +1005,9 @@ ProductCategory.belongsTo(Product, { foreignKey: "asin" });
 
 Category.hasMany(ProductCategory, { foreignKey: "category_id" });
 ProductCategory.belongsTo(Category, { foreignKey: "category_id" });
+
+Product.hasOne(TopReview, { foreignKey: "asin" });
+TopReview.belongsTo(Product, { foreignKey: "asin" });
 
 Customer.hasOne(CustomerDetail, { foreignKey: "customer_id", as: "details" });
 CustomerDetail.belongsTo(Customer, { foreignKey: "customer_id" });
@@ -1096,7 +1091,7 @@ export default {
   Seller,
   ProductSeller,
   Media,
-  Review,
+  TopReview,
   Category,
   ProductCategory,
   Variation,

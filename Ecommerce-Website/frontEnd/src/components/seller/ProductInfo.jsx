@@ -127,14 +127,14 @@ const ProductInfo = ({
     const formData = new FormData();
 
     formData.append("asin", productInfo.asin);
-    formData.append("title", productInfo.title);
-    formData.append("description", productInfo.description);
-    formData.append("price", productInfo.price);
-    formData.append("currency", productInfo.currency);
-    formData.append("discount", productInfo.discount);
-    formData.append("model_number", productInfo.model_number);
-    formData.append("brand", productInfo.brand);
-    formData.append("manufacturer", productInfo.manufacturer);
+    formData.append("title", productInfo.title || "");
+    formData.append("description", productInfo.description || "");
+    formData.append("price", productInfo.price || "No Price");
+    formData.append("currency", productInfo.currency || "");
+    formData.append("discount", productInfo.discount || "");
+    formData.append("model_number", productInfo.model_number || "");
+    formData.append("brand", productInfo.brand || "");
+    formData.append("manufacturer", productInfo.manufacturer || "");
     formData.append("availability", productInfo.availability || "");
     formData.append("weight", productInfo.weight || "");
     formData.append("dimension", productInfo.dimension || "");

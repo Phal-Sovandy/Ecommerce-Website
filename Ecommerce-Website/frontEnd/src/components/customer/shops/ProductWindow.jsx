@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useCart } from "../../../context/CartContext.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
+import { getAllCustomerReviewOfProduct } from "../../../api/common/reviews.js";
 
 import ImageSlider from "./ImageSlider.jsx";
 
@@ -25,9 +26,23 @@ import { Link } from "react-router-dom";
 function ProductWindow({ product, setShowState, showEdit = () => {} }) {
   const { isLoggedIn, role } = useAuth();
   const { addToCart } = useCart();
-  const [size, setSize] = useState(null);
+  // const [size, setSize] = useState(null);
   const [option, setOption] = useState(null);
   const [selectedImageIndex, setSelectedIndex] = useState(0);
+
+  const [reviews, setReviews] = useState({});
+
+  useEffect(() => {
+    async function fetchAllReviews() {
+      try {
+        const data = await getAllCustomerReviewOfProduct(product.asin);
+        setReviews(data);
+      } catch (error) {
+        console.error("Error Fetching reviews: ", error.message);
+      }
+    }
+    fetchAllReviews();
+  }, [product.asin]);
 
   function imageSizeChart() {
     if (product.categories.includes("top")) {
@@ -84,46 +99,43 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
   //     </div>
   //   ) : null;
 
-  function handleAddToCart() {
-    if (product.categories.includes("apparel")) {
-      if (!size) {
-        window.alert("Please select a size");
-        return false;
-      }
-      if (product.variations && !option) {
-        window.alert("Please select an option");
-        return false;
-      }
-    } else if (product.categories.includes("footwear")) {
-      if (!size) {
-        window.alert("Please select a size");
-        return false;
-      }
-      if (product.variations && !option) {
-        window.alert("Please select an option");
-        return false;
-      }
-    } else {
-      if (product.variations && !option) {
-        window.alert("Please select an option");
-        return false;
-      }
-    }
-    return true;
-  }
+  // function handleAddToCart() {
+  //   if (product.categories.includes("apparel")) {
+  //     if (!size) {
+  //       window.alert("Please select a size");
+  //       return false;
+  //     }
+  //     if (product.variations && !option) {
+  //       window.alert("Please select an option");
+  //       return false;
+  //     }
+  //   } else if (product.categories.includes("footwear")) {
+  //     if (!size) {
+  //       window.alert("Please select a size");
+  //       return false;
+  //     }
+  //     if (product.variations && !option) {
+  //       window.alert("Please select an option");
+  //       return false;
+  //     }
+  //   } else {
+  //     if (product.variations && !option) {
+  //       window.alert("Please select an option");
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
   function handleSubmission(event) {
     event.preventDefault();
-    if (handleAddToCart()) {
-      addToCart({
-        ...product,
-        image: product.variations
-          ? product.images[selectedImageIndex]
-          : product.image,
-        size: size,
-        option: option,
-      });
-      setShowState(false);
-    }
+    addToCart({
+      ...product,
+      image: product.variations
+        ? product.images[selectedImageIndex]
+        : product.image,
+      option: option,
+    });
+    setShowState(false);
   }
   function ratingPhotoManage(rating) {
     const ratingPhoto = rating * 10;
@@ -189,7 +201,8 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                   </p>
                 </div>
                 <p>
-                  Sell By <span className="sellerId">{`(${product.sellerId})`} </span>
+                  Sell By{" "}
+                  <span className="sellerId">{`(${product.sellerId})`} </span>
                   <Link to={`/sellerShop/${product.sellerId}`}>
                     {product.seller_name}
                   </Link>
@@ -236,7 +249,9 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                   {product.variations?.map((optionItem, index) => (
                     <div
                       key={optionItem.asin}
-                      className={optionItem.asin === option?.asin ? "selected" : ""}
+                      className={
+                        optionItem.asin === option?.asin ? "selected" : ""
+                      }
                       onClick={() => {
                         setOption(optionItem);
                         setSelectedIndex(index);
@@ -349,35 +364,29 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
 
               {/* //TODO: The Top review first */}
               <ProductReview
-                userProfile="https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg"
-                username="John Cena"
-                title="Something is something and thing is not a thing good."
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-        consequuntur perferendis eum fugit quibusdam ipsam earum eos quae
-        deleniti accusamus!"
+                userProfile="https://t3.ftcdn.net/jpg/06/25/95/40/360_F_625954075_LA8kZtScb8QrJtG0JTBv3FZ9wTgXURKY.jpg"
+                username="Top Review"
+                title=""
+                description={reviews?.top_review}
                 reviewId={1}
                 pin={true}
               />
 
               {/* //TODO: The rest reviews, just map it*/}
-              <ProductReview
-                userProfile="https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg"
-                username="The Rock"
-                title="Something good not good bad yes not good best yes go."
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
+              {reviews.customer_reviews?.map((rev) => (
+                <ProductReview
+                  userProfile={
+                    rev.profile ||
+                    "https://cdn-icons-png.flaticon.com/512/9187/9187604.png"
+                  }
+                  username="The Rock"
+                  title="Something good not good bad yes not good best yes go."
+                  description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
         consequuntur perferendis eum fugit quibusdam ipsam earum eos quae
         deleniti accusamus!"
-                reviewId={1}
-              />
-              <ProductReview
-                userProfile="https://cdn.pixabay.com/photo/2015/04/23/22/00/new-year-background-736885_1280.jpg"
-                username="Sting"
-                title="Wow hello amazing wonderful good man women bad worst"
-                description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-        consequuntur perferendis eum fugit quibusdam ipsam earum eos quae
-        deleniti accusamus!"
-                reviewId={1}
-              />
+                  reviewId={1}
+                />
+              ))}
 
               {/* //NOTE: Only the customer who have bought this product can give the review, so modify it*/}
               {role === "customer" && (
