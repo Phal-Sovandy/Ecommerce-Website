@@ -1,6 +1,6 @@
 import { queryAllDepartment } from "../repositories/departmentQuery.js";
 
-export async function getAllDepartment(req, res) {
+export async function getAllDepartmentController(req, res) {
   try {
     const data = await queryAllDepartment();
     return res.status(200).json(data);

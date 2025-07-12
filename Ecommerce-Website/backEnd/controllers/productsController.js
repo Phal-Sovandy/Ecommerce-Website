@@ -62,7 +62,7 @@ export async function changeProductBadgeController(req, res) {
 
 export async function removeProductController(req, res) {
   try {
-    const { asin } = req.body;
+    const { asin } = req.params;
     const productDelete = await deleteProduct(asin);
     res.status(200).json(productDelete);
   } catch (error) {

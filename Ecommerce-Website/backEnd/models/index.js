@@ -264,6 +264,9 @@ const SellerDetail = sequelize.define(
       unique: true,
       allowNull: false,
     },
+    bio: {
+      type: DataTypes.TEXT,
+    },
     password_hash: {
       type: DataTypes.TEXT,
     },
@@ -279,6 +282,11 @@ const SellerDetail = sequelize.define(
     login_method: {
       type: DataTypes.STRING(20),
       defaultValue: "email",
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
     registration_date: {
       type: DataTypes.DATEONLY,
@@ -302,6 +310,9 @@ const SellerLocation = sequelize.define(
         key: "seller_id",
       },
       onDelete: "CASCADE",
+    },
+    country: {
+      type: DataTypes.STRING(100),
     },
     city: {
       type: DataTypes.STRING(100),
@@ -596,6 +607,9 @@ const CustomerLocation = sequelize.define(
         key: "customer_id",
       },
       onDelete: "CASCADE",
+    },
+    country: {
+      type: DataTypes.STRING(100),
     },
     city: {
       type: DataTypes.STRING(100),

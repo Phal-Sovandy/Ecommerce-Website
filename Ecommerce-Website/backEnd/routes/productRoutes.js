@@ -12,11 +12,11 @@ import {
 const productRouters = express.Router();
 
 productRouters.get("/search", getProductBySearchController);
+productRouters.route("/").get(getAllProductsController);
 productRouters
-  .route("/")
-  .get(getAllProductsController)
+  .route("/:asin/badge")
+  .patch(changeProductBadgeController)
   .delete(removeProductController);
-productRouters.route("/:asin/badge").patch(changeProductBadgeController);
 productRouters
   .route("/:asin")
   .get(getAProductsController)

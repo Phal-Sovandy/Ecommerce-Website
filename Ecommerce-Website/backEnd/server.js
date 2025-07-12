@@ -8,6 +8,7 @@ import productRouter from "./routes/productRoutes.js";
 import departmentRouters from "./routes/departmentRoutes.js";
 import reviewRouter from "./routes/reviewRoutes.js";
 import wishlistRouter from "./routes/wishlistRoutes.js";
+import sellerRouter from "./routes/sellerRoutes.js";
 
 dotenv.config();
 const { BASE_API_URL, PORT } = process.env;
@@ -23,6 +24,7 @@ app.use("/uploads", express.static("public/uploads"));
 
 app.use(`${BASE_API_URL}/customers`, customerRouter);
 app.use(`${BASE_API_URL}/products`, productRouter);
+app.use(`${BASE_API_URL}/sellers`, sellerRouter);
 app.use(`${BASE_API_URL}/departments`, departmentRouters);
 app.use(`${BASE_API_URL}/reviews`, reviewRouter);
 app.use(`${BASE_API_URL}/wishlists`, wishlistRouter);

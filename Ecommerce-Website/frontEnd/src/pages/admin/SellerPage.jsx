@@ -1,26 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ViewModal from "../../components/admin/ViewModal";
 import EditModal from "../../components/admin/EditModal";
+import { getAllSellers, filterSeller } from "../../api/admin/sellersPage.js";
 
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
 
 import "../../styles/admin/SellerPage.css";
 
-const countries = ["USA", "UK", "Canada", "Australia", "Germany", "Japan"];
-const genders = ["Male", "Female"];
-
-// Simulated seller data
-const allSellers = Array.from({ length: 5000 }, (_, i) => ({
-  seller_id: i + 1,
-  name: `Seller ${i + 1}`,
-  email: `seller${i + 1}@example.com`,
-  phone: `096-727-${String(i + 1).padStart(4, "0")}`,
-  gender: genders[i % genders.length],
-  country: countries[i % countries.length],
-  joined: "2025-02-01",
-  status: i % 2 === 0 ? "Active" : "Inactive",
-}));
 const sampleSellerInfo = {
   first_name: "Alice",
   last_name: "Johnson",
@@ -40,45 +27,45 @@ const sampleSellerInfo = {
 const PAGE_SIZE = 50;
 
 const SellerPage = () => {
+  const [sellers, setSellers] = useState([]);
+  const [error, setError] = useState("");
   const [showSellerInfo, setShowSellerInfo] = useState(false);
   const [showSellerEditInfo, setShowSellerEditInfo] = useState(false);
   const [visibleSellers, setVisibleSellers] = useState([]);
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const observer = useRef();
 
+  // For header functionalities
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [sort, setSort] = useState("");
+
+  const fetchAllSellers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await filterSeller(search, status, sort);
+      setSellers(res);
+    } catch (error) {
+      setError(error.message || "Failed to fetch sellers");
+    } finally {
+      setLoading(false);
+    }
+  }, [search, status, sort]);
+
   useEffect(() => {
-    const loadSellers = () => {
-      setLoading(true);
+    fetchAllSellers();
+  }, [fetchAllSellers]);
 
-      setTimeout(() => {
-        const filtered = allSellers.filter(
-          (s) =>
-            s.name.toLowerCase().includes(search.toLowerCase().trim()) ||
-            s.email.toLowerCase().includes(search.toLowerCase().trim()) ||
-            s.country.toLowerCase().includes(search.toLowerCase().trim())
-        );
-        const start = 0;
-        const end = PAGE_SIZE * page;
-        setVisibleSellers(filtered.slice(start, end));
-        setLoading(false);
-      }, 500); // simulate delay
-    };
-
-    loadSellers();
-  }, [page, search]);
-
-  const filteredTotal = allSellers.filter(
-    (s) =>
-      s.name.toLowerCase().includes(search.toLowerCase().trim()) ||
-      s.email.toLowerCase().includes(search.toLowerCase().trim()) ||
-      s.country.toLowerCase().includes(search.toLowerCase().trim())
-  ).length;
+  useEffect(() => {
+    const start = 0;
+    const end = PAGE_SIZE * page;
+    setVisibleSellers(sellers?.slice(start, end));
+  }, [page, sellers]);
 
   const lastSellerRef = useCallback(
     (node) => {
-      if (loading || visibleSellers.length >= filteredTotal) return;
+      if (loading || visibleSellers?.length >= sellers?.length) return;
 
       if (observer.current) observer.current.disconnect();
 
@@ -90,7 +77,7 @@ const SellerPage = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, visibleSellers.length, filteredTotal]
+    [loading, visibleSellers?.length, sellers]
   );
 
   return (
@@ -111,7 +98,7 @@ const SellerPage = () => {
         <h1>Seller Management</h1>
         <input
           type="text"
-          placeholder="Search by name or email or country..."
+          placeholder="Search by Seller ID, name, email, country, joined date..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -121,21 +108,16 @@ const SellerPage = () => {
           autoCorrect="true"
         />
         <div className="listing-action">
-          <select defaultValue={""}>
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">Filter Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
-          <select defaultValue={""}>
-            <option value="">Filter Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          <select defaultValue={"nameAsc"}>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
             <option value="nameAsc">Sort By Name ↑</option>
             <option value="nameDesc">Sort By Name ↓</option>
-            <option value="joinedAsc">Sort By Joined Date ↑</option>
-            <option value="joinedDesc">Sort By Joined Date ↓</option>
+            <option value="dateAsc">Sort By Joined Date ↑</option>
+            <option value="dateDesc">Sort By Joined Date ↓</option>
           </select>
         </div>
       </header>
@@ -143,11 +125,11 @@ const SellerPage = () => {
         <table className="listing-table">
           <thead>
             <tr>
-              <th>seller ID</th>
+              <th>Seller ID</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Contact Person</th>
               <th>Phone</th>
-              <th>Gender</th>
               <th>Country</th>
               <th>Joined</th>
               <th>Status</th>
@@ -155,26 +137,26 @@ const SellerPage = () => {
             </tr>
           </thead>
           <tbody>
-            {visibleSellers.map((seller, index) => {
-              const isLast = index === visibleSellers.length - 1;
+            {visibleSellers?.map((seller, index) => {
+              const isLast = index === visibleSellers?.length - 1;
               return (
                 <tr key={seller.seller_id} ref={isLast ? lastSellerRef : null}>
-                  <td className="entity-id">
-                    SELLER{String(seller.seller_id).padStart(7, "0")}
+                  <td className="entity-id">{seller.seller_id}</td>
+                  <td>{seller.seller_name}</td>
+                  <td>
+                    <a href="mailto:seller@gmail.com">{seller.email}</a>
                   </td>
-                  <td>{seller.name}</td>
-                  <td><a href="mailto:seller@gmail.com">{seller.email}</a></td>
+                  <td>{seller.contact_person}</td>
                   <td>{seller.phone}</td>
-                  <td>{seller.gender}</td>
                   <td>{seller.country}</td>
-                  <td>{seller.joined}</td>
+                  <td>{seller.registration_date}</td>
                   <td className="status">
                     <div
                       className={`status-toggle ${
-                        seller.status === "Active" ? "active" : ""
+                        seller.status ? "active" : ""
                       }`}
                     >
-                      {seller.status}
+                      {seller.status ? "Active" : "Inactive"}
                     </div>
                   </td>
                   <td>
@@ -192,12 +174,10 @@ const SellerPage = () => {
                     </button>
                     <button
                       className={
-                        seller.status === "Inactive"
-                          ? "activate-btn"
-                          : "deactivate-btn"
+                        !seller.status ? "activate-btn" : "deactivate-btn"
                       }
                     >
-                      {seller.status === "Inactive" ? "Activate" : "Deactivate"}
+                      {!seller.status ? "Activate" : "Deactivate"}
                       {/* Important: Activate or deactivate change only the status not delete the row from the database */}
                     </button>
                   </td>
@@ -212,7 +192,7 @@ const SellerPage = () => {
           </div>
         )}
 
-        {!loading && visibleSellers.length >= filteredTotal && (
+        {!loading && visibleSellers?.length >= sellers?.length && (
           <p className="end-loading-list">No more sellers to load.</p>
         )}
       </div>

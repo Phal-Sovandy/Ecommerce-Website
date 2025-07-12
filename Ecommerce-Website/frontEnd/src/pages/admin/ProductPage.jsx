@@ -97,7 +97,7 @@ const ProductPage = () => {
         productInfo={productEditInfo}
         add={false}
         setProductInfo={setProductEditInfo}
-        triggerRefetch={() => setRefreshTrigger(p => p + 1)}
+        triggerRefetch={() => setRefreshTrigger((p) => p + 1)}
       />
       <header className="listing-page-head">
         <h1>Product Management</h1>
@@ -113,10 +113,7 @@ const ProductPage = () => {
           autoCorrect="true"
         />
         <div className="listing-action">
-          <select
-            defaultValue={badge}
-            onChange={(e) => setBadge(e.target.value)}
-          >
+          <select value={badge} onChange={(e) => setBadge(e.target.value)}>
             <option value="">Filter Badge</option>
             <option value="no badge">No Badge</option>
             <option value="Amazon's  Choice">Amazon's Choice</option>
@@ -124,14 +121,14 @@ const ProductPage = () => {
             <option value="#1 New Release">#1 New Release</option>
           </select>
           <select
-            defaultValue={discount}
+            value={discount}
             onChange={(e) => setDiscount(e.target.value)}
           >
             <option value="">Filter Discount</option>
             <option value="discount">Discount</option>
             <option value="noDiscount">No Discount</option>
           </select>
-          <select defaultValue={sort} onChange={(e) => setSort(e.target.value)}>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
             <option value="titleAsc">Sort By Title ↑</option>
             <option value="titleDesc">Sort By Title ↓</option>
             <option value="priceAsc">Sort By Price ↑</option>

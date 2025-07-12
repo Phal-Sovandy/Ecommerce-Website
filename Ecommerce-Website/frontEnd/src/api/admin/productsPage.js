@@ -50,9 +50,7 @@ export async function changeProductBadge(asin, newBadge) {
 }
 export async function deleteProduct(asin) {
   try {
-    const deleted = await axios.delete(BASE_API_URL, {
-      data: { asin },
-    });
+    const deleted = await axios.delete(`${BASE_API_URL}/${asin}`);
     return deleted.data;
   } catch (error) {
     console.error(error);
