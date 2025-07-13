@@ -37,7 +37,7 @@ export async function queryAllSellers() {
 
     return formatSellers;
   } catch (err) {
-    console.error("Error in fetching sellers:", err);
+    console.log("Error in fetching sellers:", err);
     throw new Error("Fetching sellers failed");
   }
 }
@@ -135,7 +135,7 @@ export async function queryAllSellersBySearch(search, status, sort) {
 
     return sellers;
   } catch (err) {
-    console.error("Failed to fetch sellers", err);
+    console.log("Failed to fetch sellers", err);
     throw new Error("No seller found");
   }
 }
@@ -181,7 +181,7 @@ export async function queryASellerInformation(seller_id) {
     };
     return formatSeller;
   } catch (err) {
-    console.error("Error in fetching sellers:", err);
+    console.log("Error in fetching sellers:", err);
     throw new Error("Fetching sellers failed");
   }
 }
@@ -264,7 +264,41 @@ export async function alterSellerInfo(sellerId, updatedData) {
     const updatedSeller = await queryASellerInformation(sellerId);
     return updatedSeller;
   } catch (error) {
-    console.error("Error updating seller info:", error);
+    console.log("Error updating seller info:", error);
     throw new Error("Updating seller info failed");
+  }
+}
+
+// Edit seller status
+export async function alterSellerStatus(sellerId) {
+  try {
+    const detail = await models.SellerDetail.findOne({
+      where: { seller_id: sellerId },
+      attributes: ["status"],
+    });
+
+    if (!detail) {
+      throw new Error("Seller detail not found");
+    }
+
+    const newStatus = !detail.status;
+
+    const [updated] = await models.SellerDetail.update(
+      { status: newStatus },
+      { where: { seller_id: sellerId } }
+    );
+
+    if (updated === 0) {
+      return { message: "No status update", updated };
+    }
+
+    return {
+      message: `Status updated to ${newStatus ? "active" : "inactive"}`,
+      updated,
+      newStatus,
+    };
+  } catch (error) {
+    console.log("Error: Failed to update status", error.message);
+    throw new Error("Failed to update status");
   }
 }

@@ -23,7 +23,7 @@ import {
   faFeather,
 } from "@fortawesome/free-solid-svg-icons";
 
-const EditModal = ({ show, onClose, info, title }) => {
+const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
   const countries = getData().map((country) => ({
     value: country.code,
     label: country.name,
@@ -140,6 +140,7 @@ const EditModal = ({ show, onClose, info, title }) => {
       alert("seller updated successfully");
       onClose();
       clearImageInputs();
+      refetch();
     } catch (error) {
       console.error("Failed to update seller:", error);
       alert("Failed to update seller");

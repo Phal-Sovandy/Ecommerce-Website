@@ -5,6 +5,7 @@ import {
   getAllSellers,
   filterSeller,
   getASellerInfo,
+  changeSellerStatus,
 } from "../../api/admin/sellersPage.js";
 
 import { Quantum } from "ldrs/react";
@@ -17,9 +18,13 @@ const PAGE_SIZE = 50;
 const SellerPage = () => {
   const [sellers, setSellers] = useState([]);
   const [sellerInfo, setSellerInfo] = useState({});
+
+  const [refetch, setRefetch] = useState(0);
   const [error, setError] = useState("");
+
   const [showSellerInfo, setShowSellerInfo] = useState(false);
   const [showSellerEditInfo, setShowSellerEditInfo] = useState(false);
+
   const [visibleSellers, setVisibleSellers] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -44,7 +49,7 @@ const SellerPage = () => {
 
   useEffect(() => {
     fetchAllSellers();
-  }, [fetchAllSellers]);
+  }, [fetchAllSellers, refetch]);
 
   useEffect(() => {
     const start = 0;
@@ -87,6 +92,7 @@ const SellerPage = () => {
         onClose={() => setShowSellerEditInfo(false)}
         info={sellerInfo}
         title="Seller"
+        refetch={() => setRefetch((r) => r + 1)}
       />
       <ViewModal
         show={showSellerInfo}
@@ -164,7 +170,7 @@ const SellerPage = () => {
                       className="view-btn"
                       onClick={() => {
                         fetchSellerInfo(seller.seller_id);
-                        setShowSellerInfo(true)
+                        setShowSellerInfo(true);
                       }}
                     >
                       View
@@ -173,7 +179,7 @@ const SellerPage = () => {
                       className="edit-btn"
                       onClick={() => {
                         fetchSellerInfo(seller.seller_id);
-                        setShowSellerEditInfo(true)
+                        setShowSellerEditInfo(true);
                       }}
                     >
                       Edit
@@ -182,6 +188,15 @@ const SellerPage = () => {
                       className={
                         !seller.status ? "activate-btn" : "deactivate-btn"
                       }
+                      onClick={async () => {
+                        try {
+                          await changeSellerStatus(seller.seller_id);
+                          setRefetch((r) => r + 1);
+                        } catch (error) {
+                          console.error("Error", error.message);
+                          setError(error.message);
+                        }
+                      }}
                     >
                       {!seller.status ? "Activate" : "Deactivate"}
                       {/* Important: Activate or deactivate change only the status not delete the row from the database */}

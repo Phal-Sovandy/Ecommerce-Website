@@ -5,14 +5,14 @@ import {
   getSellerBySearchController,
   getASellerController,
   updateSellerInfoController,
+  changeSellerStatusController,
 } from "../controllers/sellerController.js";
 
 const sellerRouter = express.Router();
 
 sellerRouter.get("/search", getSellerBySearchController);
 sellerRouter.route("/").get(getAllSellersController);
-
-// sellerRouter.route("/:asin/badge").patch(changeProductBadgeController);
+sellerRouter.route("/:sellerId/status").patch(changeSellerStatusController);
 sellerRouter
   .route("/:sellerId")
   .get(getASellerController)

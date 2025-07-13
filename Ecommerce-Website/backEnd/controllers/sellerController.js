@@ -3,6 +3,7 @@ import {
   queryAllSellers,
   queryAllSellersBySearch,
   queryASellerInformation,
+  alterSellerStatus
 } from "../repositories/sellerQuery.js";
 
 export async function getAllSellersController(req, res) {
@@ -60,5 +61,16 @@ export async function updateSellerInfoController(req, res) {
   } catch (error) {
     console.error("Error updating product:", error.message);
     return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function changeSellerStatusController(req, res) {
+  try {
+    const { sellerId } = req.params;
+    const result = await alterSellerStatus(sellerId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    res.status(500).json({ error: "Failed to update seller status" });
   }
 }

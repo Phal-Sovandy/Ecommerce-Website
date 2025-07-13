@@ -53,3 +53,12 @@ export async function editSellerProfileInfo(sellerId, formData) {
   }
 }
 
+export async function changeSellerStatus(sellerId){
+    try {
+    const response = await axios.patch(`${BASE_API_URL}/${sellerId}/status`);
+    return response.data;
+  } catch (error) {
+    console.error("Error editing seller status info:", error);
+    throw error;
+  }
+}
