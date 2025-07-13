@@ -28,3 +28,28 @@ export async function filterSeller(search, status, sort) {
     throw new Error(error);
   }
 }
+
+export async function getASellerInfo(sellerId) {
+  try {
+    const seller = await axios.get(`${BASE_API_URL}/${sellerId}`);
+    return seller.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
+export async function editSellerProfileInfo(sellerId, formData) {
+  try {
+    const response = await axios.put(`${BASE_API_URL}/${sellerId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error editing seller profile info:", error);
+    throw error;
+  }
+}
+

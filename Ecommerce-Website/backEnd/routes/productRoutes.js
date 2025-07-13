@@ -1,5 +1,5 @@
 import express from "express";
-import { upload } from "../config/multer.js";
+import { uploadProduct } from "../config/multer.js";
 import {
   getAllProductsController,
   getAProductsController,
@@ -21,7 +21,7 @@ productRouters
   .route("/:asin")
   .get(getAProductsController)
   .put(
-    upload.fields([
+    uploadProduct.fields([
       { name: "image_url", maxCount: 1 },
       { name: "images", maxCount: 10 },
     ]),
@@ -29,3 +29,4 @@ productRouters
   );
 
 export default productRouters;
+ 

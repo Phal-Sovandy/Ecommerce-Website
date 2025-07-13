@@ -71,7 +71,7 @@ export async function removeProductController(req, res) {
   }
 }
 
-export const updateProductController = async (req, res) => {
+export async function updateProductController(req, res){
   const { asin } = req.params;
   const updatedData = req.body;
 

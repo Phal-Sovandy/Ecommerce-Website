@@ -1,10 +1,12 @@
-import React, { useRef } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import "../../styles/admin/ViewModal.css";
 import ModalInfo from "../common/modals/ModalInfo.jsx";
 
 const ViewModal = ({ show, onClose, info, title }) => {
+  const navigate = useNavigate();
   return (
     <ModalInfo head={false} show={show} onClose={onClose}>
       <div className="inner information">
@@ -14,62 +16,89 @@ const ViewModal = ({ show, onClose, info, title }) => {
         <h3>{title} Information</h3>
         <div>
           <div className="image-holder">
-            <img src="https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg" />
+            <img
+              src={
+                info.profile_picture ||
+                "https://dokan.co/app/uploads/2023/05/How-to-Become-an-eCommerce-Seller-7-Tips-from-Experts.png"
+              }
+            />
           </div>
           <div className="info-wrapper">
-            <div className="info">
-              <h4>Firstname</h4>
-              <p>{info.first_name}</p>
-            </div>
-            <div className="info">
-              <h4>Lastname</h4>
-              <p>{info.last_name}</p>
-            </div>
+            {title.toLowerCase() !== "seller" ? (
+              <>
+                <div className="info">
+                  <h4>Firstname</h4>
+                  <p>{info.first_name || "No Record"}</p>
+                </div>
+                <div className="info">
+                  <h4>Lastname</h4>
+                  <p>{info.last_name || "No Record"}</p>
+                </div>
+              </>
+            ) : null}
             <div className="info">
               <h4>Username</h4>
-              <p>{info.username}</p>
+              <p>{info.username || "No Record"}</p>
             </div>
             <div className="info">
               <h4>Email</h4>
-              <p>{info.email}</p>
+              <a href={`mailto:${info.email}`}>{info.email}</a>
             </div>
             <div className="info">
               <h4>Phone Number</h4>
-              <p>{info.phone_number}</p>
+              <p>{info.phone || "No Record"}</p>
+            </div>
+            <div className="info bio">
+              <h4>Bio</h4>
+              <p>{info.bio || "No Record"}</p>
             </div>
 
-            <div className="info">
-              <h4>Gender</h4>
-              <p>{info.gender}</p>
-            </div>
-            <div className="info">
-              <h4>Birthdate</h4>
-              <p>{info.birthdate.toLocaleDateString()}</p>
-            </div>
+            {title.toLowerCase() !== "seller" ? (
+              <>
+                <div className="info">
+                  <h4>Gender</h4>
+                  <p>{info.gender || "No Record"}</p>
+                </div>
+                <div className="info">
+                  <h4>Birthdate</h4>
+                  <p>{info.birthdate || "No Record"}</p>
+                </div>
+              </>
+            ) : null}
             <div className="info">
               <h4>Country</h4>
-              <p>{info.country.label}</p>
+              <p>{info.country || "No Record"}</p>
             </div>
             <div className="info">
               <h4>State</h4>
-              <p>{info.state}</p>
+              <p>{info.state || "No Record"}</p>
             </div>
             <div className="info">
               <h4>City</h4>
-              <p>{info.city}</p>
+              <p>{info.city || "No Record"}</p>
             </div>
             <div className="info">
               <h4>ZIP Code</h4>
-              <p>{info.zipcode}</p>
+              <p>{info.zip_code || "No Record"}</p>
             </div>
             <div className="info">
               <h4>Address Line 1</h4>
-              <p>{info.address_line1}</p>
+              <p>{info.address_line1 || "No Record"}</p>
             </div>
             <div className="info">
               <h4>Address Line 2</h4>
-              <p>{info.address_line2}</p>
+              <p>{info.address_line2 || "No Record"}</p>
             </div>
+            <div className="info">
+              <h4>Joined Date</h4>
+              <p>{info.registration_date || "No Record"}</p>
+            </div>
+            {title.toLowerCase() === "seller" && (
+              <button
+                type="button"
+                onClick={() => navigate(`/sellerShop/${info.seller_id}`)}
+              >{`Visit ${info.name || "Seller"}'s Store`}</button>
+            )}
           </div>
         </div>
       </div>

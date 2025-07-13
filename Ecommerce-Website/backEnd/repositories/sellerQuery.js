@@ -41,7 +41,6 @@ export async function queryAllSellers() {
     throw new Error("Fetching sellers failed");
   }
 }
-
 // Query seller by search
 export async function queryAllSellersBySearch(search, status, sort) {
   try {
@@ -88,7 +87,7 @@ export async function queryAllSellersBySearch(search, status, sort) {
 
     if (status === "inactive") {
       whereConditions.push({ "$details.status$": false });
-    } else if (status === "active"){
+    } else if (status === "active") {
       whereConditions.push({ "$details.status$": true });
     }
 
@@ -140,8 +139,132 @@ export async function queryAllSellersBySearch(search, status, sort) {
     throw new Error("No seller found");
   }
 }
+// Query seller details
+export async function queryASellerInformation(seller_id) {
+  try {
+    const seller = await models.Seller.findByPk(seller_id, {
+      attributes: ["seller_id", "seller_name"],
+      include: {
+        model: models.SellerDetail,
+        as: "details",
+        attributes: [
+          "email",
+          "phone",
+          "contact_person",
+          "status",
+          "profile_picture",
+          "bio",
+          "registration_date",
+        ],
+        include: {
+          model: models.SellerLocation,
+          as: "location",
+        },
+      },
+    });
+    const formatSeller = {
+      seller_id: seller.seller_id,
+      username: seller.seller_name,
+      email: seller.details?.email,
+      phone: seller.details?.phone,
+      contact_person: seller.details?.contact_person,
+      status: seller.details?.status,
+      registration_date: seller.details?.registration_date,
+      bio: seller.details?.bio,
+      country: seller.details?.location?.country,
+      city: seller.details?.location?.city,
+      state: seller.details?.location?.state,
+      zip_code: seller.details?.location?.zipcode,
+      address_line1: seller.details?.location?.address_line1,
+      address_line2: seller.details?.location?.address_line2,
+      profile_picture: seller.details?.profile_picture,
+    };
+    return formatSeller;
+  } catch (err) {
+    console.error("Error in fetching sellers:", err);
+    throw new Error("Fetching sellers failed");
+  }
+}
+// Edit seller info
+export async function alterSellerInfo(sellerId, updatedData) {
+  const {
+    username,
+    email,
+    phone,
+    contact_person,
+    status,
+    profile_picture,
+    bio,
+    country,
+    city,
+    state,
+    zip_code,
+    address_line1,
+    address_line2,
+  } = updatedData;
 
-// Query top sellers by order count
-// TODO
-// Query top sellers by badge (amazon's  choice)
-// TODO
+  try {
+    const seller = await models.Seller.findByPk(sellerId, {
+      include: {
+        model: models.SellerDetail,
+        as: "details",
+        include: {
+          model: models.SellerLocation,
+          as: "location",
+        },
+      },
+    });
+
+    if (!seller) throw new Error("Seller not found");
+
+    if (seller.seller_name) await seller.update({ seller_name: username });
+
+    if (seller.details) {
+      await seller.details.update({
+        email,
+        phone,
+        contact_person,
+        status,
+        profile_picture,
+        bio,
+      });
+    } else {
+      await models.SellerDetail.create({
+        seller_id: sellerId,
+        email,
+        phone,
+        contact_person,
+        status,
+        profile_picture,
+        bio,
+      });
+    }
+
+    if (seller.details?.location) {
+      await seller.details.location.update({
+        country,
+        city,
+        state,
+        zipcode: zip_code,
+        address_line1,
+        address_line2,
+      });
+    } else {
+      await models.SellerLocation.create({
+        seller_id: sellerId,
+        country,
+        city,
+        state,
+        zipcode: zip_code,
+        address_line1,
+        address_line2,
+      });
+    }
+
+    const updatedSeller = await queryASellerInformation(sellerId);
+    return updatedSeller;
+  } catch (error) {
+    console.error("Error updating seller info:", error);
+    throw new Error("Updating seller info failed");
+  }
+}

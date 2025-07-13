@@ -39,20 +39,21 @@ export async function queryAllProducts() {
 export async function queryAllProductsBySearch(search, badge, discount, sort) {
   try {
     const whereConditions = [];
+    const searchLower = search?.toLowerCase();
 
-    if (search) {
+    if (searchLower) {
       whereConditions.push({
         [Op.or]: [
           Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("title")), {
-            [Op.like]: `%${search}%`,
+            [Op.like]: `%${searchLower}%`,
           }),
           Sequelize.where(
             Sequelize.fn("LOWER", Sequelize.col("ProductSellers.seller_id")),
-            { [Op.like]: `%${search}%` }
+            { [Op.like]: `%${searchLower}%` }
           ),
           Sequelize.where(
             Sequelize.fn("LOWER", Sequelize.col("Product.asin")),
-            { [Op.like]: `%${search}%` }
+            { [Op.like]: `%${searchLower}%` }
           ),
           Sequelize.where(
             Sequelize.fn(
@@ -62,7 +63,7 @@ export async function queryAllProductsBySearch(search, badge, discount, sort) {
                 "TEXT"
               )
             ),
-            { [Op.like]: `%${search}%` }
+            { [Op.like]: `%${searchLower}%` }
           ),
         ],
       });

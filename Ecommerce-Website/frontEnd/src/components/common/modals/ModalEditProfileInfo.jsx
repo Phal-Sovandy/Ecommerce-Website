@@ -129,7 +129,7 @@ const ModalEditProfileInfo = ({ show, onClose, profileInfo }) => {
               <input
                 type="tel"
                 placeholder="Phone Number (eg. 012345678)"
-                pattern="0\d{2}-?\d{3}-?\d{3}"
+                pattern="0\d{2}?\d{3}?\d{4}"
                 maxLength={11}
                 value={profileInfo.phone_number}
                 className="form-control"

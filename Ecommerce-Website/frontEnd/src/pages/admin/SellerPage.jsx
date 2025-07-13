@@ -1,33 +1,22 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ViewModal from "../../components/admin/ViewModal";
 import EditModal from "../../components/admin/EditModal";
-import { getAllSellers, filterSeller } from "../../api/admin/sellersPage.js";
+import {
+  getAllSellers,
+  filterSeller,
+  getASellerInfo,
+} from "../../api/admin/sellersPage.js";
 
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
 
 import "../../styles/admin/SellerPage.css";
 
-const sampleSellerInfo = {
-  first_name: "Alice",
-  last_name: "Johnson",
-  username: "alicej",
-  email: "alice.johnson@example.com",
-  phone_number: "012-345-678",
-  address_line1: "123 Main Street",
-  address_line2: "Apt 4B",
-  gender: "female",
-  birthdate: new Date("1995-06-15"), // IMPORTANT: use Date object, not string
-  country: { value: "US", label: "United States" }, // for react-select
-  state: "California",
-  city: "Los Angeles",
-  zipcode: "90001",
-};
-
 const PAGE_SIZE = 50;
 
 const SellerPage = () => {
   const [sellers, setSellers] = useState([]);
+  const [sellerInfo, setSellerInfo] = useState({});
   const [error, setError] = useState("");
   const [showSellerInfo, setShowSellerInfo] = useState(false);
   const [showSellerEditInfo, setShowSellerEditInfo] = useState(false);
@@ -63,6 +52,17 @@ const SellerPage = () => {
     setVisibleSellers(sellers?.slice(start, end));
   }, [page, sellers]);
 
+  const fetchSellerInfo = async (sellerId) => {
+    try {
+      const res = await getASellerInfo(sellerId);
+      setSellerInfo(res);
+    } catch (error) {
+      setError(error.message || "Failed to fetch sellers");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const lastSellerRef = useCallback(
     (node) => {
       if (loading || visibleSellers?.length >= sellers?.length) return;
@@ -85,14 +85,14 @@ const SellerPage = () => {
       <EditModal
         show={showSellerEditInfo}
         onClose={() => setShowSellerEditInfo(false)}
-        info={sampleSellerInfo}
-        titel="Seller"
+        info={sellerInfo}
+        title="Seller"
       />
       <ViewModal
         show={showSellerInfo}
         onClose={() => setShowSellerInfo(false)}
-        info={sampleSellerInfo}
-        titel="Seller"
+        info={sellerInfo}
+        title="Seller"
       />
       <header className="listing-page-head">
         <h1>Seller Management</h1>
@@ -142,9 +142,9 @@ const SellerPage = () => {
               return (
                 <tr key={seller.seller_id} ref={isLast ? lastSellerRef : null}>
                   <td className="entity-id">{seller.seller_id}</td>
-                  <td>{seller.seller_name}</td>
+                  <td className="long-content-cell">{seller.seller_name}</td>
                   <td>
-                    <a href="mailto:seller@gmail.com">{seller.email}</a>
+                    <a href={`mailto:${seller.email}`}>{seller.email}</a>
                   </td>
                   <td>{seller.contact_person}</td>
                   <td>{seller.phone}</td>
@@ -162,13 +162,19 @@ const SellerPage = () => {
                   <td>
                     <button
                       className="view-btn"
-                      onClick={() => setShowSellerInfo(true)}
+                      onClick={() => {
+                        fetchSellerInfo(seller.seller_id);
+                        setShowSellerInfo(true)
+                      }}
                     >
                       View
                     </button>
                     <button
                       className="edit-btn"
-                      onClick={() => setShowSellerEditInfo(true)}
+                      onClick={() => {
+                        fetchSellerInfo(seller.seller_id);
+                        setShowSellerEditInfo(true)
+                      }}
                     >
                       Edit
                     </button>
