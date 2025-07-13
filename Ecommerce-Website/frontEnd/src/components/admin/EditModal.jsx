@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { editSellerProfileInfo } from "../../api/admin/sellersPage.js";
+import { editSellerProfileInfo } from "../../api/admin/sellersPage.js"; // For seller (default)
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { getData } from "country-list";
@@ -23,7 +23,15 @@ import {
   faFeather,
 } from "@fortawesome/free-solid-svg-icons";
 
-const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
+const EditModal = ({
+  show,
+  onClose,
+  info,
+  title,
+  refetch = () => {},
+  type = "seller",
+  onSubmitProfileInfo,
+}) => {
   const countries = getData().map((country) => ({
     value: country.code,
     label: country.name,
@@ -32,14 +40,14 @@ const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
   const [form, setForm] = useState({
     ...info,
     country: countries.find((c) => c.label === info?.country) || null,
-    birthdate: info?.birthdate ? new Date(info.birthdate) : null,
+    birth_date: info?.birth_date ? new Date(info.birth_date) : null,
   });
 
   useEffect(() => {
     setForm({
       ...info,
       country: countries.find((c) => c.label === info?.country) || null,
-      birthdate: info?.birthdate ? new Date(info.birthdate) : null,
+      birth_date: info?.birth_date ? new Date(info.birth_date) : null,
     });
   }, [info]);
 
@@ -108,12 +116,18 @@ const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
   };
 
   const clearImageInputs = () => {
-    setProfileInputFile(null);
     setProfileInputPreview(null);
+    setProfileInputFile(null);
   };
 
   const handleSubmit = async () => {
     const formData = new FormData();
+
+    if (type === "customer") {
+      formData.append("first_name", form.first_name || "");
+      formData.append("last_name", form.last_name || "");
+    }
+
     formData.append("username", form.username || "");
     formData.append("email", form.email || "");
     formData.append("phone", form.phone || "");
@@ -121,29 +135,37 @@ const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
     formData.append("bio", form.bio || "");
     formData.append("address_line1", form.address_line1 || "");
     formData.append("address_line2", form.address_line2 || "");
-    formData.append("gender", form.gender || "");
-    formData.append(
-      "birthdate",
-      form.birthdate ? form.birthdate.toISOString().split("T")[0] : ""
-    );
     formData.append("country", form.country?.label || "");
     formData.append("state", form.state || "");
     formData.append("city", form.city || "");
-    formData.append("zip_code", form.zip_code || "");
+    formData.append("zipcode", form.zipcode || "");
+
+    if (type === "customer") {
+      formData.append("gender", form.gender || "");
+      formData.append(
+        "birth_date",
+        form.birth_date ? form.birth_date.toISOString().split("T")[0] : ""
+      );
+    }
 
     if (profileInputFile) {
       formData.append("profile_picture", profileInputFile);
     }
 
     try {
-      await editSellerProfileInfo(info.seller_id, formData);
-      alert("seller updated successfully");
-      onClose();
+      if (onSubmitProfileInfo) {
+        await onSubmitProfileInfo(info.customer_id || info.seller_id, formData);
+      } else {
+        await editSellerProfileInfo(info.seller_id, formData);
+      }
+
+      alert(`${title} updated successfully`);
       clearImageInputs();
+      onClose();
       refetch();
     } catch (error) {
-      console.error("Failed to update seller:", error);
-      alert("Failed to update seller");
+      console.error(`Failed to update ${title.toLowerCase()}:`, error);
+      alert(`Failed to update ${title.toLowerCase()}`);
     }
   };
 
@@ -192,7 +214,7 @@ const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
               if (e.key === "Enter") e.preventDefault();
             }}
           >
-            {title.toLowerCase() !== "seller" && (
+            {type === "customer" && (
               <div className="form-group">
                 <input
                   type="text"
@@ -234,34 +256,70 @@ const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
               <input
                 type="tel"
                 placeholder="Phone Number (eg. 012345678)"
-                pattern="0\d{2}?\d{3}?\d{4}"
-                maxLength={11}
+                pattern="0\d{8,9}"
+                maxLength={10}
                 className="form-control"
                 value={form.phone || ""}
                 onChange={(e) => onChange("phone", e.target.value)}
               />
               <FontAwesomeIcon icon={faPhone} />
             </div>
-            <div className="form-wrapper">
-              <input
-                type="text"
-                placeholder="Contact Person"
-                className="form-control"
-                value={form.contact_person || ""}
-                onChange={(e) => onChange("contact_person", e.target.value)}
-              />
-              <FontAwesomeIcon icon={faFeather} />
-            </div>
-            <div className="form-wrapper">
-              <input
-                type="text"
-                placeholder="Bio"
-                className="form-control"
-                value={form.bio || ""}
-                onChange={(e) => onChange("bio", e.target.value)}
-              />
-              <FontAwesomeIcon icon={faFeather} />
-            </div>
+            {type === "seller" && (
+              <>
+                <div className="form-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Contact Person"
+                    className="form-control"
+                    value={form.contact_person || ""}
+                    onChange={(e) => onChange("contact_person", e.target.value)}
+                  />
+                  <FontAwesomeIcon icon={faFeather} />
+                </div>
+                <div className="form-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Bio"
+                    className="form-control"
+                    value={form.bio || ""}
+                    onChange={(e) => onChange("bio", e.target.value)}
+                  />
+                  <FontAwesomeIcon icon={faFeather} />
+                </div>
+              </>
+            )}
+            {type === "customer" && (
+              <div className="form-group">
+                <div className="form-wrapper">
+                  <select
+                    className="form-control"
+                    value={form.gender || ""}
+                    onChange={(e) => onChange("gender", e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Gender
+                    </option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                  <FontAwesomeIcon icon={faCaretDown} />
+                </div>
+                <div className="form-wrapper birthdate">
+                  <DatePicker
+                    selected={form.birth_date}
+                    onChange={(date) => onChange("birth_date", date)}
+                    dateFormat="yyyy-MM-dd"
+                    placeholderText="Select your birth date"
+                    className="form-control"
+                    showYearDropdown
+                    showMonthDropdown
+                    scrollableYearDropdown
+                    yearDropdownItemNumber={100}
+                  />
+                  <FontAwesomeIcon icon={faCalendar} />
+                </div>
+              </div>
+            )}
             <div className="form-group">
               <div className="form-wrapper">
                 <input
@@ -284,38 +342,7 @@ const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
                 <FontAwesomeIcon icon={faLocationDot} />
               </div>
             </div>
-            {title.toLowerCase() !== "seller" && (
-              <div className="form-group">
-                <div className="form-wrapper">
-                  <select
-                    className="form-control"
-                    value={form.gender || ""}
-                    onChange={(e) => onChange("gender", e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Gender
-                    </option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                  <FontAwesomeIcon icon={faCaretDown} />
-                </div>
-                <div className="form-wrapper birthdate">
-                  <DatePicker
-                    selected={form.birthdate}
-                    onChange={(date) => onChange("birthdate", date)}
-                    dateFormat="yyyy-MM-dd"
-                    placeholderText="Select your birth date"
-                    className="form-control"
-                    showYearDropdown
-                    showMonthDropdown
-                    scrollableYearDropdown
-                    yearDropdownItemNumber={100}
-                  />
-                  <FontAwesomeIcon icon={faCalendar} />
-                </div>
-              </div>
-            )}
+
             <div className="form-wrapper">
               <Select
                 options={countries}
@@ -354,8 +381,8 @@ const EditModal = ({ show, onClose, info, title, refetch = () => {} }) => {
                   placeholder="ZIP Code"
                   maxLength={10}
                   className="form-control"
-                  value={form.zip_code || ""}
-                  onChange={(e) => onChange("zip_code", e.target.value)}
+                  value={form.zipcode || ""}
+                  onChange={(e) => onChange("zipcode", e.target.value)}
                 />
                 <FontAwesomeIcon icon={faMapLocationDot} />
               </div>

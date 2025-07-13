@@ -5,7 +5,7 @@ import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import "../../styles/admin/ViewModal.css";
 import ModalInfo from "../common/modals/ModalInfo.jsx";
 
-const ViewModal = ({ show, onClose, info, title }) => {
+const ViewModal = ({ show, onClose, info, title, type = "seller" }) => {
   const navigate = useNavigate();
   return (
     <ModalInfo head={false} show={show} onClose={onClose}>
@@ -24,7 +24,7 @@ const ViewModal = ({ show, onClose, info, title }) => {
             />
           </div>
           <div className="info-wrapper">
-            {title.toLowerCase() !== "seller" ? (
+            {type !== "seller" ? (
               <>
                 <div className="info">
                   <h4>Firstname</h4>
@@ -42,18 +42,30 @@ const ViewModal = ({ show, onClose, info, title }) => {
             </div>
             <div className="info">
               <h4>Email</h4>
-              <a href={`mailto:${info.email}`}>{info.email}</a>
+              {info.email ? (
+                <a href={`mailto:${info.email}`}>{info.email}</a>
+              ) : (
+                <p>No Record</p>
+              )}
             </div>
             <div className="info">
               <h4>Phone Number</h4>
               <p>{info.phone || "No Record"}</p>
             </div>
-            <div className="info bio">
-              <h4>Bio</h4>
-              <p>{info.bio || "No Record"}</p>
-            </div>
+            {type === "seller" && (
+              <>
+                <div className="info bio">
+                  <h4>Contact Person</h4>
+                  <p>{info.contact_person || "No Record"}</p>
+                </div>
+                <div className="info bio">
+                  <h4>Bio</h4>
+                  <p>{info.bio || "No Record"}</p>
+                </div>
+              </>
+            )}
 
-            {title.toLowerCase() !== "seller" ? (
+            {type !== "seller" ? (
               <>
                 <div className="info">
                   <h4>Gender</h4>
@@ -61,7 +73,7 @@ const ViewModal = ({ show, onClose, info, title }) => {
                 </div>
                 <div className="info">
                   <h4>Birthdate</h4>
-                  <p>{info.birthdate || "No Record"}</p>
+                  <p>{info.birth_date || "No Record"}</p>
                 </div>
               </>
             ) : null}
@@ -79,7 +91,7 @@ const ViewModal = ({ show, onClose, info, title }) => {
             </div>
             <div className="info">
               <h4>ZIP Code</h4>
-              <p>{info.zip_code || "No Record"}</p>
+              <p>{info.zipcode || "No Record"}</p>
             </div>
             <div className="info">
               <h4>Address Line 1</h4>

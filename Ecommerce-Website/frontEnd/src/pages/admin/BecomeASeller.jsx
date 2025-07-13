@@ -1,62 +1,54 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import {
+  getAllSellerRequests,
+  changeCustomerStatus,
+  filterRequest,
+} from "../../api/admin/sellerRequests.js";
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
 
 import "../../styles/admin/BecomeASeller.css";
 
-const dummyRequests = Array.from({ length: 100 }, (_, i) => ({
-  id: i + 1,
-  customerId: i + 1,
-  full_name: `User ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  phone: `012-345-${String(i + 1).padStart(4, "0")}`,
-  request_date: "2025-07-06",
-  status: i % 2 === 0 ? "approved" : "pending",
-}));
-
 const PAGE_SIZE = 50;
 
 const BecomeASeller = () => {
   const [requests, setRequests] = useState([]);
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(true);
+  const [refetch, setRefetch] = useState(0);
+
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [sort, setSort] = useState("");
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      setLoading(true);
+      try {
+        const res = await filterRequest(search, status, sort);
+        setRequests(res);
+      } catch (err) {
+        setError(err.message || "Failed to fetch customers");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRequests();
+  }, [search, status, sort, refetch]);
+
+  const [page, setPage] = useState(1);
+  const [visibleRequest, setVisibleRequest] = useState([]);
   const observer = useRef();
 
   useEffect(() => {
-    const loadRequests = () => {
-      setLoading(true);
-
-      const filtered = dummyRequests.filter(
-        (r) =>
-          r.full_name.toLowerCase().includes(search.toLowerCase().trim()) ||
-          r.email.toLowerCase().includes(search.toLowerCase().trim()) ||
-          r.phone.includes(search.trim())
-      );
-
-      const start = 0;
-      const end = PAGE_SIZE * page;
-      setRequests(filtered.slice(start, end));
-      setLoading(false);
-    };
-
-    loadRequests();
-  }, [page, search]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [search]);
-
-  const filteredTotal = dummyRequests.filter(
-    (r) =>
-      r.full_name.toLowerCase().includes(search.toLowerCase().trim()) ||
-      r.email.toLowerCase().includes(search.toLowerCase().trim()) ||
-      r.phone.includes(search.trim())
-  ).length;
+    const start = 0;
+    const end = PAGE_SIZE * page;
+    setVisibleRequest(requests?.slice(start, end));
+  }, [page, requests]);
 
   const lastRequestRef = useCallback(
     (node) => {
-      if (loading || requests.length >= filteredTotal) return;
+      if (loading || visibleRequest.length >= requests.length) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -67,19 +59,16 @@ const BecomeASeller = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, requests.length, filteredTotal]
+    [loading, visibleRequest.length, requests.length]
   );
 
-  const handleApprove = (id) => {
-    setRequests((prev) =>
-      prev.map((req) => (req.id === id ? { ...req, status: "approved" } : req))
-    );
-  };
-
-  const handleReject = (id) => {
-    setRequests((prev) =>
-      prev.map((req) => (req.id === id ? { ...req, status: "rejected" } : req))
-    );
+  const handleStatusChange = async (id, status) => {
+    try {
+      await changeCustomerStatus(id, status);
+      setRefetch((r) => r + 1);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -94,11 +83,17 @@ const BecomeASeller = () => {
           className="listing-search"
         />
         <div className="listing-action">
-          <select defaultValue={""}>
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">Filter Status</option>
             <option value="approved">Approved</option>
             <option value="rejected">Rejected</option>
             <option value="pending">Pending</option>
+          </select>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+            <option value="nameAsc">Sort By Name ↑</option>
+            <option value="nameDesc">Sort By Name ↓</option>
+            <option value="joinedAsc">Sort By Joined Date ↑</option>
+            <option value="joinedDesc">Sort By Joined Date ↓</option>
           </select>
         </div>
       </header>
@@ -118,17 +113,13 @@ const BecomeASeller = () => {
             </tr>
           </thead>
           <tbody>
-            {requests.map((req, index) => {
+            {requests?.map((req, index) => {
               const isLast = index === requests.length - 1;
               return (
                 <tr key={req.id} ref={isLast ? lastRequestRef : null}>
-                  <td className="entity-id">
-                    REQ{String(req.id).padStart(5, "0")}
-                  </td>
-                  <td className="entity-id">
-                    CUST{String(req.customerId).padStart(5, "0")}
-                  </td>
-                  <td>{req.full_name}</td>
+                  <td className="entity-id">{req.request_id}</td>
+                  <td className="entity-id">{req.customer_id}</td>
+                  <td>{`${req.first_name} ${req.last_name}`}</td>
                   <td>
                     <a href={`mailto:${req.email}`}>{req.email}</a>
                   </td>
@@ -146,15 +137,19 @@ const BecomeASeller = () => {
                       <>
                         <button
                           className="view-btn"
-                          onClick={() => handleApprove(req.id)}
-                          disabled={req.status !== "pending"}
+                          onClick={() => {
+                            handleStatusChange(req.request_id, "approved");
+                          }}
+                          disabled={req.status.toLowerCase() !== "pending"}
                         >
                           Approve
                         </button>
                         <button
                           className="delete-btn"
-                          onClick={() => handleReject(req.id)}
-                          disabled={req.status !== "pending"}
+                          onClick={() => {
+                            handleStatusChange(req.request_id, "rejected");
+                          }}
+                          disabled={req.status.toLowerCase() !== "pending"}
                         >
                           Reject
                         </button>
@@ -164,11 +159,6 @@ const BecomeASeller = () => {
                 </tr>
               );
             })}
-            {requests.length === 0 && !loading && (
-              <tr>
-                <td colSpan="7">No seller requests found.</td>
-              </tr>
-            )}
           </tbody>
         </table>
 
@@ -178,7 +168,7 @@ const BecomeASeller = () => {
           </div>
         )}
 
-        {!loading && requests.length >= filteredTotal && (
+        {!loading && requests.length >= requests.length && (
           <p className="end-loading-list">No more requests to load.</p>
         )}
       </div>

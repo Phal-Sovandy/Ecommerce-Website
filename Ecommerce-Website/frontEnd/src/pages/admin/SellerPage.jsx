@@ -92,6 +92,7 @@ const SellerPage = () => {
         onClose={() => setShowSellerEditInfo(false)}
         info={sellerInfo}
         title="Seller"
+        type="seller"
         refetch={() => setRefetch((r) => r + 1)}
       />
       <ViewModal

@@ -1,5 +1,6 @@
 import models from "../models/index.js";
 import { Sequelize, Op } from "sequelize";
+import { sequelize } from "../config/database.js";
 
 // Query all sellers
 export async function queryAllSellers() {
@@ -174,7 +175,7 @@ export async function queryASellerInformation(seller_id) {
       country: seller.details?.location?.country,
       city: seller.details?.location?.city,
       state: seller.details?.location?.state,
-      zip_code: seller.details?.location?.zipcode,
+      zipcode: seller.details?.location?.zipcode,
       address_line1: seller.details?.location?.address_line1,
       address_line2: seller.details?.location?.address_line2,
       profile_picture: seller.details?.profile_picture,
@@ -198,7 +199,7 @@ export async function alterSellerInfo(sellerId, updatedData) {
     country,
     city,
     state,
-    zip_code,
+    zipcode,
     address_line1,
     address_line2,
   } = updatedData;
@@ -245,7 +246,7 @@ export async function alterSellerInfo(sellerId, updatedData) {
         country,
         city,
         state,
-        zipcode: zip_code,
+        zipcode,
         address_line1,
         address_line2,
       });
@@ -255,7 +256,7 @@ export async function alterSellerInfo(sellerId, updatedData) {
         country,
         city,
         state,
-        zipcode: zip_code,
+        zipcode,
         address_line1,
         address_line2,
       });
@@ -271,34 +272,54 @@ export async function alterSellerInfo(sellerId, updatedData) {
 
 // Edit seller status
 export async function alterSellerStatus(sellerId) {
+  const t = await sequelize.transaction();
+
   try {
-    const detail = await models.SellerDetail.findOne({
+    const sellerDetail = await models.SellerDetail.findOne({
       where: { seller_id: sellerId },
       attributes: ["status"],
+      transaction: t,
     });
 
-    if (!detail) {
-      throw new Error("Seller detail not found");
-    }
+    if (!sellerDetail) throw new Error("Seller detail not found");
 
-    const newStatus = !detail.status;
+    const newSellerStatus = !sellerDetail.status;
 
-    const [updated] = await models.SellerDetail.update(
-      { status: newStatus },
-      { where: { seller_id: sellerId } }
+    const [sellerUpdated] = await models.SellerDetail.update(
+      { status: newSellerStatus },
+      { where: { seller_id: sellerId }, transaction: t }
     );
 
-    if (updated === 0) {
-      return { message: "No status update", updated };
+    if (sellerUpdated === 0) {
+      await t.rollback();
+      return { message: "No status update", updated: 0 };
     }
 
+    if (newSellerStatus) {
+      const customerDetail = await models.CustomerDetail.findOne({
+        where: { customer_id: sellerId },
+        attributes: ["status"],
+        transaction: t,
+      });
+
+      if (customerDetail && customerDetail.status === true) {
+        await models.CustomerDetail.update(
+          { status: false },
+          { where: { customer_id: sellerId }, transaction: t }
+        );
+      }
+    }
+
+    await t.commit();
     return {
-      message: `Status updated to ${newStatus ? "active" : "inactive"}`,
-      updated,
-      newStatus,
+      message: `Seller status updated to ${newSellerStatus ? "active" : "inactive"}`,
+      updated: sellerUpdated,
+      newStatus: newSellerStatus,
     };
   } catch (error) {
+    await t.rollback();
     console.log("Error: Failed to update status", error.message);
     throw new Error("Failed to update status");
   }
 }
+

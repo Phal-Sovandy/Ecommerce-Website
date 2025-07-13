@@ -90,7 +90,12 @@ const ModalEditProfileInfo = ({ show, onClose, profileInfo }) => {
             <div className="change-image" onClick={handleIconClick}>
               <FontAwesomeIcon icon={faImage} />
             </div>
-            <input type="file" accept="image/png, image/jpeg" style={{display: "none"}} ref={fileInputRef}/>
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              style={{ display: "none" }}
+              ref={fileInputRef}
+            />
           </div>
           <form action="">
             <div className="form-group">
@@ -129,8 +134,8 @@ const ModalEditProfileInfo = ({ show, onClose, profileInfo }) => {
               <input
                 type="tel"
                 placeholder="Phone Number (eg. 012345678)"
-                pattern="0\d{2}?\d{3}?\d{4}"
-                maxLength={11}
+                pattern="0\d{8,9}"
+                maxLength={10}
                 value={profileInfo.phone_number}
                 className="form-control"
               />

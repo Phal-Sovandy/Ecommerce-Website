@@ -1,89 +1,76 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ViewModal from "../../components/admin/ViewModal";
 import EditModal from "../../components/admin/EditModal";
+import {
+  filterCustomer,
+  getACustomerInfo,
+  changeCustomerStatus,
+  editCustomerProfileInfo,
+} from "../../api/admin/customersPage";
 
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
 
 import "../../styles/admin/CustomerPage.css";
 
-const countries = ["USA", "UK", "Canada", "Australia", "Germany", "Japan"];
-const genders = ["Male", "Female"];
-
-const allCustomers = Array.from({ length: 100 }, (_, i) => ({
-  customer_id: i + 1,
-  name: `Customer ${i + 1}`,
-  email: `customer${i + 1}@example.com`,
-  phone: `096-727-${String(i + 1).padStart(4, "0")}`,
-  gender: genders[i % genders.length],
-  country: countries[i % countries.length],
-  joined: "2025-01-01",
-  status: i % 2 === 0 ? "Active" : "Inactive",
-}));
-
-const sampleCustomerInfo = {
-  first_name: "Alice",
-  last_name: "Johnson",
-  username: "alicej",
-  email: "alice.johnson@example.com",
-  phone_number: "012-345-678",
-  address_line1: "123 Main Street",
-  address_line2: "Apt 4B",
-  gender: "female",
-  birthdate: new Date("1995-06-15"), // IMPORTANT: use Date object, not string
-  country: { value: "US", label: "United States" }, // for react-select
-  state: "California",
-  city: "Los Angeles",
-  zipcode: "90001",
-};
-
 const PAGE_SIZE = 50;
 
 const CustomerPage = () => {
+  const [customers, setCustomers] = useState([]);
   const [visibleCustomers, setVisibleCustomers] = useState([]);
-  const [showCustomerInfo, setShowCustomerInfo] = useState(false);
-  const [showCustomerEditInfo, setShowCustomerEditInfo] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState({});
+
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const observer = useRef();
 
-  useEffect(() => {
-    const loadCustomers = () => {
-      setLoading(true);
+  const [refetch, setRefetch] = useState(0);
+  const [error, setError] = useState("");
 
-      const filtered = allCustomers.filter(
-        (c) =>
-          c.name.toLowerCase().includes(search.toLowerCase().trim()) ||
-          c.email.toLowerCase().includes(search.toLowerCase().trim()) ||
-          c.country.toLowerCase().includes(search.toLowerCase().trim())
-      );
+  const [showCustomerInfo, setShowCustomerInfo] = useState(false);
+  const [showCustomerEditInfo, setShowCustomerEditInfo] = useState(false);
 
-      const start = 0;
-      const end = PAGE_SIZE * page;
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [gender, setGender] = useState("");
+  const [sort, setSort] = useState("");
 
-      setVisibleCustomers(filtered.slice(start, end));
+  const fetchAllCustomers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await filterCustomer(search, status, gender, sort);
+      setCustomers(res);
+    } catch (err) {
+      setError(err.message || "Failed to fetch customers");
+    } finally {
       setLoading(false);
-    };
-
-    loadCustomers();
-  }, [page, search]);
+    }
+  }, [search, status, gender, sort]);
 
   useEffect(() => {
-    setPage(1);
-  }, [search]);
+    fetchAllCustomers();
+  }, [fetchAllCustomers, refetch]);
 
-  const filteredTotal = allCustomers.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase().trim()) ||
-      c.email.toLowerCase().includes(search.toLowerCase().trim()) ||
-      c.country.toLowerCase().includes(search.toLowerCase().trim())
-  ).length;
+  useEffect(() => {
+    const start = 0;
+    const end = PAGE_SIZE * page;
+    setVisibleCustomers(customers?.slice(start, end));
+  }, [page, customers]);
+
+  const fetchCustomerInfo = async (customerId) => {
+    try {
+      const res = await getACustomerInfo(customerId);
+      setCustomerInfo(res);
+    } catch (err) {
+      setError(err.message || "Failed to fetch customer info");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const lastCustomerRef = useCallback(
     (node) => {
-      if (loading || visibleCustomers.length >= filteredTotal) return;
-
+      if (loading || visibleCustomers.length >= customers.length) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -94,7 +81,7 @@ const CustomerPage = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, visibleCustomers.length, filteredTotal]
+    [loading, visibleCustomers.length, customers.length]
   );
 
   return (
@@ -102,41 +89,43 @@ const CustomerPage = () => {
       <EditModal
         show={showCustomerEditInfo}
         onClose={() => setShowCustomerEditInfo(false)}
-        info={sampleCustomerInfo}
+        info={customerInfo}
         title="Customer"
+        type="customer"
+        refetch={() => setRefetch((r) => r + 1)}
+        onSubmitProfileInfo={editCustomerProfileInfo}
       />
       <ViewModal
         show={showCustomerInfo}
         onClose={() => setShowCustomerInfo(false)}
-        info={sampleCustomerInfo}
+        info={customerInfo}
         title="Customer"
+        type="customer"
       />
 
       <header className="listing-page-head">
         <h1>Customer Management</h1>
         <input
           type="text"
-          placeholder="Search by name or email or country..."
+          placeholder="Search by ID, name, email, country, joined date..."
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-          }}
+          onChange={(e) => setSearch(e.target.value)}
           className="listing-search"
           autoComplete="true"
           autoCorrect="true"
         />
         <div className="listing-action">
-          <select defaultValue={""}>
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">Filter Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
-          <select defaultValue={""}>
+          <select value={gender} onChange={(e) => setGender(e.target.value)}>
             <option value="">Filter Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          <select defaultValue={"nameAsc"}>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
             <option value="nameAsc">Sort By Name ↑</option>
             <option value="nameDesc">Sort By Name ↓</option>
             <option value="joinedAsc">Sort By Joined Date ↑</option>
@@ -144,6 +133,7 @@ const CustomerPage = () => {
           </select>
         </div>
       </header>
+
       <div className="table-wrapper customer">
         <table className="listing-table">
           <thead>
@@ -167,62 +157,72 @@ const CustomerPage = () => {
                   key={customer.customer_id}
                   ref={isLast ? lastCustomerRef : null}
                 >
-                  <td className="entity-id">
-                    CUST{String(customer.customer_id).padStart(7, "0")}
-                  </td>
+                  <td className="entity-id">{customer.customer_id}</td>
                   <td>{customer.name}</td>
-                  <td><a href="mailto:customer@gmail.com">{customer.email}</a></td>
+                  <td>
+                    <a href={`mailto:${customer.email}`}>{customer.email}</a>
+                  </td>
                   <td>{customer.phone}</td>
                   <td>{customer.gender}</td>
                   <td>{customer.country}</td>
-                  <td>{customer.joined}</td>
-                  <td class="status">
+                  <td>{customer.registration_date}</td>
+                  <td className="status">
                     <div
                       className={`status-toggle ${
-                        customer.status === "Active" ? "active" : ""
+                        customer.status ? "active" : ""
                       }`}
                     >
-                      {customer.status}
+                      {customer.status ? "Active" : "Inactive"}
                     </div>
                   </td>
                   <td>
                     <button
                       className="view-btn"
-                      onClick={() => setShowCustomerInfo(true)}
+                      onClick={() => {
+                        fetchCustomerInfo(customer.customer_id);
+                        setShowCustomerInfo(true);
+                      }}
                     >
                       View
                     </button>
                     <button
                       className="edit-btn"
-                      onClick={() => setShowCustomerEditInfo(true)}
+                      onClick={() => {
+                        fetchCustomerInfo(customer.customer_id);
+                        setShowCustomerEditInfo(true);
+                      }}
                     >
                       Edit
                     </button>
                     <button
                       className={
-                        customer.status === "Inactive"
-                          ? "activate-btn"
-                          : "deactivate-btn"
+                        !customer.status ? "activate-btn" : "deactivate-btn"
                       }
+                      onClick={async () => {
+                        try {
+                          await changeCustomerStatus(customer.customer_id);
+                          setRefetch((r) => r + 1);
+                        } catch (error) {
+                          console.error("Error", error.message);
+                          setError(error.message);
+                        }
+                      }}
                     >
-                      {customer.status === "Inactive"
-                        ? "Activate"
-                        : "Deactivate"}
-                    </button>{" "}
-                    {/* Important: Activate or deactivate change only the status not delete the row from the database */}
+                      {!customer.status ? "Activate" : "Deactivate"}
+                    </button>
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+
         {loading && (
           <div className="loader">
             <Quantum size="40" speed="1.75" color="black" />
           </div>
         )}
-
-        {!loading && visibleCustomers.length >= filteredTotal && (
+        {!loading && visibleCustomers.length >= customers.length && (
           <p className="end-loading-list">No more customers to load.</p>
         )}
       </div>

@@ -582,12 +582,21 @@ const CustomerDetail = sequelize.define(
     country: {
       type: DataTypes.STRING(100),
     },
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
     profile_picture: {
       type: DataTypes.TEXT,
     },
     login_method: {
       type: DataTypes.STRING(20),
       defaultValue: "email",
+    },
+    registration_date: {
+      type: DataTypes.DATEONLY,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
