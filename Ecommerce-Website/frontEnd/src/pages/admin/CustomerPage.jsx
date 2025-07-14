@@ -158,7 +158,7 @@ const CustomerPage = () => {
                   ref={isLast ? lastCustomerRef : null}
                 >
                   <td className="entity-id">{customer.customer_id}</td>
-                  <td>{customer.name}</td>
+                  <td>{customer.name.trim() || customer.username}</td>
                   <td>
                     <a href={`mailto:${customer.email}`}>{customer.email}</a>
                   </td>
