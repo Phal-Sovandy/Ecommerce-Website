@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { getAdminDashboardData } from "../../api/admin/adminDashboard.js";
 import "../../styles/admin/AdminDashboard.css";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,10 +14,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
 import { Bar, Line, Doughnut, Pie } from "react-chartjs-2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { Quantum } from "ldrs/react";
+import "ldrs/react/Quantum.css";
 
 ChartJS.register(
   CategoryScale,
@@ -29,80 +31,6 @@ ChartJS.register(
   Legend
 );
 
-// Sample data
-const rawUserData = {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-  datasets: [
-    {
-      label: "New Users",
-      data: [120, 200, 150, 300, 250, 400],
-      backgroundColor: "rgba(54, 162, 235, 0.6)",
-    },
-  ],
-};
-
-const rawRevenueData = {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-  datasets: [
-    {
-      label: "Revenue ($)",
-      data: [5000, 7000, 6000, 8000, 7500, 9000],
-      borderColor: "rgba(75, 192, 192, 1)",
-      fill: false,
-      tension: 0.4,
-    },
-  ],
-};
-
-const rawOrderStatusData = {
-  labels: ["Pending", "Shipping", "Delivered", "Canceled"],
-  datasets: [
-    {
-      label: "Order Status",
-      data: [50, 120, 300, 30],
-      backgroundColor: ["#facc15", "#38bdf8", "#4ade80", "#f87171"],
-    },
-  ],
-};
-
-const rawSalesByCategoryData = {
-  labels: ["Electronics", "Clothes", "Books", "Home"],
-  datasets: [
-    {
-      label: "Sales by Category",
-      data: [300, 200, 150, 100],
-      backgroundColor: ["#60a5fa", "#f472b6", "#34d399", "#fbbf24"],
-    },
-  ],
-};
-
-const rawTopProductsData = {
-  labels: ["Product A", "Product B", "Product C", "Product D"],
-  datasets: [
-    {
-      label: "Units Sold",
-      data: [400, 320, 280, 220],
-      backgroundColor: "rgba(153, 102, 255, 0.6)",
-    },
-  ],
-};
-
-const topCustomers = [
-  { name: "Alice Johnson", totalSpent: 12000 },
-  { name: "Bob Smith", totalSpent: 9500 },
-  { name: "Carol Lee", totalSpent: 8700 },
-  { name: "David Kim", totalSpent: 7900 },
-  { name: "Ella Brown", totalSpent: 7100 },
-];
-
-const topSellers = [
-  { name: "ElectroMart", totalSales: 24000 },
-  { name: "FashionHub", totalSales: 21000 },
-  { name: "BookNest", totalSales: 19800 },
-  { name: "HomeStyle", totalSales: 18500 },
-  { name: "GadgetCore", totalSales: 17200 },
-];
-
 const options = {
   responsive: true,
   plugins: {
@@ -112,19 +40,154 @@ const options = {
 };
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const { logout } = useAuth();
-  const filteredUserData = rawUserData;
-  const filteredRevenueData = rawRevenueData;
-  const filteredOrderStatusData = rawOrderStatusData;
-  const filteredSalesByCategoryData = rawSalesByCategoryData;
-  const filteredTopProductsData = rawTopProductsData;
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [timeFilter, setTimeFilter] = useState("allTime");
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const data = await getAdminDashboardData(timeFilter);
+        setDashboardData(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [timeFilter]);
+
+  const totalUsers = dashboardData?.stats?.totalUsers;
+  const totalRevenue = parseFloat(dashboardData?.stats?.totalRevenue[0]?.total);
+  const ordersCount = dashboardData?.stats?.ordersCount;
+
+  const topCustomers = dashboardData?.tops?.topCustomers?.map((c) => ({
+    name: c["Order.customer.username"],
+    totalSpent: parseFloat(c.totalSpent),
+  }));
+
+  const topSellers = dashboardData?.tops?.topSellers?.map((s) => ({
+    seller_id: s["Order.seller.seller_id"],
+    name: s["Order.seller.seller_name"],
+    totalSales: parseFloat(s.totalSales),
+  }));
+
+  const newUsersPerMonth = {
+    labels: dashboardData?.charts?.newUsersPerMonth?.map((item) =>
+      new Date(item.month).toLocaleString("default", {
+        month: "short",
+        year: "numeric",
+      })
+    ),
+    datasets: [
+      {
+        label: "New Users",
+        data: dashboardData?.charts?.newUsersPerMonth?.map((item) =>
+          parseInt(item.count)
+        ),
+        backgroundColor: "#40916c",
+      },
+    ],
+  };
+
+  const revenueOverTime = {
+    labels: dashboardData?.charts?.revenueOverTime?.map((item) =>
+      new Date(item.time_unit.split("T")[0]).toLocaleString("default", {
+        month: "short",
+        year: "numeric",
+      })
+    ),
+    datasets: [
+      {
+        label: "Revenue",
+        data: dashboardData?.charts?.revenueOverTime?.map((item) =>
+          parseFloat(item.revenue)
+        ),
+        borderColor: "#40916c",
+        backgroundColor: "#1b4332",
+        fill: false,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const orderStatusCount = {
+    labels: dashboardData?.charts?.orderStatusCount?.map((s) => s.status),
+    datasets: [
+      {
+        label: "Orders",
+        data: dashboardData?.charts?.orderStatusCount?.map((s) =>
+          parseInt(s.count)
+        ),
+        backgroundColor: ["#081c15", "#1b4332", "#2d6a4f", "#40916c"],
+      },
+    ],
+  };
+
+  const salesByCategory = {
+    labels: dashboardData?.charts?.salesByCategory.map((item) => item.name),
+    datasets: [
+      {
+        label: "Sales by Category",
+        data: dashboardData?.charts?.salesByCategory.map((item) =>
+          parseInt(item.total_sold)
+        ),
+        backgroundColor: [
+          "#081c15",
+          "#1b4332",
+          "#2d6a4f",
+          "#40916c",
+          "#52b788",
+          "#74c69d",
+          "#95d5b2",
+          "#b7e4c7",
+          "#d8f3dc",
+        ],
+      },
+    ],
+  };
+
+  const topSellingProducts = {
+    labels: dashboardData?.charts?.topSellingProducts.map(
+      (p) => p["product.title"]
+    ),
+    datasets: [
+      {
+        label: "Units Sold",
+        data: dashboardData?.charts?.topSellingProducts.map((p) =>
+          parseInt(p.total_sold)
+        ),
+        backgroundColor: "#40916c",
+      },
+    ],
+  };
+
+  const timeFilterDisplay = () => {
+    return timeFilter === "allTime" || timeFilter == null
+      ? "All Time"
+      : timeFilter === "today"
+      ? "Today"
+      : timeFilter === "thisMonth"
+      ? "This Month"
+      : timeFilter === "thisYear"
+      ? "This Year"
+      : "";
+  };
 
   return (
     <div className="admin-dashboard">
       <header>
         <h1>Admin Dashboard</h1>
         <div>
-          <select defaultValue={"allTime"}>
+          <select
+            value={timeFilter}
+            onChange={(e) => setTimeFilter(e.target.value)}
+          >
             <option value="allTime">All time</option>
             <option value="today">Today</option>
             <option value="thisMonth">This Month</option>
@@ -135,27 +198,33 @@ const AdminDashboard = () => {
           </div>
         </div>
       </header>
-
+      {loading && (
+        <div className="loader">
+          <Quantum size="40" speed="1.75" color="black" />
+        </div>
+      )}
+      {!dashboardData && (
+        <div className="admin-dashboard no-data">No data available</div>
+      )}
       <div className="stats">
         <div className="stat-box">
-          <h2>Total Users</h2>
-          <p>12,345</p>
+          <h2>Total User {timeFilterDisplay()}</h2>
+          <p>{totalUsers?.toLocaleString()}</p>
         </div>
         <div className="stat-box">
-          <h2>Total Revenue</h2>
-          <p>$84,000</p>
+          <h2>Total Revenue {timeFilterDisplay()}</h2>
+          <p>${totalRevenue?.toLocaleString()}</p>
         </div>
         <div className="stat-box">
-          <h2>Orders Today</h2>
-          <p>432</p>
+          <h2>Orders {timeFilterDisplay()}</h2>
+          <p>{ordersCount}</p>
         </div>
       </div>
-
       <div className="top-user-row">
         <div className="top-user-section">
-          <h3>Top 5 Customers</h3>
+          <h3>Top 5 Customers {timeFilterDisplay()}</h3>
           <div className="user-cards-row">
-            {topCustomers.map((customer, idx) => (
+            {topCustomers?.map((customer, idx) => (
               <div className="user-card" key={idx}>
                 <h4>{customer.name}</h4>
                 <p>Total Spent: ${customer.totalSpent.toLocaleString()}</p>
@@ -165,10 +234,14 @@ const AdminDashboard = () => {
         </div>
 
         <div className="top-user-section">
-          <h3>Top 5 Sellers</h3>
+          <h3>Top 5 Sellers {timeFilterDisplay()}</h3>
           <div className="user-cards-row">
-            {topSellers.map((seller, idx) => (
-              <div className="user-card" key={idx}>
+            {topSellers?.map((seller, idx) => (
+              <div
+                className="user-card"
+                key={idx}
+                onClick={() => navigate(`/sellerShop/${seller.seller_id}`)}
+              >
                 <h4>{seller.name}</h4>
                 <p>Total Sales: ${seller.totalSales.toLocaleString()}</p>
               </div>
@@ -176,37 +249,36 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-
       <div className="charts-grid">
         <div className="part-1">
           <div className="chart-box">
             <h3>New Users Per Month</h3>
-            <Bar data={filteredUserData} options={options} />
+            <Bar data={newUsersPerMonth} options={options} />
           </div>
 
           <div className="chart-box">
-            <h3>Top Selling Products</h3>
-            <Bar data={filteredTopProductsData} options={options} />
+            <h3>Top Selling Products of {timeFilterDisplay()}</h3>
+            <Bar data={topSellingProducts} options={options} />
           </div>
 
           <div className="chart-box">
             <h3>Revenue Over Time</h3>
-            <Line data={filteredRevenueData} options={options} />
+            <Line data={revenueOverTime} options={options} />
           </div>
         </div>
 
         <div className="part-2">
           <div className="chart-box">
-            <h3>Order Status Breakdown</h3>
+            <h3>Order Status Breakdown for {timeFilterDisplay()}</h3>
             <div>
-              <Pie data={filteredOrderStatusData} options={options} />
+              <Pie data={orderStatusCount} options={options} />
             </div>
           </div>
 
           <div className="chart-box">
-            <h3>Sales by Category</h3>
+            <h3>Sales by Category of {timeFilterDisplay()}</h3>
             <div>
-              <Doughnut data={filteredSalesByCategoryData} options={options} />
+              <Doughnut data={salesByCategory} options={options} />
             </div>
           </div>
         </div>

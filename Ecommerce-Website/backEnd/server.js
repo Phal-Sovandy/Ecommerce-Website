@@ -10,6 +10,8 @@ import reviewRouter from "./routes/reviewRoutes.js";
 import wishlistRouter from "./routes/wishlistRoutes.js";
 import sellerRouter from "./routes/sellerRoutes.js";
 import sellerRequestRouter from "./routes/sellerRequestRoutes.js";
+import userEnquiryRouter from "./routes/userEnquiryRoutes.js";
+import adminRouter from "./routes/adminDashboard.js";
 
 dotenv.config();
 const { BASE_API_URL, PORT } = process.env;
@@ -27,9 +29,13 @@ app.use(`${BASE_API_URL}/customers`, customerRouter);
 app.use(`${BASE_API_URL}/products`, productRouter);
 app.use(`${BASE_API_URL}/sellers`, sellerRouter);
 app.use(`${BASE_API_URL}/sellerRequests`, sellerRequestRouter);
+app.use(`${BASE_API_URL}/userEnquiries`, userEnquiryRouter);
 app.use(`${BASE_API_URL}/departments`, departmentRouters);
 app.use(`${BASE_API_URL}/reviews`, reviewRouter);
 app.use(`${BASE_API_URL}/wishlists`, wishlistRouter);
+app.use(`${BASE_API_URL}/adminDashboard`, adminRouter);
+
+
 
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });

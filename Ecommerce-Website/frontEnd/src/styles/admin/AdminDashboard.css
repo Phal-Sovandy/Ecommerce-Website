@@ -2,6 +2,7 @@
   background-color: var(--primary-color);
   min-height: calc(100vh - 70px);
   box-sizing: border-box;
+  position: relative;
 }
 
 .admin-dashboard header {
@@ -17,24 +18,24 @@
   top: 70px;
 }
 
-.admin-dashboard header > div{
+.admin-dashboard header > div {
   display: flex;
   align-items: center;
   gap: 25px;
 }
 
-.admin-dashboard header > div .log-out{
+.admin-dashboard header > div .log-out {
   font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 30px;
-  aspect-ratio: 1 /1 ;
+  aspect-ratio: 1 /1;
   border-radius: 5px;
   transition: all 0.2s ease;
 }
 
-.admin-dashboard header > div .log-out:hover{
+.admin-dashboard header > div .log-out:hover {
   background-color: var(--identity-color);
   color: white;
 }
@@ -76,14 +77,14 @@
   background-size: cover;
 }
 
-.admin-dashboard .stat-box:first-child{
+.admin-dashboard .stat-box:first-child {
   background-image: url("../../assets/UserCard.png");
 }
 
-.admin-dashboard .stat-box:nth-child(2){
+.admin-dashboard .stat-box:nth-child(2) {
   background-image: url("../../assets/RevenueCard.png");
 }
-.admin-dashboard .stat-box:last-child{
+.admin-dashboard .stat-box:last-child {
   background-image: url("../../assets/OrderCard.png");
 }
 
@@ -119,17 +120,21 @@
 .admin-dashboard .charts-grid .part-2 .chart-box {
   height: 500px;
   display: flex;
+  align-items: center;
   flex-direction: column;
 }
 
 .admin-dashboard .charts-grid .part-2 .chart-box > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  height: calc(100% - 100px);
+  max-height: calc(100% - 90px);
+  margin-top: 10px;
 }
 .admin-dashboard .charts-grid .part-2 .chart-box > div canvas {
-  max-width: 100%;
+  width: 100%;
   max-height: 100%;
-  margin-top: 10px;
 }
 
 .admin-dashboard .chart-box {
@@ -198,4 +203,11 @@
 .top-user-row,
 .charts-grid {
   padding-inline: 20px;
+}
+
+.admin-dashboard .loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
