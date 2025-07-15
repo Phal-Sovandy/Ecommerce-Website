@@ -99,43 +99,22 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
   //     </div>
   //   ) : null;
 
-  // function handleAddToCart() {
-  //   if (product.categories.includes("apparel")) {
-  //     if (!size) {
-  //       window.alert("Please select a size");
-  //       return false;
-  //     }
-  //     if (product.variations && !option) {
-  //       window.alert("Please select an option");
-  //       return false;
-  //     }
-  //   } else if (product.categories.includes("footwear")) {
-  //     if (!size) {
-  //       window.alert("Please select a size");
-  //       return false;
-  //     }
-  //     if (product.variations && !option) {
-  //       window.alert("Please select an option");
-  //       return false;
-  //     }
-  //   } else {
-  //     if (product.variations && !option) {
-  //       window.alert("Please select an option");
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
+  function validAddToCart() {
+    if (product.variations && !option) {
+      window.alert("Please select an option");
+      return false;
+    }
+    return true;
+  }
   function handleSubmission(event) {
     event.preventDefault();
-    addToCart({
-      ...product,
-      image: product.variations
-        ? product.images[selectedImageIndex]
-        : product.image,
-      option: option,
-    });
-    setShowState(false);
+    if (validAddToCart()) {
+      addToCart({
+        asin: product.asin,
+        option: option,
+      });
+      setShowState(false);
+    }
   }
   function ratingPhotoManage(rating) {
     const ratingPhoto = rating * 10;

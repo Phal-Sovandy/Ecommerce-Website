@@ -5,6 +5,7 @@ import {
   alterProductBadge,
   deleteProduct,
   alterProductInfo,
+  queryAllProductsByFilter,
 } from "../repositories/productQuery.js";
 
 export async function getAllProductsController(req, res) {
@@ -48,6 +49,48 @@ export async function getProductBySearchController(req, res) {
   }
 }
 
+export async function filterProductsController(req, res) {
+  try {
+    const {
+      search,
+      badge,
+      discount,
+      sort,
+      available,
+      categories,
+      department,
+      priceMin,
+      priceMax,
+    } = req.query;
+
+    const filters = {
+      available: available === "true",
+      categories: categories ? categories.split(",") : [],
+      department: department ? department.split(",") : [],
+      priceRange:
+        priceMin || priceMax
+          ? [
+              priceMin ? Number(priceMin) : null,
+              priceMax ? Number(priceMax) : null,
+            ]
+          : null,
+    };
+
+    const results = await queryAllProductsByFilter(
+      search,
+      badge,
+      discount,
+      sort,
+      filters
+    );
+
+    res.status(200).json(results);
+  } catch (err) {
+    console.error("Failed in filterProductsController:", err);
+    res.status(500).json({ error: "Failed to filter products." });
+  }
+}
+
 export async function changeProductBadgeController(req, res) {
   try {
     const { asin } = req.params;
@@ -71,7 +114,7 @@ export async function removeProductController(req, res) {
   }
 }
 
-export async function updateProductController(req, res){
+export async function updateProductController(req, res) {
   const { asin } = req.params;
   const updatedData = req.body;
 
@@ -114,4 +157,4 @@ export async function updateProductController(req, res){
     console.error("Error updating product:", error.message);
     return res.status(500).json({ error: error.message });
   }
-};
+}

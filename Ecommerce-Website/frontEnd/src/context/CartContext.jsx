@@ -14,42 +14,30 @@ export function CartProvider({ children }) {
   function checkProductExistance(cartIn, product) {
     return cartIn.find(
       (item) =>
-        item.id === product.id &&
-        (!product.size || product.size === item.size) &&
-        (!product.option || product.option === item.option)
+        item.asin === product.asin &&
+        (!product.option?.asin || product.option?.asin === item.option?.asin)
     );
   }
   function addToCart(product) {
-    if(product.stock <= 0){
-      window.alert("Product is out of stock, Please select another product.");
-      return
-    }
     setCart((c) => {
       const existingItem = checkProductExistance(c, product);
-
-      if (product.stock > 0) {
-        if (existingItem) {
-          return c.map((item) => {
-            if (
-              item.id === product.id &&
-              (!product.size || product.size === item.size) &&
-              (!product.option || product.option === item.option)
-            ) {
-              return {
-                ...item,
-                quantity:
-                  item.quantity < item.stock
-                    ? item.quantity + 1
-                    : item.quantity,
-              };
-            }
-            return item;
-          });
-        } else {
-          return [...c, { ...product, quantity: 1 }];
-        }
+      if (existingItem) {
+        return c.map((item) => {
+          if (
+            item.asin === product.asin &&
+            (!product.option?.asin ||
+              product.option?.asin === item.option?.asin)
+          ) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+            };
+          }
+          return item;
+        });
+      } else {
+        return [...c, { ...product, quantity: 1 }];
       }
-      return c;
     });
   }
 
@@ -60,7 +48,8 @@ export function CartProvider({ children }) {
           !(
             item.id === product.id &&
             (!product.size || product.size === item.size) &&
-            (!product.option || product.option === item.option)
+            (!product.option?.asin ||
+              product.option?.asin === item.option?.asin)
           )
       )
     );

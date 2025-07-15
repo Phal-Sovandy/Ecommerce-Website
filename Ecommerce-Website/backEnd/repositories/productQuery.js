@@ -117,6 +117,7 @@ export async function queryAllProductsBySearch(search, badge, discount, sort) {
         [Sequelize.col("pricing.currency"), "currency"],
         [Sequelize.col("pricing.discount"), "discount"],
         [Sequelize.col("details.rating"), "rating"],
+        [Sequelize.col("media.image_url"), "image"],
         [
           Sequelize.literal(
             `(SELECT COUNT(quantity) FROM ordered_items WHERE asin = "Product".asin)`
@@ -133,6 +134,11 @@ export async function queryAllProductsBySearch(search, badge, discount, sort) {
         { model: models.ProductDetail, attributes: [], as: "details" },
         { model: models.Ranking, attributes: [], as: "rankings" },
         { model: models.Brand, attributes: [], as: "brand" },
+        {
+          model: models.Media,
+          as: "media",
+          attributes: [],
+        },
       ],
       where: whereConditions.length ? { [Op.and]: whereConditions } : {},
       order: [order],
@@ -144,6 +150,239 @@ export async function queryAllProductsBySearch(search, badge, discount, sort) {
     throw new Error("No Product found");
   }
 }
+
+export async function queryAllProductsByFilter(
+  search,
+  badge,
+  discount,
+  sort,
+  filters = {}
+) {
+  try {
+    const whereConditions = [];
+    const searchLower = search?.toLowerCase();
+
+    if (searchLower) {
+      whereConditions.push({
+        [Op.or]: [
+          // title
+          Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("title")), {
+            [Op.like]: `%${searchLower}%`,
+          }),
+
+          // asin
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("Product.asin")),
+            { [Op.like]: `%${searchLower}%` }
+          ),
+
+          // seller_id
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("ProductSellers.seller_id")),
+            { [Op.like]: `%${searchLower}%` }
+          ),
+
+          // seller_name
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("ProductSellers.Seller.seller_name")),
+            { [Op.like]: `%${searchLower}%` }
+          ),
+
+          // date_first_available
+          Sequelize.where(
+            Sequelize.fn(
+              "LOWER",
+              Sequelize.cast(
+                Sequelize.col("details.date_first_available"),
+                "TEXT"
+              )
+            ),
+            { [Op.like]: `%${searchLower}%` }
+          ),
+
+          // department name
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("details.department.name")),
+            { [Op.like]: `%${searchLower}%` }
+          ),
+
+          // category name
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("categories.name")),
+            { [Op.like]: `%${searchLower}%` }
+          ),
+
+          // brand name
+          Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("brand.name")), {
+            [Op.like]: `%${searchLower}%`,
+          }),
+
+          // manufacturer name
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.col("manufacturer.name")),
+            { [Op.like]: `%${searchLower}%` }
+          ),
+        ],
+      });
+    }
+
+    if (badge) {
+      if (badge === "no badge") {
+        whereConditions.push({ "$rankings.badge$": null });
+      } else {
+        whereConditions.push({ "$rankings.badge$": badge });
+      }
+    }
+
+    if (discount === "discount") {
+      whereConditions.push({ "$pricing.discount$": { [Op.ne]: null } });
+    } else if (discount === "noDiscount") {
+      whereConditions.push({ "$pricing.discount$": null });
+    }
+
+    if (filters) {
+      const {
+        available = false,
+        categories = [],
+        department = [],
+        priceRange = null,
+      } = filters;
+
+      if (available) {
+        whereConditions.push({
+          [Op.and]: [
+            { availability: { [Op.ne]: "Out of stock" } },
+            { availability: { [Op.not]: null } },
+          ],
+        });
+      }
+
+      if (categories.length > 0) {
+        whereConditions.push({
+          [Op.or]: categories.map((cat) => ({
+            "$categories.name$": {
+              [Op.iLike]: `%${cat}%`,
+            },
+          })),
+        });
+      }
+
+      if (department.length > 0) {
+        whereConditions.push({
+          [Op.or]: department.map((dept) => ({
+            "$details.department.name$": {
+              [Op.iLike]: `%${dept}%`,
+            },
+          })),
+        });
+      }
+
+      if (
+        priceRange &&
+        Array.isArray(priceRange) &&
+        (priceRange[0] !== null || priceRange[1] !== null)
+      ) {
+        const priceCondition = {};
+        if (priceRange[0] !== null) {
+          priceCondition[Op.gte] = priceRange[0];
+        }
+        if (priceRange[1] !== null) {
+          priceCondition[Op.lte] = priceRange[1];
+        }
+        whereConditions.push({ "$pricing.final_price$": priceCondition });
+      }
+    }
+
+    const sortMap = {
+      titleAsc: [Sequelize.col("title"), "ASC"],
+      titleDesc: [Sequelize.col("title"), "DESC"],
+      priceAsc: [Sequelize.col("pricing.final_price"), "ASC"],
+      priceDesc: [Sequelize.col("pricing.final_price"), "DESC"],
+      soldAsc: [
+        Sequelize.literal(
+          `(SELECT COUNT(quantity) FROM ordered_items WHERE asin = "Product".asin)`
+        ),
+        "ASC",
+      ],
+      soldDesc: [
+        Sequelize.literal(
+          `(SELECT COUNT(quantity) FROM ordered_items WHERE asin = "Product".asin)`
+        ),
+        "DESC",
+      ],
+      dateAsc: [Sequelize.col("details.date_first_available"), "ASC"],
+      dateDesc: [Sequelize.col("details.date_first_available"), "DESC"],
+      ratingAsc: [Sequelize.col("details.rating"), "ASC"],
+      ratingDesc: [Sequelize.col("details.rating"), "DESC"],
+    };
+
+    const order = sortMap[sort] || sortMap["titleAsc"];
+
+    const foundProducts = await models.Product.findAll({
+      attributes: [
+        "asin",
+        [Sequelize.col("ProductSellers.seller_id"), "seller_id"],
+        [Sequelize.col("title"), "title"],
+        [Sequelize.col("pricing.final_price"), "price"],
+        [Sequelize.col("pricing.currency"), "currency"],
+        [Sequelize.col("pricing.discount"), "discount"],
+        [Sequelize.col("details.rating"), "rating"],
+        [Sequelize.col("media.image_url"), "image"],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(quantity) FROM ordered_items WHERE asin = "Product".asin)`
+          ),
+          "sold",
+        ],
+        [Sequelize.col("brand.name"), "brand"],
+        [Sequelize.col("rankings.badge"), "badge"],
+        [Sequelize.col("details.date_first_available"), "date_first_available"],
+      ],
+      include: [
+        {
+          model: models.ProductSeller,
+          attributes: [],
+          include: [{ model: models.Seller, as: "Seller", attributes: [] }],
+        },
+        { model: models.Pricing, attributes: [], as: "pricing" },
+        {
+          model: models.ProductDetail,
+          attributes: [],
+          as: "details",
+          include: [
+            {
+              model: models.Department,
+              as: "department",
+              attributes: [],
+            },
+          ],
+        },
+        {
+          model: models.Category,
+          as: "categories",
+          attributes: [],
+          through: { attributes: [] },
+        },
+        { model: models.Ranking, attributes: [], as: "rankings" },
+        { model: models.Brand, attributes: [], as: "brand" },
+        { model: models.Manufacturer, as: "manufacturer", attributes: [] },
+        {
+          model: models.Media,
+          as: "media",
+          attributes: [],
+        },
+      ],
+      where: whereConditions.length ? { [Op.and]: whereConditions } : {},
+      order: [order],
+    });
+
+    return foundProducts;
+  } catch (err) {
+    console.error("Failed to fetch filtered products", err);
+    throw new Error("No Product found");
+  }
+}
+
 export async function queryAProductInfo(asin) {
   try {
     const product = await models.Product.findByPk(asin, {
@@ -322,6 +561,7 @@ export async function queryAProductInfo(asin) {
     throw new Error("Failed to fetch product's data");
   }
 }
+
 export async function alterProductBadge(asin, badge) {
   try {
     const [updated] = await models.Ranking.update(
@@ -337,6 +577,7 @@ export async function alterProductBadge(asin, badge) {
     throw new Error("Failed to update badge");
   }
 }
+
 export async function deleteProduct(asin) {
   try {
     const deletedRow = await models.Product.destroy({
@@ -354,6 +595,7 @@ export async function deleteProduct(asin) {
     throw new Error("Failed to delete product");
   }
 }
+
 export async function alterProductInfo(asin, updatedData) {
   try {
     const product = await models.Product.findByPk(asin, {
@@ -456,8 +698,6 @@ export async function alterProductInfo(asin, updatedData) {
           );
           createdCategoryIds = createdCategories.map((cat) => cat.category_id);
         }
-
-        // const existingIds = existingCategoriesInDB.map((cat) => cat.category_id);
 
         await models.ProductCategory.bulkCreate(
           createdCategoryIds.map((id) => ({ asin, category_id: id })),

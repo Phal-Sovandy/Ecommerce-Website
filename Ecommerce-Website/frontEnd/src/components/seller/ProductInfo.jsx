@@ -5,8 +5,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/seller/ProductInfo.css";
 import ModalInfo from "../common/modals/ModalInfo";
 import ListInput from "../common/ListInput";
-import { getAllDepartments } from "../../api/common/departments";
-import { editProductInfo } from "../../api/admin/productsPage";
+import { getAllDepartments } from "../../api/common/departments.js";
+import { editProductInfo } from "../../api/common/products.js";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

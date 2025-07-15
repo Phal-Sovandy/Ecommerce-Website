@@ -7,11 +7,13 @@ import {
   changeProductBadgeController,
   removeProductController,
   updateProductController,
+  filterProductsController,
 } from "../controllers/productsController.js";
 
 const productRouters = express.Router();
 
-productRouters.get("/search", getProductBySearchController);
+productRouters.route("/filter").get(filterProductsController);
+productRouters.route("/search").get(getProductBySearchController);
 productRouters.route("/").get(getAllProductsController);
 productRouters
   .route("/:asin/badge")
@@ -29,4 +31,3 @@ productRouters
   );
 
 export default productRouters;
- 

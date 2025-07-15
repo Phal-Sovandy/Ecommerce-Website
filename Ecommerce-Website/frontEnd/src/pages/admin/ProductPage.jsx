@@ -8,7 +8,7 @@ import {
   filterProduct,
   changeProductBadge,
   deleteProduct,
-} from "../../api/admin/productsPage.js";
+} from "../../api/common/products.js";
 import "ldrs/react/Quantum.css";
 import "../../styles/admin/ProductPage.css";
 

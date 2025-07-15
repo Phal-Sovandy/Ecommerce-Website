@@ -1,5 +1,6 @@
 import { useCart } from "../../../context/CartContext.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
+import { getAProductsInfo } from "../../../api/common/products.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartShopping,
@@ -13,75 +14,95 @@ import "../../../styles/customer/component-styles/shops/ProductCard.css";
 function ProductCard({
   product,
   showDetails,
-  setShowItem,
   setDeletePrompt = () => {},
   showEdit = () => {},
 }) {
   const { isLoggedIn, role } = useAuth();
   const { addToCart } = useCart();
+
   return (
     <div
-      key={product.id}
+      key={product.asin}
       className="product-card"
       onClick={(event) => {
         if (!event.target.closest(".functions-product")) {
-          showDetails(true);
-          setShowItem(product);
+          showDetails();
         }
       }}
     >
       <div className="product-image-holder">
-        <img src={product.image} alt={product.title}></img>
+        <img
+          src={product.image || "../../../assets/OrderCard.png"}
+          alt={product.title}
+        ></img>
       </div>
       <div className="product-description">
-        <div>
-          <h3 className="product-name">{product.title}</h3>
-          <p className="product-keywords">
-            {product.categories
-              .slice(
-                0,
-                product.categories.length > 3 ? 4 : product.categories.length
-              )
-              .join(" | ")}
-          </p>
+        <div className="product-name">
+          <h3>{product.title}</h3>
         </div>
-        <div className="card-functions">
-          <h2 className="product-price">{product.currency}{product.price}</h2>
-          {isLoggedIn && role === "customer" && (
-            <div className="functions-product customer">
-              <FontAwesomeIcon
-                icon={faCartShopping}
-                size="lg"
-                onClick={() => {
-                  if (
-                    product.categories.includes("footwear") ||
-                    product.categories.includes("apparel") ||
-                    product.variations
-                  ) {
-                    showDetails(true);
-                    setShowItem(product);
-                  } else {
-                    addToCart(product);
-                  }
-                }}
-              />
-              <FontAwesomeIcon icon={faHeart} size="lg" />
-            </div>
-          )}
-          {isLoggedIn && role === "seller" && (
-            <div className="functions-product seller">
-              <FontAwesomeIcon
-                icon={faTrash}
-                size="lg"
-                onClick={() => setDeletePrompt(true)}
-              />
-              <FontAwesomeIcon
-                icon={faEllipsisVertical}
-                size="lg"
-                onClick={() => showEdit(true)}
-              />
-            </div>
-          )}
+        <div className="bottom-product-card">
+          <div className="badge-brand">
+            {product.badge && (
+              <p
+                className={`product-badge ${
+                  product.badge?.toLowerCase() === "amazon's  choice"
+                    ? "amazon-choice"
+                    : product.badge?.toLowerCase() === "#1 best seller"
+                    ? "best-seller"
+                    : product.badge?.toLowerCase() === "#1 new release"
+                    ? "new-release"
+                    : ""
+                }`}
+              >
+                {product.badge}
+              </p>
+            )}
+            {product.brand?.trim() && (
+              <p className="product-brand">{product.brand}</p>
+            )}
+          </div>
+          <div className="card-functions">
+            <h2 className="product-price">
+              {product.currency} {product.price}
+            </h2>
+            {isLoggedIn && role === "customer" && (
+              <div className="functions-product customer">
+                <FontAwesomeIcon
+                  icon={faCartShopping}
+                  size="lg"
+                  onClick={async () => {
+                    try {
+                      const productDetails = await getAProductsInfo(
+                        product.asin
+                      );
+                      if (productDetails?.variations?.length > 0) {
+                        showDetails();
+                      } else {
+                        addToCart({ asin: product.asin });
+                      }
+                    } catch (error) {
+                      console.errro("Error: ", error.message);
+                    }
+                  }}
+                />
+                <FontAwesomeIcon icon={faHeart} size="lg" />
+              </div>
+            )}
+            {isLoggedIn && role === "seller" && (
+              <div className="functions-product seller">
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  size="lg"
+                  onClick={() => setDeletePrompt(true)}
+                />
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  size="lg"
+                  onClick={() => showEdit(true)}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

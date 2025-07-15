@@ -68,3 +68,27 @@ export async function editProductInfo(asin, data) {
     throw new Error(error.message);
   }
 }
+export async function filterProductWithSidebar(search, badge, discount, sort, filters) {
+  const params = {
+    search,
+    badge,
+    discount,
+    sort,
+    available: filters.available,
+    categories: filters.categories.join(","),
+    department: filters.department.join(","),
+    priceMin: filters.priceRange?.[0],
+    priceMax: filters.priceRange?.[1],
+  };
+
+  try {
+    const response = await axios.get(`${BASE_API_URL}/filter`, { params });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to filter products with sidebar.");
+  }
+}
+
+
+
