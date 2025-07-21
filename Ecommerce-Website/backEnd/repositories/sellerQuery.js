@@ -269,7 +269,6 @@ export async function alterSellerInfo(sellerId, updatedData) {
     throw new Error("Updating seller info failed");
   }
 }
-
 // Edit seller status
 export async function alterSellerStatus(sellerId) {
   const t = await sequelize.transaction();
@@ -295,21 +294,6 @@ export async function alterSellerStatus(sellerId) {
       return { message: "No status update", updated: 0 };
     }
 
-    if (newSellerStatus) {
-      const customerDetail = await models.CustomerDetail.findOne({
-        where: { customer_id: sellerId },
-        attributes: ["status"],
-        transaction: t,
-      });
-
-      if (customerDetail && customerDetail.status === true) {
-        await models.CustomerDetail.update(
-          { status: false },
-          { where: { customer_id: sellerId }, transaction: t }
-        );
-      }
-    }
-
     await t.commit();
     return {
       message: `Seller status updated to ${newSellerStatus ? "active" : "inactive"}`,
@@ -322,4 +306,5 @@ export async function alterSellerStatus(sellerId) {
     throw new Error("Failed to update status");
   }
 }
+
 

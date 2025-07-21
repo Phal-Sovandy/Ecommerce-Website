@@ -38,7 +38,7 @@ const ProductInfo = ({
   const [allDeparments, setAllDepartments] = useState([]);
 
   const [categories, setCategories] = useState(productInfo.categories || []);
-  const [variations, setVariations] = useState(productInfo.variations || []);
+  const [variations, setVariations] = useState(productInfo.variations || {});
   const [features, setFeatures] = useState(productInfo.features || []);
 
   const [selectedDate, setSelectedDate] = useState(null);

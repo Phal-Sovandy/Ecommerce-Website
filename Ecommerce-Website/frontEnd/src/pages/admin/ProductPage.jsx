@@ -197,8 +197,7 @@ const ProductPage = () => {
                             product.asin,
                             e.target.value
                           );
-                          const data = await filterProduct();
-                          setProducts(data);
+                          setRefreshTrigger((p) => p + 1);
                         } catch (err) {
                           console.error(err);
                         }

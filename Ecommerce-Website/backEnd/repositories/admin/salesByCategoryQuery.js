@@ -12,7 +12,7 @@ export default async function querySalesByCategory(timeFilter = "allTime") {
           Sequelize.fn(
             "SUM",
             Sequelize.literal(
-              '\"OrderedItem\".quantity * \"product->pricing\".final_price'
+              '"OrderedItem".quantity * "product->pricing"."final_price"'
             )
           ),
           "total_sold",
@@ -48,14 +48,17 @@ export default async function querySalesByCategory(timeFilter = "allTime") {
           as: "Order",
           attributes: [],
           where: orderWhereClause,
+          required: true 
         },
       ],
       group: [
-        "product.ProductCategories.Category.name",
-        "product.ProductCategories.Category.category_id",
+        "product->ProductCategories->Category.name",
+        "product->ProductCategories->Category.category_id",
       ],
       order: [[Sequelize.literal("total_sold"), "DESC"]],
       raw: true,
+      limit: 10,
+      subQuery: false
     });
     return salesByCategory;
   } catch (err) {

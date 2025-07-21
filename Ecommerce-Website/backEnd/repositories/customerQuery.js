@@ -45,35 +45,48 @@ export async function queryAllCustomers() {
 
 export async function queryAllCustomersBySearch(search, status, gender, sort) {
   try {
-    const loweSearch = search?.toLowerCase();
+    const lowerSearch = search?.toLowerCase();
     const whereConditions = [];
 
-    if (loweSearch) {
+    if (lowerSearch) {
       whereConditions.push({
         [Op.or]: [
           Sequelize.where(
+            Sequelize.fn(
+              "LOWER",
+              Sequelize.cast(Sequelize.col("Customer.customer_id"), "varchar")
+            ),
+            { [Op.like]: `%${lowerSearch}%` }
+          ),
+          Sequelize.where(
             Sequelize.fn("LOWER", Sequelize.col("Customer.username")),
-            { [Op.like]: `%${loweSearch}%` }
+            { [Op.like]: `%${lowerSearch}%` }
           ),
           Sequelize.where(
             Sequelize.fn("LOWER", Sequelize.col("details.email")),
-            { [Op.like]: `%${loweSearch}%` }
+            { [Op.like]: `%${lowerSearch}%` }
           ),
           Sequelize.where(
             Sequelize.fn("LOWER", Sequelize.col("details.phone")),
-            { [Op.like]: `%${loweSearch}%` }
+            { [Op.like]: `%${lowerSearch}%` }
           ),
           Sequelize.where(
-            Sequelize.fn("LOWER", Sequelize.col("details.first_name")),
-            { [Op.like]: `%${loweSearch}%` }
-          ),
-          Sequelize.where(
-            Sequelize.fn("LOWER", Sequelize.col("details.last_name")),
-            { [Op.like]: `%${loweSearch}%` }
+            Sequelize.fn(
+              "LOWER",
+              Sequelize.fn(
+                "CONCAT",
+                Sequelize.col("details.first_name"),
+                Sequelize.literal(`' '`),
+                Sequelize.col("details.last_name")
+              )
+            ),
+            {
+              [Op.like]: `%${lowerSearch}%`,
+            }
           ),
           Sequelize.where(
             Sequelize.fn("LOWER", Sequelize.col("details.location.country")),
-            { [Op.like]: `%${loweSearch}%` }
+            { [Op.like]: `%${lowerSearch}%` }
           ),
         ],
       });
@@ -280,8 +293,7 @@ export async function alterCustomerStatus(customerId) {
 
     if (!customerDetail) throw new Error("Customer detail not found");
 
-    const currentStatus = customerDetail.status;
-    const newStatus = !currentStatus;
+    const newStatus = !customerDetail.status;
 
     const [updated] = await models.CustomerDetail.update(
       { status: newStatus },
@@ -293,27 +305,10 @@ export async function alterCustomerStatus(customerId) {
       return { message: "No status update", updated };
     }
 
-    if (newStatus) {
-      const sellerDetail = await models.SellerDetail.findOne({
-        where: { seller_id: customerId },
-        attributes: ["status"],
-        transaction: t,
-      });
-
-      if (sellerDetail && sellerDetail.status === true) {
-        await models.SellerDetail.update(
-          { status: false },
-          { where: { seller_id: customerId }, transaction: t }
-        );
-      }
-    }
-
     await t.commit();
 
     return {
-      message: `Customer status updated to ${
-        newStatus ? "active" : "inactive"
-      }`,
+      message: `Customer status updated to ${newStatus ? "active" : "inactive"}`,
       updated,
       newStatus,
     };
