@@ -30,6 +30,17 @@ All core frontend and backend application logic is included in this repository. 
 
 ## 1. Project Features
 
+This project is a comprehensive full-stack e-commerce web application developed using **React** for the frontend, **Express.js** (Node.js) for the backend, and **PostgreSQL** as the relational database. It offers a seamless shopping experience for customers and includes dedicated interfaces and tools for **sellers** and **administrators**.
+
+Key features include:
+- Role-based access control (customer, seller, admin)
+- Secure authentication and session management
+- Dynamic product filtering and searching
+- Cart and checkout functionality
+- Seller onboarding and product management
+- Admin dashboard for moderation and analytics
+- RESTful API design with modular architecture
+
 ### 1.1. Frontend Capabilities
 
 - Partially responsive and mobile-optimized user interface for broad device compatibility.
