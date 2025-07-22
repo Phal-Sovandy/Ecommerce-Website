@@ -1,11 +1,8 @@
-import axios from "axios";
-
-const PORT = 3002;
-const BASE_API_URL = `http://localhost:${PORT}/api/v1/adminDashboard`;
+import axiosInstance from "../../utils/axiosInstance.js";
 
 export async function getAdminDashboardData(timeFilter = "allTime") {
   try {
-    const response = await axios.get(BASE_API_URL, {
+    const response = await axiosInstance.get('/adminDashboard', {
       params: { timeFilter },
     });
     return response.data;

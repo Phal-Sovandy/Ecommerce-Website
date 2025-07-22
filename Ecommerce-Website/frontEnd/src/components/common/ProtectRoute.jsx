@@ -5,11 +5,11 @@ function ProtectedRoute({ children, allowedRoles }) {
   const { isLoggedIn, role } = useAuth();
 
   if (!isLoggedIn) {
-    return <Navigate to="/notfound" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/notfound" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;

@@ -6,22 +6,26 @@ import {
   removeProductFromWishlist,
   deleteWishlist,
 } from "../controllers/wishlistController.js";
+import { authenticate } from "../middlewares/authenticate.js";
+import { authorizeRoles } from "../middlewares/authorizeRoles.js";
 
-const router = express.Router();
+const wishlistRouter = express.Router();
+wishlistRouter.use(authenticate);
+wishlistRouter.use(authorizeRoles("customer", "admin"));
 
 // Get all wishlists
-router.get("/", getAllWishlists);
+wishlistRouter.get("/", getAllWishlists);
 
 // Get all products in wishlist by customer_id
-router.get("/:customerId", getWishlistByCustomerId);
+wishlistRouter.get("/:customerId", getWishlistByCustomerId);
 
 // Add product to wishlist
-router.post("/:customerId/products", addProductToWishlist);
+wishlistRouter.post("/:customerId/products", addProductToWishlist);
 
 // Remove product from wishlist
-router.delete("/:customerId/products/:asin", removeProductFromWishlist);
+wishlistRouter.delete("/:customerId/products/:asin", removeProductFromWishlist);
 
 // Delete entire wishlist for a customer
-router.delete("/:customerId", deleteWishlist);
+wishlistRouter.delete("/:customerId", deleteWishlist);
 
-export default router;
+export default wishlistRouter;

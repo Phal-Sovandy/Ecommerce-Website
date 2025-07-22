@@ -1,5 +1,7 @@
 import express from "express";
 import { uploadProduct } from "../config/multer.js";
+import { authenticate } from "../middlewares/authenticate.js";
+import { authorizeRoles } from "../middlewares/authorizeRoles.js";
 import {
   getAllProductsController,
   getAProductsController,
@@ -12,17 +14,23 @@ import {
 
 const productRouters = express.Router();
 
-productRouters.route("/filter").get(filterProductsController);
+productRouters.route("/filter").get(authenticate, filterProductsController);
 productRouters.route("/search").get(getProductBySearchController);
 productRouters.route("/").get(getAllProductsController);
 productRouters
   .route("/:asin/badge")
-  .patch(changeProductBadgeController)
-  .delete(removeProductController);
+  .patch(authenticate, authorizeRoles("admin"), changeProductBadgeController)
+  .delete(
+    authenticate,
+    authorizeRoles("seller", "admin"),
+    removeProductController
+  );
 productRouters
   .route("/:asin")
   .get(getAProductsController)
   .put(
+    authenticate,
+    authorizeRoles("seller", "admin"),
     uploadProduct.fields([
       { name: "image_url", maxCount: 1 },
       { name: "images", maxCount: 10 },

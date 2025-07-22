@@ -1,11 +1,10 @@
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance.js";
 
-const PORT = 3002;
-const BASE_API_URL = `http://localhost:${PORT}/api/v1/reviews`;
+const BASE_API_URL = `/reviews`;
 
 export async function getAllCustomerReviewOfProduct(asin) {
   try {
-    const departments = await axios.get(`${BASE_API_URL}/product/${asin}`);
+    const departments = await axiosInstance.get(`${BASE_API_URL}/product/${asin}`);
     return departments.data;
   } catch (error) {
     console.error(error);

@@ -942,6 +942,8 @@ const Admin = sequelize.define(
     },
   },
   {
+    createdAt: "created_at",
+    updatedAt: "updated_at",
     tableName: "admin",
     timestamps: true,
   }

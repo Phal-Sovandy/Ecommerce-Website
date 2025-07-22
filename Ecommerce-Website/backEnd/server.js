@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import logger from "./middlewares/logger.js";
+import { authenticate } from "./middlewares/authenticate.js";
+import { authorizeRoles } from "./middlewares/authorizeRoles.js";
 import { initDatabase } from "./config/database.js";
 import customerRouter from "./routes/customerRoutes.js";
 import productRouter from "./routes/productRoutes.js";
@@ -12,6 +14,7 @@ import sellerRouter from "./routes/sellerRoutes.js";
 import sellerRequestRouter from "./routes/sellerRequestRoutes.js";
 import userEnquiryRouter from "./routes/userEnquiryRoutes.js";
 import adminRouter from "./routes/adminDashboard.js";
+import authRouter from "./routes/authRoutes.js";
 
 dotenv.config();
 const { BASE_API_URL, PORT } = process.env;
@@ -34,6 +37,7 @@ app.use(`${BASE_API_URL}/departments`, departmentRouters);
 app.use(`${BASE_API_URL}/reviews`, reviewRouter);
 app.use(`${BASE_API_URL}/wishlists`, wishlistRouter);
 app.use(`${BASE_API_URL}/adminDashboard`, adminRouter);
+app.use(`${BASE_API_URL}/auth`, authRouter);
 
 
 

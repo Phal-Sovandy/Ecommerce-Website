@@ -29,7 +29,7 @@ const ModalEditProfileInfo = ({ show, onClose, profileInfo }) => {
   }));
   const blankStyles = {
     control: () => ({
-      all: "unset", // strip everything
+      all: "unset",
       borderBottom: "1px solid #333",
       height: "30px",
       width: "100%",

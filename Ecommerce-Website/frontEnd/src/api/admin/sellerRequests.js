@@ -1,11 +1,10 @@
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance.js";
 
-const PORT = 3002;
-const BASE_API_URL = `http://localhost:${PORT}/api/v1/sellerRequests`;
+const BASE_API_URL = `/sellerRequests`;
 
 export async function getAllSellerRequests() {
   try {
-    const allRequests = await axios.get(`${BASE_API_URL}`);
+    const allRequests = await axiosInstance.get(`${BASE_API_URL}`);
     return allRequests.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +14,7 @@ export async function getAllSellerRequests() {
 
 export async function filterRequest(search, status, sort) {
   try {
-    const allRequests = await axios.get(
+    const allRequests = await axiosInstance.get(
       `${BASE_API_URL}/search?search=${encodeURIComponent(
         search || ""
       )}&status=${encodeURIComponent(status || "")}&sort=${encodeURIComponent(
@@ -31,7 +30,7 @@ export async function filterRequest(search, status, sort) {
 
 export async function changeCustomerStatus(req_id, status) {
   try {
-    const response = await axios.patch(`${BASE_API_URL}/${req_id}/status`, {
+    const response = await axiosInstance.patch(`${BASE_API_URL}/${req_id}/status`, {
       status,
     });
     return response.data;
