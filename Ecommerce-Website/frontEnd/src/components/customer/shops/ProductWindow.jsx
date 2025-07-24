@@ -101,8 +101,8 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
 
   function validAddToCart() {
     //if (product.variations && !option) {
-      //window.alert("Please select an option");
-      //return false;
+    //window.alert("Please select an option");
+    //return false;
     //}
     return true;
   }
@@ -175,17 +175,22 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                   <p className="product-departments">{product.departments}</p>
                 )}
                 <div className="product-rating">
-  {[...Array(5)].map((_, i) => (
-    <FontAwesomeIcon
-      key={i}
-      icon={faStar}
-      style={{ color: i < Math.round(product.rating) ? '#ffc107' : '#e4e5e9' }}
-    />
-  ))}
-  <p style={{ display: 'inline', marginLeft: 8 }}>
-    {product.rating} <span>({product.sold})</span>
-  </p>
-</div>
+                  {[...Array(5)].map((_, i) => (
+                    <FontAwesomeIcon
+                      key={i}
+                      icon={faStar}
+                      style={{
+                        color:
+                          i < Math.round(product.rating)
+                            ? "#ffc107"
+                            : "#e4e5e9",
+                      }}
+                    />
+                  ))}
+                  <p style={{ display: "inline", marginLeft: 8 }}>
+                    {product.rating} <span>({product.sold})</span>
+                  </p>
+                </div>
                 <p>
                   Sell By{" "}
                   <span className="sellerId">{`(${product.sellerId})`} </span>
@@ -258,7 +263,7 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                     {product.badge?.trim()}{" "}
                     <span>
                       {product.badge?.toLowerCase().trim() ===
-                        "amazon's  choice" && (
+                        "amazon's choice" && (
                         <FontAwesomeIcon icon={faMedal} />
                       )}
                       {product.badge?.toLowerCase().trim() ===

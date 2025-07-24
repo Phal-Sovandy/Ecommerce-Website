@@ -38,14 +38,15 @@
 .left {
   min-width: 40%;
   max-width: 50%;
+  z-index: 200;
 }
-.right{
+.right {
   animation: fromRight 5s 1 normal;
 }
 
 .welcome-section .top h1 {
-  font-size: 7rem;
-  font-weight: 700;
+  font-size: 5rem;
+  font-weight: 600;
   font-family: Lexend;
   color: #222;
   line-height: 1;
@@ -53,8 +54,8 @@
 }
 
 .welcome-section .top span {
-  font-size: 15rem;
-  font-weight: 900;
+  font-size: 17rem;
+  font-weight: 700;
   font-family: Lexend;
   color: var(--identity-color);
 }
@@ -74,7 +75,7 @@
 
 .shop-now-btn,
 .learn-more-btn {
-  padding: 14px 28px;
+  padding: 10px 28px;
   font-size: 1.2rem;
   font-weight: bold;
   border: none;
@@ -124,7 +125,7 @@
   align-items: center;
   justify-content: center;
 }
-.stat-item > *{
+.stat-item > * {
   margin: 0;
 }
 
@@ -167,5 +168,54 @@
   width: 40%;
 }
 .right img {
+  z-index: 100;
   max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .welcome-section .top h1 {
+    font-size: 3rem;
+  }
+
+  .welcome-section .top span {
+    font-size: 10rem;
+  }
+}
+
+@media (max-width: 768px) {
+.left {
+  max-width: 90%;
+}
+  .right {
+    display: none;
+  }
+  .welcome-section {
+    justify-content: center;
+    padding-inline: 0;
+    min-height: calc(100vh - 50px);
+  }
+
+  .welcome-section .top h1,
+  .welcome-section .top span {
+    line-height: 0.7;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  .welcome-section .top span {
+    font-size: 13rem;
+  }
+  .btn-container {
+    justify-content: center;
+    align-items: center;
+  }
+  .btn-container button{
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  .welcome-section .top p {
+    text-align: center;
+    margin-block: 40px;
+  }
 }

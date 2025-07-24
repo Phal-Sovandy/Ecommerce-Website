@@ -48,7 +48,7 @@ function ProductCard({
             {product.badge && (
               <p
                 className={`product-badge ${
-                  product.badge?.toLowerCase() === "amazon's  choice"
+                  product.badge?.toLowerCase() === "amazon's choice"
                     ? "amazon-choice"
                     : product.badge?.toLowerCase() === "#1 best seller"
                     ? "best-seller"
@@ -82,7 +82,9 @@ function ProductCard({
                         showDetails();
                       } else {
                         addToCart({
-                          id: product.asin + (product.option ? `-${product.option}` : ""),
+                          id:
+                            product.asin +
+                            (product.option ? `-${product.option}` : ""),
                           asin: product.asin,
                           name: product.title,
                           priceCents: product.price, // or product.final_price if that's correct
@@ -98,12 +100,21 @@ function ProductCard({
                   }}
                 />
                 <FontAwesomeIcon
-                  icon={wishlist.some(w => w.asin === product.asin) ? faHeartSolid : faHeart}
+                  icon={
+                    wishlist.some((w) => w.asin === product.asin)
+                      ? faHeartSolid
+                      : faHeart
+                  }
                   size="lg"
-                  style={{ color: wishlist.some(w => w.asin === product.asin) ? 'red' : 'gray', cursor: 'pointer' }}
-                  onClick={e => {
+                  style={{
+                    color: wishlist.some((w) => w.asin === product.asin)
+                      ? "red"
+                      : "gray",
+                    cursor: "pointer",
+                  }}
+                  onClick={(e) => {
                     e.stopPropagation();
-                    if (wishlist.some(w => w.asin === product.asin)) {
+                    if (wishlist.some((w) => w.asin === product.asin)) {
                       removeFromWishlist(product);
                     } else {
                       addToWishlist(product);
