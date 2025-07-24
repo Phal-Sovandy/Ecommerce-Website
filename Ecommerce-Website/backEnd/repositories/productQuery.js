@@ -518,13 +518,10 @@ export async function queryAProductInfo(asin) {
       price: product.pricing ? product.pricing.final_price : null,
       discount: product.pricing ? product.pricing.discount : null,
       variations:
-<<<<<<< HEAD
+
         product.variation && product.variation.variations &&
         Array.isArray(product.variation.variations)
-=======
-        product.variation?.variations &&
-        Array.isArray(product.variation?.variations)
->>>>>>> bf8be8700d32ab21c5427345f7ecaed0f3efeebb
+
           ? product.variation.variations
           : [],
       badge: product.rankings.badge,
