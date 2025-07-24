@@ -149,12 +149,16 @@ const router = createBrowserRouter(
   )
 );
 
+import { WishlistProvider } from "./context/WishlistContext.jsx";
+
 function App() {
   return (
     <AuthProvider>
       <UserAuthModalProvider>
         <CartProvider>
-          <RouterProvider router={router} />
+          <WishlistProvider>
+            <RouterProvider router={router} />
+          </WishlistProvider>
         </CartProvider>
       </UserAuthModalProvider>
     </AuthProvider>

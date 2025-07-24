@@ -518,7 +518,7 @@ export async function queryAProductInfo(asin) {
       price: product.pricing ? product.pricing.final_price : null,
       discount: product.pricing ? product.pricing.discount : null,
       variations:
-        product.variation.variations &&
+        product.variation && product.variation.variations &&
         Array.isArray(product.variation.variations)
           ? product.variation.variations
           : [],

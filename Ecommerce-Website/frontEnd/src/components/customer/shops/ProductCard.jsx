@@ -6,8 +6,10 @@ import {
   faCartShopping,
   faEllipsisVertical,
   faHeart,
+  faHeart as faHeartSolid,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import { useWishlist } from "../../../context/WishlistContext";
 
 import "../../../styles/customer/component-styles/shops/ProductCard.css";
 
@@ -19,6 +21,7 @@ function ProductCard({
 }) {
   const { isLoggedIn, role } = useAuth();
   const { addToCart } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   return (
     <div
@@ -78,14 +81,35 @@ function ProductCard({
                       if (productDetails?.variations?.length > 0) {
                         showDetails();
                       } else {
-                        addToCart({ asin: product.asin });
+                        addToCart({
+                          id: product.asin + (product.option ? `-${product.option}` : ""),
+                          asin: product.asin,
+                          name: product.title,
+                          priceCents: product.price, // or product.final_price if that's correct
+                          currency: product.currency,
+                          image: product.image,
+                          option: product.option,
+                          // add any other fields needed by the checkout
+                        });
                       }
                     } catch (error) {
-                      console.errro("Error: ", error.message);
+                      console.error("Error: ", error.message);
                     }
                   }}
                 />
-                <FontAwesomeIcon icon={faHeart} size="lg" />
+                <FontAwesomeIcon
+                  icon={wishlist.some(w => w.asin === product.asin) ? faHeartSolid : faHeart}
+                  size="lg"
+                  style={{ color: wishlist.some(w => w.asin === product.asin) ? 'red' : 'gray', cursor: 'pointer' }}
+                  onClick={e => {
+                    e.stopPropagation();
+                    if (wishlist.some(w => w.asin === product.asin)) {
+                      removeFromWishlist(product);
+                    } else {
+                      addToWishlist(product);
+                    }
+                  }}
+                />
               </div>
             )}
             {isLoggedIn && role === "seller" && (

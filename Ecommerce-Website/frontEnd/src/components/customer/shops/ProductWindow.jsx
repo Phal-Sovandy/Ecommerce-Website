@@ -100,20 +100,26 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
   //   ) : null;
 
   function validAddToCart() {
-    if (product.variations && !option) {
-      window.alert("Please select an option");
-      return false;
-    }
+    //if (product.variations && !option) {
+      //window.alert("Please select an option");
+      //return false;
+    //}
     return true;
   }
   function handleSubmission(event) {
     event.preventDefault();
     if (validAddToCart()) {
       addToCart({
+        id: product.asin + (option ? `-${option}` : ""),
         asin: product.asin,
+        name: product.title,
+        priceCents: product.price, // or product.final_price if that's correct
+        currency: product.currency,
+        image: product.image,
         option: option,
+        // add any other fields needed by the checkout
       });
-      setShowState(false);
+      //setShowState(false);
     }
   }
   function ratingPhotoManage(rating) {
@@ -169,16 +175,17 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                   <p className="product-departments">{product.departments}</p>
                 )}
                 <div className="product-rating">
-                  <img
-                    src={`../../public/ratings/rating-${ratingPhotoManage(
-                      product.rating
-                    )}.png`}
-                    alt="rating"
-                  ></img>
-                  <p>
-                    {product.rating} <span>({product.sold})</span>
-                  </p>
-                </div>
+  {[...Array(5)].map((_, i) => (
+    <FontAwesomeIcon
+      key={i}
+      icon={faStar}
+      style={{ color: i < Math.round(product.rating) ? '#ffc107' : '#e4e5e9' }}
+    />
+  ))}
+  <p style={{ display: 'inline', marginLeft: 8 }}>
+    {product.rating} <span>({product.sold})</span>
+  </p>
+</div>
                 <p>
                   Sell By{" "}
                   <span className="sellerId">{`(${product.sellerId})`} </span>
@@ -327,12 +334,12 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
               <h4>Description</h4>
               <p>{product.description}</p>
             </div>
-            {product.features.length > 0 && (
+            {Array.isArray(product.features) && product.features.length > 0 && (
               <div className="product-features">
                 <h4>Features</h4>
                 <ul>
-                  {product.features.map((feature) => (
-                    <li>{feature}</li>
+                  {product.features.map((feature, idx) => (
+                    <li key={idx}>{feature}</li>
                   ))}
                 </ul>
               </div>

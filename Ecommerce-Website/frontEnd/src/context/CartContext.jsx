@@ -43,15 +43,7 @@ export function CartProvider({ children }) {
 
   function removeFromCart(product) {
     setCart((c) =>
-      c.filter(
-        (item) =>
-          !(
-            item.id === product.id &&
-            (!product.size || product.size === item.size) &&
-            (!product.option?.asin ||
-              product.option?.asin === item.option?.asin)
-          )
-      )
+      c.filter((item) => item.id !== product.id)
     );
   }
 
@@ -62,9 +54,7 @@ export function CartProvider({ children }) {
   function updateItemQuantity(newOrder) {
     setCart((c) =>
       c.map((item) =>
-        item.id === newOrder.id &&
-        (!newOrder.size || newOrder.size === item.size) &&
-        (!newOrder.option || newOrder.option === item.option)
+        item.id === newOrder.id
           ? {
               ...item,
               quantity: item.stock

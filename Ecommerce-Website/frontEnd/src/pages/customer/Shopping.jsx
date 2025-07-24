@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter, faGlobe } from "@fortawesome/free-solid-svg-icons";
 import "../../styles/customer/Shopping.css";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 5;
 
 function Shopping() {
   const { addToCart } = useCart();

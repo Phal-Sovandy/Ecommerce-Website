@@ -9,12 +9,19 @@ import "../../styles/customer/component-styles/Navigation.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
+import { useWishlist } from "../../context/WishlistContext.jsx";
+
 function Navigation() {
   const { isLoggedIn, role } = useAuth();
   const { openLoginModal } = useUserAuthModal();
   const { cart } = useCart();
+  const { wishlist } = useWishlist();
   const itemsInCart = cart.reduce((acc, cur) => acc + cur.quantity, 0);
+  const wishlistCount = wishlist.length;
   const navigate = useNavigate();
+
+  //const { id } = useAuth();
+  //console.log("My customer_id is:", id);
 
   return (
     <nav>
@@ -55,6 +62,9 @@ function Navigation() {
               className={({ isActive }) => (isActive ? "active-page" : "")}
               to="/wishlist"
             >
+              {wishlistCount > 0 && (
+                <div className="cart-item-count">{wishlistCount}</div>
+              )}
               WISHLIST
             </NavLink>
             <NavLink

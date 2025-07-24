@@ -1,50 +1,26 @@
 import React from "react";
 import WishListItem from "../../components/customer/wishlist/WishListItem";
+import { useWishlist } from "../../context/WishlistContext";
 import "../../styles/customer/WishList.css";
 
 const WishList = () => {
-  const sampleItem = {
-    asin: "1233234",
-    title: "Hello this is the product",
-    final_price: 1323.233,
-    currency: "USD",
-    categories: ["Sport", "Kitchen", "Bedroom"],
-    image_url:
-      "https://images.pexels.com/photos/3094799/pexels-photo-3094799.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    availability: "Only 10 in stock",
-  };
+  const { wishlist, removeAllFromWishlist } = useWishlist();
+
   return (
     <main id="wishlist">
       <div id="head">
         <h2>Wishlist Item(s)</h2>
-        <button id="remove-all-btn" onClick={() => {}}>
+        <button id="remove-all-btn" onClick={removeAllFromWishlist} disabled={wishlist.length === 0}>
           Remove All
         </button>
       </div>
-
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-      <WishListItem product={sampleItem} />
-
+      {wishlist.length === 0 ? (
+        <h4 style={{ color: "grey" }}>Your wishlist is empty</h4>
+      ) : (
+        wishlist.map((product) => (
+          <WishListItem key={product.id || product.asin} product={product} />
+        ))
+      )}
     </main>
   );
 };
