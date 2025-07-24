@@ -12,7 +12,7 @@ All core frontend and backend application logic is included in this repository. 
 1. [Project Features](#1-project-features)
    - [1.1. Frontend Capabilities](#11-frontend-capabilities)
    - [1.2. Backend Functionality](#12-backend-functionality)
-   - [1.3. Frontend Capabilities](#13-database-design)
+   - [1.3. Database Design](#13-database-design)
 2. [Technology Stack](#2-technology-stack)
 3. [Repository Structure](#3-repository-structure)
 4. [Prerequisites](#4-prerequisites)
