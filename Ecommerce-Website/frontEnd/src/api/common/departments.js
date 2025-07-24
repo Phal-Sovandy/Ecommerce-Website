@@ -1,11 +1,10 @@
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance.js";
 
-const PORT = 3002;
-const BASE_API_URL = `http://localhost:${PORT}/api/v1/departments`;
+const BASE_API_URL = `/departments`;
 
 export async function getAllDepartments() {
   try {
-    const departments = await axios.get(`${BASE_API_URL}`);
+    const departments = await axiosInstance.get(`${BASE_API_URL}`);
     return departments.data;
   } catch (error) {
     console.error(error);

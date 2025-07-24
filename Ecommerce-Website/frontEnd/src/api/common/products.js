@@ -1,11 +1,10 @@
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance.js";
 
-const PORT = 3002;
-const BASE_API_URL = `http://localhost:${PORT}/api/v1/products`;
+const BASE_API_URL = `/products`;
 
 export async function getAllProducts() {
   try {
-    const allProducts = await axios.get(`${BASE_API_URL}`);
+    const allProducts = await axiosInstance.get(`${BASE_API_URL}`);
     return allProducts.data;
   } catch (error) {
     console.error(error);
@@ -14,7 +13,7 @@ export async function getAllProducts() {
 }
 export async function filterProduct(search, badge, discount, sort) {
   try {
-    const filteredProduct = await axios.get(
+    const filteredProduct = await axiosInstance.get(
       `${BASE_API_URL}/search?search=${encodeURIComponent(
         search || ""
       )}&badge=${encodeURIComponent(badge || "")}&discount=${encodeURIComponent(
@@ -29,7 +28,7 @@ export async function filterProduct(search, badge, discount, sort) {
 }
 export async function getAProductsInfo(asin) {
   try {
-    const product = await axios.get(`${BASE_API_URL}/${asin}`);
+    const product = await axiosInstance.get(`${BASE_API_URL}/${asin}`);
     return product.data;
   } catch (error) {
     console.error(error);
@@ -38,7 +37,7 @@ export async function getAProductsInfo(asin) {
 }
 export async function changeProductBadge(asin, newBadge) {
   try {
-    const response = await axios.patch(`${BASE_API_URL}/${asin}/badge`, {
+    const response = await axiosInstance.patch(`${BASE_API_URL}/${asin}/badge`, {
       badge: newBadge,
     });
     return response.data;
@@ -50,7 +49,7 @@ export async function changeProductBadge(asin, newBadge) {
 }
 export async function deleteProduct(asin) {
   try {
-    const deleted = await axios.delete(`${BASE_API_URL}/${asin}`);
+    const deleted = await axiosInstance.delete(`${BASE_API_URL}/${asin}`);
     return deleted.data;
   } catch (error) {
     console.error(error);
@@ -59,7 +58,7 @@ export async function deleteProduct(asin) {
 }
 export async function editProductInfo(asin, data) {
   try {
-    const response = await axios.put(`${BASE_API_URL}/${asin}`, data, {
+    const response = await axiosInstance.put(`${BASE_API_URL}/${asin}`, data, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
@@ -82,7 +81,7 @@ export async function filterProductWithSidebar(search, badge, discount, sort, fi
   };
 
   try {
-    const response = await axios.get(`${BASE_API_URL}/filter`, { params });
+    const response = await axiosInstance.get(`${BASE_API_URL}/filter`, { params });
     return response.data;
   } catch (error) {
     console.error(error);

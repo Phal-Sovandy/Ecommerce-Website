@@ -1,11 +1,10 @@
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance.js";
 
-const PORT = 3002;
-const BASE_API_URL = `http://localhost:${PORT}/api/v1/customers`;
+const BASE_API_URL = `/customers`;
 
 export async function getAllCustomers() {
   try {
-    const response = await axios.get(BASE_API_URL);
+    const response = await axiosInstance.get(BASE_API_URL);
     return response.data;
   } catch (error) {
     console.error("Error fetching customers:", error.message);
@@ -15,7 +14,7 @@ export async function getAllCustomers() {
 
 export async function filterCustomer(search, status, gender, sort) {
   try {
-    const response = await axios.get(
+    const response = await axiosInstance.get(
       `${BASE_API_URL}/search?search=${encodeURIComponent(
         search || ""
       )}&status=${encodeURIComponent(status || "")}&gender=${encodeURIComponent(
@@ -31,7 +30,7 @@ export async function filterCustomer(search, status, gender, sort) {
 
 export async function getACustomerInfo(customerId) {
   try {
-    const response = await axios.get(`${BASE_API_URL}/${customerId}`);
+    const response = await axiosInstance.get(`${BASE_API_URL}/${customerId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching customer info:", error.message);
@@ -41,7 +40,7 @@ export async function getACustomerInfo(customerId) {
 
 export async function editCustomerProfileInfo(customerId, formData) {
   try {
-    const response = await axios.put(`${BASE_API_URL}/${customerId}`, formData, {
+    const response = await axiosInstance.put(`${BASE_API_URL}/${customerId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -55,7 +54,7 @@ export async function editCustomerProfileInfo(customerId, formData) {
 
 export async function changeCustomerStatus(customerId) {
   try {
-    const response = await axios.patch(`${BASE_API_URL}/${customerId}/status`);
+    const response = await axiosInstance.patch(`${BASE_API_URL}/${customerId}/status`);
     return response.data;
   } catch (error) {
     console.error("Error changing customer status:", error.message);

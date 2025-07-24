@@ -123,7 +123,7 @@ const BecomeASeller = () => {
                   <td>
                     <a href={`mailto:${req.email}`}>{req.email}</a>
                   </td>
-                  <td>{req.phone}</td>
+                  <td><a href={`tel:${req.phone}`}>{req.phone}</a></td>
                   <td>{req.request_date}</td>
                   <td className="status">
                     <div

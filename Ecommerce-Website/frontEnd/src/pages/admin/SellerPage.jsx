@@ -154,7 +154,9 @@ const SellerPage = () => {
                     <a href={`mailto:${seller.email}`}>{seller.email}</a>
                   </td>
                   <td>{seller.contact_person}</td>
-                  <td>{seller.phone}</td>
+                  <td>
+                    <a href={`tel:${seller.phone}`}>{seller.phone}</a>
+                  </td>
                   <td>{seller.country}</td>
                   <td>{seller.registration_date}</td>
                   <td className="status">

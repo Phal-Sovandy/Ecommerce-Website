@@ -28,7 +28,8 @@
     margin-bottom: 10px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
-.enquiry-details .badge.priority{
+.enquiry-details .badge.priority,
+.badge-toggle.active{
     background-color: rgba(255, 176, 176, 0.364);
     color: var(--red-color);
 }

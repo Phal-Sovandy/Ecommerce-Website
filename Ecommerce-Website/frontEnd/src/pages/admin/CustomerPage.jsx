@@ -162,7 +162,7 @@ const CustomerPage = () => {
                   <td>
                     <a href={`mailto:${customer.email}`}>{customer.email}</a>
                   </td>
-                  <td>{customer.phone}</td>
+                  <td><a href={`tel:${customer.phone}`}>{customer.phone}</a></td>
                   <td>{customer.gender}</td>
                   <td>{customer.country}</td>
                   <td>{customer.registration_date}</td>

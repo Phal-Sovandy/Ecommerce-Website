@@ -145,9 +145,7 @@ const UserEnquiry = () => {
               const isLast = index === visibleEnquiries.length - 1;
               return (
                 <tr key={user.enquiry_id} ref={isLast ? lastUserRef : null}>
-                  <td className="entity-id">{`ENQ${String(
-                    user.enquiry_id
-                  ).padStart(6, "0")}`}</td>
+                  <td className="entity-id">{user.enquiry_id}</td>
                   <td>{user.full_name}</td>
                   <td>{user.role}</td>
                   <td>{user.gender}</td>
@@ -158,9 +156,9 @@ const UserEnquiry = () => {
                       {user.email}
                     </a>
                   </td>
-                  <td>{user.phone}</td>
+                  <td><a href={`tel:${user.phone}`}>{user.phone}</a></td>
                   <td>{user.enquiry_date}</td>
-                  <td className="badge">
+                  <td className="badge priority">
                     <button
                       type="button"
                       className={`badge-toggle ${

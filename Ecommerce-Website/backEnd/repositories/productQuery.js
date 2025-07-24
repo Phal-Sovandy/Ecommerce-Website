@@ -508,9 +508,9 @@ export async function queryAProductInfo(asin) {
         product.details && product.details.department
           ? product.details.department.name
           : null,
-      images: product.media.images,
-      image: product.media.image_url,
-      rating: product.details.rating,
+      images: product.media?.images,
+      image: product.media?.image_url,
+      rating: product.details?.rating,
       sold: totalOrderedQuantity,
       sellerId: mainSeller ? mainSeller.seller_id : null,
       seller_name: mainSeller ? mainSeller.seller_name : null,
@@ -518,13 +518,18 @@ export async function queryAProductInfo(asin) {
       price: product.pricing ? product.pricing.final_price : null,
       discount: product.pricing ? product.pricing.discount : null,
       variations:
+<<<<<<< HEAD
         product.variation && product.variation.variations &&
         Array.isArray(product.variation.variations)
+=======
+        product.variation?.variations &&
+        Array.isArray(product.variation?.variations)
+>>>>>>> bf8be8700d32ab21c5427345f7ecaed0f3efeebb
           ? product.variation.variations
           : [],
       badge: product.rankings.badge,
       availability: product.availability,
-      root_bs_rank: product.rankings ? product.rankings.root_bs_rank : null,
+      root_bs_rank: product.rankings ? product.rankings?.root_bs_rank : null,
       bs_rank: product.rankings ? product.rankings.bs_rank : null,
       subcategory_rank:
         product.rankings && Array.isArray(product.rankings.subcategory_rank)
@@ -635,9 +640,8 @@ export async function alterProductInfo(asin, updatedData) {
       let finalImages = [...(product.media.images || [])];
 
       if (
-        updatedData.images &&
-        updatedData.images.files &&
-        updatedData.images.indexes
+        updatedData.images?.files &&
+        updatedData.images?.indexes
       ) {
         updatedData.images.indexes.forEach((index, i) => {
           while (finalImages.length <= index) {
@@ -674,29 +678,19 @@ export async function alterProductInfo(asin, updatedData) {
       const newNames = updatedNames.filter(
         (cat) => !existingNames.includes(cat)
       );
-
       const removedNames = existingNames.filter(
         (cat) => !updatedNames.includes(cat)
       );
 
       if (newNames.length > 0) {
-        const existingCategoriesInDB = await models.Category.findAll({
-          where: { name: newNames },
-          attributes: ["category_id", "name"],
-        });
+        const createdCategoryIds = [];
 
-        const existingNamesInDB = existingCategoriesInDB.map((c) => c.name);
-        const newNamesToCreate = newNames.filter(
-          (n) => !existingNamesInDB.includes(n)
-        );
-
-        let createdCategoryIds = [];
-        if (newNamesToCreate.length > 0) {
-          const createdCategories = await models.Category.bulkCreate(
-            newNamesToCreate.map((name) => ({ name })),
-            { validate: true, returning: true }
-          );
-          createdCategoryIds = createdCategories.map((cat) => cat.category_id);
+        for (const name of newNames) {
+          const [category] = await models.Category.findOrCreate({
+            where: { name },
+            defaults: { name },
+          });
+          createdCategoryIds.push(category.category_id);
         }
 
         await models.ProductCategory.bulkCreate(
@@ -723,31 +717,29 @@ export async function alterProductInfo(asin, updatedData) {
     }
 
     if (updatedData.brand !== undefined && product.brand) {
-      const currentBrand = product.brand.name;
+      const currentBrand = product.brand?.name;
 
       if (updatedData.brand === "") {
         await product.update({ brand_id: null });
       } else if (updatedData.brand !== currentBrand) {
-        let [brand] = await models.Brand.findOrCreate({
+        const [brand] = await models.Brand.findOrCreate({
           where: { name: updatedData.brand },
           defaults: { name: updatedData.brand },
         });
-
         await product.update({ brand_id: brand.brand_id });
       }
     }
 
     if (updatedData.manufacturer !== undefined && product.manufacturer) {
-      const currentManufacturer = product.manufacturer.name;
+      const currentManufacturer = product.manufacturer?.name;
 
       if (updatedData.manufacturer === "") {
         await product.update({ manufacturer_id: null });
       } else if (updatedData.manufacturer !== currentManufacturer) {
-        let [manufacturer] = await models.Manufacturer.findOrCreate({
+        const [manufacturer] = await models.Manufacturer.findOrCreate({
           where: { name: updatedData.manufacturer },
           defaults: { name: updatedData.manufacturer },
         });
-
         await product.update({ manufacturer_id: manufacturer.manufacturer_id });
       }
     }
@@ -758,3 +750,4 @@ export async function alterProductInfo(asin, updatedData) {
     throw new Error("Product update failed");
   }
 }
+

@@ -34,9 +34,9 @@ function WelcomingSection() {
                 <button className="shop-now-btn">Shop Now</button>
               </Link>
             )}
-            <Link to="/contacts">
+            {role !== "admin" && (<Link to="/contacts">
               <button className="learn-more-btn">Contacts Us</button>
-            </Link>
+            </Link>)}
           </div>
         </div>
         <div className="center">

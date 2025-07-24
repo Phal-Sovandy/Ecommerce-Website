@@ -74,12 +74,18 @@ export async function queryAllSellerRequestBySearch(search, status, sort) {
             { [Op.like]: `%${lowerSearch}%` }
           ),
           Sequelize.where(
-            Sequelize.fn("LOWER", Sequelize.col("customer.details.first_name")),
-            { [Op.like]: `%${lowerSearch}%` }
-          ),
-          Sequelize.where(
-            Sequelize.fn("LOWER", Sequelize.col("customer.details.last_name")),
-            { [Op.like]: `%${lowerSearch}%` }
+            Sequelize.fn(
+              "LOWER",
+              Sequelize.fn(
+                "CONCAT",
+                Sequelize.col("customer.details.first_name"),
+                Sequelize.literal(`' '`),
+                Sequelize.col("customer.details.last_name")
+              )
+            ),
+            {
+              [Op.like]: `%${lowerSearch}%`,
+            }
           ),
         ],
       });
@@ -172,7 +178,7 @@ export async function alterRequestStatus(req_id, status) {
       if (!existingSeller) {
         await models.Seller.create(
           {
-            seller_id: sellerId,
+            seller_id: `SEL_${sellerId}`,
             seller_name: request.customer.username,
           },
           { transaction: t }
@@ -182,7 +188,7 @@ export async function alterRequestStatus(req_id, status) {
 
         await models.SellerDetail.create(
           {
-            seller_id: sellerId,
+            seller_id: `SEL_${sellerId}`,
             email: detail.email,
             phone: detail.phone,
             password_hash: detail.password_hash,
@@ -206,7 +212,7 @@ export async function alterRequestStatus(req_id, status) {
         if (location) {
           await models.SellerLocation.create(
             {
-              seller_id: sellerId,
+              seller_id: `SEL_${sellerId}`,
               country: location.country,
               city: location.city,
               state: location.state,

@@ -213,7 +213,7 @@ const AdminDashboard = () => {
         </div>
         <div className="stat-box">
           <h2>Total Revenue {timeFilterDisplay()}</h2>
-          <p>${totalRevenue?.toLocaleString()}</p>
+          <p>${!isNaN(totalRevenue) ? totalRevenue.toLocaleString() : "0"}</p>
         </div>
         <div className="stat-box">
           <h2>Orders {timeFilterDisplay()}</h2>
@@ -224,28 +224,36 @@ const AdminDashboard = () => {
         <div className="top-user-section">
           <h3>Top 5 Customers {timeFilterDisplay()}</h3>
           <div className="user-cards-row">
-            {topCustomers?.map((customer, idx) => (
-              <div className="user-card" key={idx}>
-                <h4>{customer.name}</h4>
-                <p>Total Spent: ${customer.totalSpent.toLocaleString()}</p>
-              </div>
-            ))}
+            {topCustomers?.length > 0 ? (
+              topCustomers?.map((customer, idx) => (
+                <div className="user-card" key={idx}>
+                  <h4>{customer.name}</h4>
+                  <p>Total Spent: ${customer.totalSpent.toLocaleString()}</p>
+                </div>
+              ))
+            ) : (
+              <p className="no-data">No available data</p>
+            )}
           </div>
         </div>
 
         <div className="top-user-section">
           <h3>Top 5 Sellers {timeFilterDisplay()}</h3>
           <div className="user-cards-row">
-            {topSellers?.map((seller, idx) => (
-              <div
-                className="user-card"
-                key={idx}
-                onClick={() => navigate(`/sellerShop/${seller.seller_id}`)}
-              >
-                <h4>{seller.name}</h4>
-                <p>Total Sales: ${seller.totalSales.toLocaleString()}</p>
-              </div>
-            ))}
+            {topSellers?.length > 0 ? (
+              topSellers?.map((seller, idx) => (
+                <div
+                  className="user-card"
+                  key={idx}
+                  onClick={() => navigate(`/sellerShop/${seller.seller_id}`)}
+                >
+                  <h4>{seller.name}</h4>
+                  <p>Total Sales: ${seller.totalSales.toLocaleString()}</p>
+                </div>
+              ))
+            ) : (
+              <p className="no-data">No available data</p>
+            )}
           </div>
         </div>
       </div>
@@ -253,17 +261,29 @@ const AdminDashboard = () => {
         <div className="part-1">
           <div className="chart-box">
             <h3>New Users Per Month</h3>
-            <Bar data={newUsersPerMonth} options={options} />
+            {dashboardData?.charts?.newUsersPerMonth?.length > 0 ? (
+              <Bar data={newUsersPerMonth} options={options} />
+            ) : (
+              <p className="no-data">No available data</p>
+            )}
           </div>
 
           <div className="chart-box">
             <h3>Top Selling Products of {timeFilterDisplay()}</h3>
-            <Bar data={topSellingProducts} options={options} />
+            {dashboardData?.charts?.topSellingProducts?.length > 0 ? (
+              <Bar data={topSellingProducts} options={options} />
+            ) : (
+              <p className="no-data">No available data</p>
+            )}
           </div>
 
           <div className="chart-box">
             <h3>Revenue Over Time</h3>
-            <Line data={revenueOverTime} options={options} />
+            {dashboardData?.charts?.revenueOverTime?.length > 0 ? (
+              <Line data={revenueOverTime} options={options} />
+            ) : (
+              <p className="no-data">No available data</p>
+            )}
           </div>
         </div>
 
@@ -271,14 +291,22 @@ const AdminDashboard = () => {
           <div className="chart-box">
             <h3>Order Status Breakdown for {timeFilterDisplay()}</h3>
             <div>
-              <Pie data={orderStatusCount} options={options} />
+              {dashboardData?.charts?.orderStatusCount?.length > 0 ? (
+                <Pie data={orderStatusCount} options={options} />
+              ) : (
+                <p className="no-data">No available data</p>
+              )}
             </div>
           </div>
 
           <div className="chart-box">
             <h3>Sales by Category of {timeFilterDisplay()}</h3>
             <div>
-              <Doughnut data={salesByCategory} options={options} />
+              {dashboardData?.charts?.salesByCategory?.length > 0 ? (
+                <Doughnut data={salesByCategory} options={options} />
+              ) : (
+                <p className="no-data">No available data</p>
+              )}
             </div>
           </div>
         </div>

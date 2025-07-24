@@ -195,3 +195,8 @@
 .long-content-cell{
   max-width: 350px;
 }
+
+p.no-data{
+  color: grey;
+  text-align: center;
+}

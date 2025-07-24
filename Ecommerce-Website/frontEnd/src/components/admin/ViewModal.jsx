@@ -50,7 +50,7 @@ const ViewModal = ({ show, onClose, info, title, type = "seller" }) => {
             </div>
             <div className="info">
               <h4>Phone Number</h4>
-              <p>{info.phone || "No Record"}</p>
+              <a href={`tel:${info.phone}`}>{info.phone || "No Record"}</a>
             </div>
             {type === "seller" && (
               <>
