@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ViewModal from "../../components/admin/ViewModal";
 import EditModal from "../../components/admin/EditModal";
+import { useModal } from "../../context/ModalContext.jsx";
 import {
   getAllSellers,
   filterSeller,
@@ -16,11 +17,11 @@ import "../../styles/admin/SellerPage.css";
 const PAGE_SIZE = 50;
 
 const SellerPage = () => {
+  const {showError} = useModal();
   const [sellers, setSellers] = useState([]);
   const [sellerInfo, setSellerInfo] = useState({});
 
   const [refetch, setRefetch] = useState(0);
-  const [error, setError] = useState("");
 
   const [showSellerInfo, setShowSellerInfo] = useState(false);
   const [showSellerEditInfo, setShowSellerEditInfo] = useState(false);
@@ -41,7 +42,7 @@ const SellerPage = () => {
       const res = await filterSeller(search, status, sort);
       setSellers(res);
     } catch (error) {
-      setError(error.message || "Failed to fetch sellers");
+      showError(error.message || "Failed to fetch sellers");
     } finally {
       setLoading(false);
     }
@@ -62,7 +63,7 @@ const SellerPage = () => {
       const res = await getASellerInfo(sellerId);
       setSellerInfo(res);
     } catch (error) {
-      setError(error.message || "Failed to fetch sellers");
+      showError(error.message || "Failed to fetch sellers");
     } finally {
       setLoading(false);
     }
@@ -197,12 +198,11 @@ const SellerPage = () => {
                           setRefetch((r) => r + 1);
                         } catch (error) {
                           console.error("Error", error.message);
-                          setError(error.message);
+                          showError(error.message);
                         }
                       }}
                     >
                       {!seller.status ? "Activate" : "Deactivate"}
-                      {/* Important: Activate or deactivate change only the status not delete the row from the database */}
                     </button>
                   </td>
                 </tr>

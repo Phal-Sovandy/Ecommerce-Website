@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ViewModal from "../../components/admin/ViewModal";
 import EditModal from "../../components/admin/EditModal";
+import { useModal } from "../../context/ModalContext";
 import {
   filterCustomer,
   getACustomerInfo,
@@ -16,6 +17,7 @@ import "../../styles/admin/CustomerPage.css";
 const PAGE_SIZE = 50;
 
 const CustomerPage = () => {
+  const {showError} = useModal();
   const [customers, setCustomers] = useState([]);
   const [visibleCustomers, setVisibleCustomers] = useState([]);
   const [customerInfo, setCustomerInfo] = useState({});
@@ -25,7 +27,6 @@ const CustomerPage = () => {
   const observer = useRef();
 
   const [refetch, setRefetch] = useState(0);
-  const [error, setError] = useState("");
 
   const [showCustomerInfo, setShowCustomerInfo] = useState(false);
   const [showCustomerEditInfo, setShowCustomerEditInfo] = useState(false);
@@ -41,7 +42,7 @@ const CustomerPage = () => {
       const res = await filterCustomer(search, status, gender, sort);
       setCustomers(res);
     } catch (err) {
-      setError(err.message || "Failed to fetch customers");
+      showError(err.message || "Failed to fetch customers");
     } finally {
       setLoading(false);
     }
@@ -62,7 +63,7 @@ const CustomerPage = () => {
       const res = await getACustomerInfo(customerId);
       setCustomerInfo(res);
     } catch (err) {
-      setError(err.message || "Failed to fetch customer info");
+      showError(err.message || "Failed to fetch customer info");
     } finally {
       setLoading(false);
     }
@@ -204,7 +205,7 @@ const CustomerPage = () => {
                           setRefetch((r) => r + 1);
                         } catch (error) {
                           console.error("Error", error.message);
-                          setError(error.message);
+                          showError(error.message);
                         }
                       }}
                     >

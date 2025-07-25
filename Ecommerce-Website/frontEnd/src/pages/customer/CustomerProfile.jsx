@@ -30,7 +30,6 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 ChartJS.register(
@@ -47,7 +46,6 @@ function CustomerProfile() {
   const [showOrderItem, setShowOrderItem] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const {logout} = useAuth();
-  const navigate = useNavigate();
 
   const sampleItem = {
     asin: "1233234",

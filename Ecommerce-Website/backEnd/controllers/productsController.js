@@ -110,7 +110,7 @@ export async function removeProductController(req, res) {
     res.status(200).json(productDelete);
   } catch (error) {
     console.error(`Error: ${error.message}`);
-    res.status(500).json({ error: "Failed to update badge" });
+    res.status(500).json({ error: "Failed to delete product" });
   }
 }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useModal } from "../../context/ModalContext.jsx";
 import ProductWindow from "../../components/customer/shops/ProductWindow";
 import ProductInfo from "../../components/seller/ProductInfo";
 import { Quantum } from "ldrs/react";
@@ -15,13 +16,13 @@ import "../../styles/admin/ProductPage.css";
 const PAGE_SIZE = 20;
 
 const ProductPage = () => {
+  const { showError, showConfirm } = useModal();
   const [products, setProducts] = useState([]);
 
   // For Lazy-Loading implementation for web efficiency
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const observer = useRef();
 
   // For header functionalities
@@ -45,7 +46,7 @@ const ProductPage = () => {
       const data = await filterProduct(search, badge, discount, sort);
       setProducts(data);
     } catch (error) {
-      setError(error);
+      showError(error.message);
     } finally {
       setLoading(false);
     }
@@ -198,8 +199,8 @@ const ProductPage = () => {
                             e.target.value
                           );
                           setRefreshTrigger((p) => p + 1);
-                        } catch (err) {
-                          console.error(err);
+                        } catch (error) {
+                          showError(error.message);
                         }
                       }}
                       value={product.badge || "No Badge"}
@@ -221,8 +222,8 @@ const ProductPage = () => {
                           const data = await getAProductsInfo(product.asin);
                           setWindowProduct(data);
                           setShowWindow(true);
-                        } catch (err) {
-                          setError(err);
+                        } catch (error) {
+                          showError(error.message);
                         }
                       }}
                     >
@@ -242,10 +243,15 @@ const ProductPage = () => {
                       className="delete-btn"
                       onClick={async () => {
                         try {
-                          await deleteProduct(product.asin);
-                          fetchAllProducts();
-                        } catch (err) {
-                          setError(err.message);
+                          showConfirm(
+                            "Are you sure to delete this product?",
+                            async () => {
+                              await deleteProduct(product.asin);
+                              fetchAllProducts();
+                            }
+                          );
+                        } catch (error) {
+                          showError(error.message);
                         }
                       }}
                     >

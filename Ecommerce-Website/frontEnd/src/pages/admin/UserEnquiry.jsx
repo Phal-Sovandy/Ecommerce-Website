@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useModal } from "../../context/ModalContext";
 import {
   getAllUserEnquiry,
   getAUserEnquiry,
@@ -14,6 +15,7 @@ import "../../styles/admin/UserEnquiry.css";
 const PAGE_SIZE = 50;
 
 const UserEnquiry = () => {
+  const {showError, showConfirm} = useModal();
   const [enquiries, setEnquiries] = useState([]);
 
   const [showEnquiryDetails, setShowEnquiryDetails] = useState(false);
@@ -27,7 +29,6 @@ const UserEnquiry = () => {
 
   const [visibleEnquiries, setVisibleEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(true);
   const [page, setPage] = useState(1);
   const observer = useRef();
 
@@ -44,7 +45,7 @@ const UserEnquiry = () => {
         );
         setEnquiries(res);
       } catch (err) {
-        setError(err.message || "Failed to fetch customers");
+        showError(err.message || "Failed to fetch customers");
       } finally {
         setLoading(false);
       }
@@ -179,7 +180,7 @@ const UserEnquiry = () => {
                           }
                           setRefetch((r) => r + 1);
                         } catch (error) {
-                          setError(error.message);
+                          showError(error.message);
                         }
                       }}
                     >
@@ -197,7 +198,7 @@ const UserEnquiry = () => {
                           setEnquiryDetails(enquiry);
                           setShowEnquiryDetails(true);
                         } catch (error) {
-                          setError(error.message);
+                          showError(error.message);
                         }
                       }}
                     >
@@ -207,10 +208,12 @@ const UserEnquiry = () => {
                       className="delete-btn"
                       onClick={async () => {
                         try {
-                          await deleteUserEnquiry(user.enquiry_id);
-                          setRefetch((r) => r + 1);
+                          showConfirm("Are you sure, want to delete this enquiry?", async () => {
+                            await deleteUserEnquiry(user.enquiry_id);
+                            setRefetch((r) => r + 1);
+                          })
                         } catch (error) {
-                          setError(error.message);
+                          showError(error.message);
                         }
                       }}
                     >

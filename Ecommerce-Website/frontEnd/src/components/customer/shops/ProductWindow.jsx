@@ -263,9 +263,11 @@ function ProductWindow({ product, setShowState, showEdit = () => {} }) {
                     {product.badge?.trim()}{" "}
                     <span>
                       {product.badge?.toLowerCase().trim() ===
-                        "amazon's choice" && (
-                        <FontAwesomeIcon icon={faMedal} />
-                      )}
+                        "amazon's choice" ||
+                        (product.badge?.toLowerCase().trim() ===
+                          "amazon's  choice" && (
+                          <FontAwesomeIcon icon={faMedal} />
+                        ))}
                       {product.badge?.toLowerCase().trim() ===
                         "best seller" && (
                         <FontAwesomeIcon icon={faWebAwesome} />

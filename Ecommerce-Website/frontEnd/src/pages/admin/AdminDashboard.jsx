@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Quantum } from "ldrs/react";
 import "ldrs/react/Quantum.css";
+import { useModal } from "../../context/ModalContext.jsx";
 
 ChartJS.register(
   CategoryScale,
@@ -40,6 +41,7 @@ const options = {
 };
 
 const AdminDashboard = () => {
+  const {showError} = useModal();
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
@@ -53,7 +55,7 @@ const AdminDashboard = () => {
         const data = await getAdminDashboardData(timeFilter);
         setDashboardData(data);
       } catch (err) {
-        console.error(err);
+        showError(err.message);
       } finally {
         setLoading(false);
       }

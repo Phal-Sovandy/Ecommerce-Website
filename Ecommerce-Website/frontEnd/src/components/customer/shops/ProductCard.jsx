@@ -48,7 +48,8 @@ function ProductCard({
             {product.badge && (
               <p
                 className={`product-badge ${
-                  product.badge?.toLowerCase() === "amazon's choice"
+                  product.badge?.toLowerCase() === "amazon's choice" ||
+                  product.badge?.toLowerCase() === "amazon's  choice"
                     ? "amazon-choice"
                     : product.badge?.toLowerCase() === "#1 best seller"
                     ? "best-seller"
@@ -59,9 +60,6 @@ function ProductCard({
               >
                 {product.badge}
               </p>
-            )}
-            {product.brand?.trim() && (
-              <p className="product-brand">{product.brand}</p>
             )}
           </div>
           <div className="card-functions">

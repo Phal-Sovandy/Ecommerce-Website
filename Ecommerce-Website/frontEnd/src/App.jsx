@@ -27,6 +27,9 @@ import BecomeASeller from "./pages/admin/BecomeASeller.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext";
 import { UserAuthModalProvider } from "./context/UserAuthModalContext.jsx";
+import { WishlistProvider } from "./context/WishlistContext.jsx";
+import { ModalProvider } from "./context/ModalContext.jsx";
+
 import ProtectedRoute from "./components/common/ProtectRoute.jsx";
 
 const router = createBrowserRouter(
@@ -149,18 +152,18 @@ const router = createBrowserRouter(
   )
 );
 
-import { WishlistProvider } from "./context/WishlistContext.jsx";
-
 function App() {
   return (
     <AuthProvider>
-      <UserAuthModalProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <RouterProvider router={router} />
-          </WishlistProvider>
-        </CartProvider>
-      </UserAuthModalProvider>
+      <ModalProvider>
+        <UserAuthModalProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <RouterProvider router={router} />
+            </WishlistProvider>
+          </CartProvider>
+        </UserAuthModalProvider>
+      </ModalProvider>
     </AuthProvider>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useModal } from "../../context/ModalContext.jsx";
 import {
   getAllSellerRequests,
   changeCustomerStatus,
@@ -12,9 +13,10 @@ import "../../styles/admin/BecomeASeller.css";
 const PAGE_SIZE = 50;
 
 const BecomeASeller = () => {
+
+  const {showError} = useModal();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(true);
   const [refetch, setRefetch] = useState(0);
 
   const [search, setSearch] = useState("");
@@ -28,7 +30,7 @@ const BecomeASeller = () => {
         const res = await filterRequest(search, status, sort);
         setRequests(res);
       } catch (err) {
-        setError(err.message || "Failed to fetch customers");
+        showError(err.message || "Failed to fetch customers");
       } finally {
         setLoading(false);
       }
@@ -67,7 +69,7 @@ const BecomeASeller = () => {
       await changeCustomerStatus(id, status);
       setRefetch((r) => r + 1);
     } catch (error) {
-      setError(error.message);
+      showError(error.message);
     }
   };
 

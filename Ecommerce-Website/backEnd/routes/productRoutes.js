@@ -18,16 +18,13 @@ productRouters.route("/filter").get(authenticate, filterProductsController);
 productRouters.route("/search").get(getProductBySearchController);
 productRouters.route("/").get(getAllProductsController);
 productRouters
-  .route("/:asin/badge")
-  .patch(authenticate, authorizeRoles("admin"), changeProductBadgeController)
+  .route("/:asin")
+  .get(getAProductsController)
   .delete(
     authenticate,
     authorizeRoles("seller", "admin"),
     removeProductController
-  );
-productRouters
-  .route("/:asin")
-  .get(getAProductsController)
+  )
   .put(
     authenticate,
     authorizeRoles("seller", "admin"),
@@ -37,5 +34,8 @@ productRouters
     ]),
     updateProductController
   );
+productRouters
+  .route("/:asin/badge")
+  .patch(authenticate, authorizeRoles("admin"), changeProductBadgeController);
 
 export default productRouters;
