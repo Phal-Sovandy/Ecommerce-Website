@@ -50,8 +50,6 @@ function ModalLogin() {
         </div>
 
         <form onSubmit={handleLogin}>
-          {error && <p className="error">{error}</p>}
-
           <div className="input-wrapper">
             <input
               type="text"
@@ -76,6 +74,7 @@ function ModalLogin() {
               onClick={() => setType(type === "password" ? "text" : "password")}
             />
           </div>
+          {error && <p className="error">{error}</p>}
 
           <div className="remember-forgot">
             <div className="remember">

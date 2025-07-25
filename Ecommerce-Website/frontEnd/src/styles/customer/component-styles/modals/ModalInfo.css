@@ -24,6 +24,9 @@
   display: flex;
   flex-direction: column;
 }
+.modal-content > h2{
+  padding-inline: 5px;
+}
 .modal-head {
   display: flex;
   align-items: center;
