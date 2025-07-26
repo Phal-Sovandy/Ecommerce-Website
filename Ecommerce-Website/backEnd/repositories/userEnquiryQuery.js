@@ -30,7 +30,7 @@ export async function queryAllUserEnquiryBySearch(
 ) {
   try {
     const whereConditions = [];
-    const searchLower = search?.toLowerCase();
+    const searchLower = search?.toLowerCase()?.trim();
 
     if (searchLower) {
       whereConditions.push({

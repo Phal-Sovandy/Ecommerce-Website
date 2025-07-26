@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useModal } from "../../context/ModalContext.jsx";
 import {
-  getAllSellerRequests,
   changeCustomerStatus,
   filterRequest,
 } from "../../api/admin/sellerRequests.js";
@@ -13,44 +12,45 @@ import "../../styles/admin/BecomeASeller.css";
 const PAGE_SIZE = 50;
 
 const BecomeASeller = () => {
+  const { showError } = useModal();
 
-  const {showError} = useModal();
   const [requests, setRequests] = useState([]);
+  const [visibleRequests, setVisibleRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const observer = useRef();
+
+  const [page, setPage] = useState(1);
   const [refetch, setRefetch] = useState(0);
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [sort, setSort] = useState("");
 
-  useEffect(() => {
-    const fetchRequests = async () => {
-      setLoading(true);
-      try {
-        const res = await filterRequest(search, status, sort);
-        setRequests(res);
-      } catch (err) {
-        showError(err.message || "Failed to fetch customers");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRequests();
-  }, [search, status, sort, refetch]);
+  const fetchAllRequests = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await filterRequest(search, status, sort);
+      setRequests(res);
+    } catch (err) {
+      showError(err.message || "Failed to fetch seller requests");
+    } finally {
+      setLoading(false);
+    }
+  }, [search, status, sort]);
 
-  const [page, setPage] = useState(1);
-  const [visibleRequest, setVisibleRequest] = useState([]);
-  const observer = useRef();
+  useEffect(() => {
+    fetchAllRequests();
+  }, [fetchAllRequests, refetch]);
 
   useEffect(() => {
     const start = 0;
     const end = PAGE_SIZE * page;
-    setVisibleRequest(requests?.slice(start, end));
-  }, [page, requests]);
+    setVisibleRequests(requests.slice(start, end));
+  }, [requests, page]);
 
   const lastRequestRef = useCallback(
     (node) => {
-      if (loading || visibleRequest.length >= requests.length) return;
+      if (loading || visibleRequests.length >= requests.length) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
@@ -61,12 +61,12 @@ const BecomeASeller = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, visibleRequest.length, requests.length]
+    [loading, visibleRequests.length, requests.length]
   );
 
-  const handleStatusChange = async (id, status) => {
+  const handleStatusChange = async (id, newStatus) => {
     try {
-      await changeCustomerStatus(id, status);
+      await changeCustomerStatus(id, newStatus);
       setRefetch((r) => r + 1);
     } catch (error) {
       showError(error.message);
@@ -115,10 +115,10 @@ const BecomeASeller = () => {
             </tr>
           </thead>
           <tbody>
-            {requests?.map((req, index) => {
-              const isLast = index === requests.length - 1;
+            {visibleRequests.map((req, index) => {
+              const isLast = index === visibleRequests.length - 1;
               return (
-                <tr key={req.id} ref={isLast ? lastRequestRef : null}>
+                <tr key={req.request_id} ref={isLast ? lastRequestRef : null}>
                   <td className="entity-id">{req.request_id}</td>
                   <td className="entity-id">{req.customer_id}</td>
                   <td>{`${req.first_name} ${req.last_name}`}</td>
@@ -128,35 +128,27 @@ const BecomeASeller = () => {
                   <td><a href={`tel:${req.phone}`}>{req.phone}</a></td>
                   <td>{req.request_date}</td>
                   <td className="status">
-                    <div
-                      className={`status-toggle ${req.status.toLowerCase()}`}
-                    >
+                    <div className={`status-toggle ${req.status.toLowerCase()}`}>
                       {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
                     </div>
                   </td>
                   <td>
-                    {req.status === "pending" ? (
+                    {req.status === "pending" && (
                       <>
                         <button
                           className="view-btn"
-                          onClick={() => {
-                            handleStatusChange(req.request_id, "approved");
-                          }}
-                          disabled={req.status.toLowerCase() !== "pending"}
+                          onClick={() => handleStatusChange(req.request_id, "approved")}
                         >
                           Approve
                         </button>
                         <button
                           className="delete-btn"
-                          onClick={() => {
-                            handleStatusChange(req.request_id, "rejected");
-                          }}
-                          disabled={req.status.toLowerCase() !== "pending"}
+                          onClick={() => handleStatusChange(req.request_id, "rejected")}
                         >
                           Reject
                         </button>
                       </>
-                    ) : null}
+                    )}
                   </td>
                 </tr>
               );
@@ -169,8 +161,7 @@ const BecomeASeller = () => {
             <Quantum size="40" speed="1.75" color="black" />
           </div>
         )}
-
-        {!loading && requests.length >= requests.length && (
+        {!loading && visibleRequests.length >= requests.length && (
           <p className="end-loading-list">No more requests to load.</p>
         )}
       </div>
