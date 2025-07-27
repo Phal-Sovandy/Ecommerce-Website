@@ -33,7 +33,7 @@ function ModalLogin() {
       } else {
         sessionStorage.setItem("token", token);
       }
-      login(token);
+      login(token, remember);
       closeModal();
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");

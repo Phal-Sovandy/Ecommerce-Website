@@ -39,13 +39,31 @@ export async function login(req, res) {
       return res.status(401).json({ message: "Invalid credentials" });
 
     console.log({ user, role, error });
+    // Determine the correct ID based on user role
+    let userId;
+    if (role === 'customer') {
+      userId = user.customer_id;
+    } else if (role === 'seller') {
+      userId = user.seller_id;
+    } else if (role === 'admin') {
+      userId = user.admin_id;
+    } else {
+      // Fallback to email/phone if role is unknown (shouldn't happen)
+      userId = user.email ?? user.phone;
+    }
+
     const token = jwt.sign(
-      { id: user.email ?? user.phone, role },
+      { 
+        id: userId, 
+        role 
+      },
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
       }
     );
+    
+    console.log('Generated token with payload:', { id: userId, role });
 
     res.json({ token });
   } catch (err) {

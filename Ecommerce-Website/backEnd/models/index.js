@@ -679,6 +679,17 @@ const Order = sequelize.define(
       },
       onDelete: "SET NULL",
     },
+    status: {
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      validate: {
+        isIn: [['Cancelled', 'Shipping', 'Delivered', 'Processing']]
+      }
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    }
   },
   {
     tableName: "orders",
@@ -1061,7 +1072,9 @@ OrderedItem.belongsTo(Order, { foreignKey: "order_id" });
 OrderedItem.belongsTo(Product, { foreignKey: "asin", as: "product" });
 Product.hasMany(OrderedItem, { foreignKey: "asin", as: "orderedInItems" });
 
-// Wishlists
+// Wishlist Tables - Models are already defined above
+
+// Wishlist Associations
 Wishlist.belongsTo(Customer, { foreignKey: "customer_id", as: "customer" });
 Customer.hasMany(Wishlist, { foreignKey: "customer_id", as: "wishlists" });
 

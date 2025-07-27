@@ -155,15 +155,15 @@ const router = createBrowserRouter(
 function App() {
   return (
     <AuthProvider>
-      <ModalProvider>
-        <UserAuthModalProvider>
-          <CartProvider>
-            <WishlistProvider>
+      <WishlistProvider>
+        <ModalProvider>
+          <UserAuthModalProvider>
+            <CartProvider>
               <RouterProvider router={router} />
-            </WishlistProvider>
-          </CartProvider>
-        </UserAuthModalProvider>
-      </ModalProvider>
+            </CartProvider>
+          </UserAuthModalProvider>
+        </ModalProvider>
+      </WishlistProvider>
     </AuthProvider>
   );
 }

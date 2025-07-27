@@ -13,8 +13,8 @@ router.post("/cart/add", addToCart);
 // Get cart for a customer
 router.get("/cart/:customer_id", getCart);
 // Remove item from cart
-router.post("/cart/remove", removeFromCart);
+router.delete("/cart/remove", removeFromCart);
 // Clear cart
-router.post("/cart/clear", clearCart);
+router.delete("/cart/clear", clearCart);
 
 export default router;

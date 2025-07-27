@@ -28,7 +28,12 @@ initDatabase();
 
 const app = express();
 
-app.use(cors());
+// Configure CORS with credentials support
+app.use(cors({
+  origin: 'http://localhost:5173', // Your frontend URL
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(BASE_API_URL, logger);
 app.use("/uploads", express.static("public/uploads"));

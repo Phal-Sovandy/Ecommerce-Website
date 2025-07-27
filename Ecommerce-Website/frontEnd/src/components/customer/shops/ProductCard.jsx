@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useCart } from "../../../context/CartContext.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { getAProductsInfo } from "../../../api/common/products.js";
@@ -8,6 +9,7 @@ import {
   faHeart,
   faHeart as faHeartSolid,
   faTrash,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { useWishlist } from "../../../context/WishlistContext";
 
@@ -20,8 +22,10 @@ function ProductCard({
   showEdit = () => {},
 }) {
   const { isLoggedIn, role } = useAuth();
-  const { addToCart } = useCart();
+  const { addToCart, isLoading: isCartLoading } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   return (
     <div
@@ -69,56 +73,89 @@ function ProductCard({
             {isLoggedIn && role === "customer" && (
               <div className="functions-product customer">
                 <FontAwesomeIcon
-                  icon={faCartShopping}
+                  icon={isAddingToCart ? faSpinner : faCartShopping}
                   size="lg"
-                  onClick={async () => {
+                  spin={isAddingToCart}
+                  className={isAddingToCart ? 'cart-loading' : ''}
+                  onClick={async (e) => {
+                    e.stopPropagation(); // Prevent the card click handler from triggering
+                    if (isAddingToCart) return; // Prevent multiple clicks
+                    
                     try {
-                      const productDetails = await getAProductsInfo(
-                        product.asin
-                      );
-                      if (productDetails?.variations?.length > 0) {
+                      setIsAddingToCart(true);
+                      
+                      // If product has variations, show details page
+                      if (product.hasVariations) {
                         showDetails();
+                        return;
+                      }
+                      
+                      // Otherwise, add to cart directly
+                      const result = await addToCart({
+                        asin: product.asin,
+                        title: product.title,
+                        price: parseFloat(product.price) || 0,
+                        currency: product.currency || '$',
+                        image: product.image,
+                        option: product.option,
+                        quantity: 1 // Default quantity to 1
+                      });
+                      
+                      if (result.success) {
+                        // Show success message (you might want to use a toast notification here)
+                        console.log('Added to cart:', result.message);
                       } else {
-                        addToCart({
-                          id:
-                            product.asin +
-                            (product.option ? `-${product.option}` : ""),
-                          asin: product.asin,
-                          name: product.title,
-                          priceCents: product.price, // or product.final_price if that's correct
-                          currency: product.currency,
-                          image: product.image,
-                          option: product.option,
-                          // add any other fields needed by the checkout
-                        });
+                        console.error('Failed to add to cart:', result.error);
+                        // You might want to show an error message to the user
                       }
                     } catch (error) {
-                      console.error("Error: ", error.message);
+                      console.error("Error adding to cart:", error);
+                    } finally {
+                      setIsAddingToCart(false);
                     }
                   }}
                 />
-                <FontAwesomeIcon
-                  icon={
-                    wishlist.some((w) => w.asin === product.asin)
-                      ? faHeartSolid
-                      : faHeart
-                  }
-                  size="lg"
-                  style={{
-                    color: wishlist.some((w) => w.asin === product.asin)
-                      ? "red"
-                      : "gray",
-                    cursor: "pointer",
-                  }}
-                  onClick={(e) => {
+                <div 
+                  className="wishlist-button"
+                  onClick={async (e) => {
+                    e.preventDefault();
                     e.stopPropagation();
-                    if (wishlist.some((w) => w.asin === product.asin)) {
-                      removeFromWishlist(product);
-                    } else {
-                      addToWishlist(product);
+                    
+                    if (isWishlistLoading) return;
+                    
+                    const isInWishlist = wishlist.some((w) => w.asin === product.asin);
+                    console.log(`Wishlist button clicked for product: ${product.asin}, isInWishlist: ${isInWishlist}`);
+                    
+                    try {
+                      setIsWishlistLoading(true);
+                      
+                      if (isInWishlist) {
+                        console.log('Removing product from wishlist');
+                        await removeFromWishlist(product);
+                        console.log('Successfully removed from wishlist');
+                      } else {
+                        console.log('Adding product to wishlist');
+                        const result = await addToWishlist(product);
+                        console.log('addToWishlist result:', result);
+                      }
+                    } catch (error) {
+                      console.error('Error in wishlist operation:', error);
+                    } finally {
+                      setIsWishlistLoading(false);
                     }
                   }}
-                />
+                  style={{ cursor: isWishlistLoading ? 'not-allowed' : 'pointer' }}
+                >
+                  {isWishlistLoading ? (
+                    <FontAwesomeIcon icon={faSpinner} spin size="lg" color="gray" />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={wishlist.some((w) => w.asin === product.asin) ? faHeartSolid : faHeart}
+                      size="lg"
+                      color={wishlist.some((w) => w.asin === product.asin) ? 'red' : 'gray'}
+                    />
+                  )}
+                </div>
               </div>
             )}
             {isLoggedIn && role === "seller" && (

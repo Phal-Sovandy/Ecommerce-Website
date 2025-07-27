@@ -30,8 +30,13 @@ export async function findUserByEmailOrPhone(identifier) {
     }),
     models.Admin.findOne({
       where: {
-        [Op.or]: [{ email: identifier }, { phone: identifier }],
+        [Op.or]: [
+          { email: identifier },
+          { phone: identifier }
+        ].filter(Boolean),
       },
+      attributes: ['admin_id', 'email', 'phone', 'hashed_password', 'created_at'],
+      raw: true
     }),
   ]);
 
