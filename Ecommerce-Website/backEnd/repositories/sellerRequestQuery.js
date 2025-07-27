@@ -35,7 +35,7 @@ export async function queryAllSellerRequests() {
 
 export async function queryAllSellerRequestBySearch(search, status, sort) {
   try {
-    const lowerSearch = search?.toLowerCase();
+    const lowerSearch = search?.toLowerCase()?.trim();
     const whereConditions = [];
 
     if (lowerSearch) {

@@ -1,4 +1,5 @@
 ![E-commerce App Cover](Ecommerce-Website/frontEnd/src/assets/githubRepoCover.png)
+
 # Full-Stack E-commerce Web Application
 
 This repository contains the complete source code for a full-stack e-commerce web application. The system is developed using **React** (with **Vite** for build optimization) on the frontend and **Node.js** with **Express.js** on the backend. Data persistence is managed using a **PostgreSQL** relational database integrated via **Sequelize ORM**. The application supports typical e-commerce functionalities, including product catalog browsing, shopping cart management, order processing, and user authentication with role-based access control.
@@ -13,6 +14,7 @@ All core frontend and backend application logic is included in this repository. 
    - [1.1. Frontend Capabilities](#11-frontend-capabilities)
    - [1.2. Backend Functionality](#12-backend-functionality)
    - [1.3. Database Design](#13-database-design)
+   - [1.4. Sequence Diagram](#13-sequence-diagram)
 2. [Technology Stack](#2-technology-stack)
 3. [Repository Structure](#3-repository-structure)
 4. [Prerequisites](#4-prerequisites)
@@ -33,6 +35,7 @@ All core frontend and backend application logic is included in this repository. 
 This project is a comprehensive full-stack e-commerce web application developed using **React** for the frontend, **Express.js** (Node.js) for the backend, and **PostgreSQL** as the relational database. It offers a seamless shopping experience for customers and includes dedicated interfaces and tools for **sellers** and **administrators**.
 
 Key features include:
+
 - Role-based access control (customer, seller, admin)
 - Secure authentication and session management
 - Dynamic product filtering and searching
@@ -71,6 +74,19 @@ Key features include:
 - **Indexes and Performance Optimization**: Critical columns, including primary keys and foreign keys, are indexed to accelerate query performance. Additional indexes are created on frequently queried fields.
 - **Clustering**: Selected tables utilize clustering on indexes to physically order data for faster sequential access, improving performance on large datasets and common query patterns.
 - **Maintenance**: Routine maintenance such as vacuuming and analyzing ensure the database remains performant and scalable as data volume grows.
+
+### 1.4. Sequence Diagram
+
+Below is a sequence diagram illustrating the core functionality of the user authentication and checkout process:
+
+This diagram outlines the following key operations:
+
+- User registration and login using JWT authentication
+- Product browsing and cart updates
+- Checkout with payment gateway integration
+- Token refresh and logout flow
+
+![core functionalities sequence diagram](Ecommerce-Website/frontEnd/src/assets/core-functionalities-sequence-diagram.png)
 
 ---
 
@@ -155,7 +171,6 @@ Please follow the instructions in that repository to:
 - Create the PostgreSQL database (`ecommercewebsite`)
 - Execute SQL scripts to define the schema, triggers, and views
 - Run stored procedures and insert sample data as required
-
 
 ### 5.3. Backend Setup
 
@@ -388,6 +403,7 @@ Future iterations aim to improve user experience, performance, and feature set w
 ---
 
 ## 8. Contributing
+
 Contributions are welcome! If you have suggestions for improvements, new features, or bug fixes, please open an issue or submit a pull request.
 
 ## 9. License

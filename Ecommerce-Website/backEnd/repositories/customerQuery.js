@@ -45,7 +45,7 @@ export async function queryAllCustomers() {
 
 export async function queryAllCustomersBySearch(search, status, gender, sort) {
   try {
-    const lowerSearch = search?.toLowerCase();
+    const lowerSearch = search?.toLowerCase()?.trim();
     const whereConditions = [];
 
     if (lowerSearch) {
@@ -88,6 +88,13 @@ export async function queryAllCustomersBySearch(search, status, gender, sort) {
             Sequelize.fn("LOWER", Sequelize.col("details.location.country")),
             { [Op.like]: `%${lowerSearch}%` }
           ),
+          Sequelize.where(
+            Sequelize.fn(
+              "LOWER",
+              Sequelize.cast(Sequelize.col("details.registration_date"), "TEXT")
+            ),
+            { [Op.like]: `%${lowerSearch}%` }
+          ),
         ],
       });
     }
@@ -110,8 +117,8 @@ export async function queryAllCustomersBySearch(search, status, gender, sort) {
     const sortMap = {
       nameAsc: [Sequelize.col("details.first_name"), "ASC"],
       nameDesc: [Sequelize.col("details.first_name"), "DESC"],
-      dateAsc: [Sequelize.col("details.registration_date"), "ASC"],
-      dateDesc: [Sequelize.col("details.registration_date"), "DESC"],
+      joinedAsc: [Sequelize.col("details.registration_date"), "ASC"],
+      joinedDesc: [Sequelize.col("details.registration_date"), "DESC"],
     };
 
     const order = sortMap[sort] || sortMap["nameAsc"];
